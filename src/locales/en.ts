@@ -56,6 +56,31 @@ export default {
     noteBody:
       'obsidian, pulse and vault have not released v1 — the API is designed from approved specs but may change. This page does not document APIs: it documents vision and roadmap.',
   },
+  docs: {
+    title: 'Documentation',
+    subtitle: 'From zero to a running API — every block below compiles against quartz 0.1.1 and facet 0.1.0.',
+    step: 'Step {n}',
+    installation: 'Installation',
+    installationBody:
+      'Add the shards to shard.yml. Each piece is independent — install only what you use.',
+    payload: 'Define the payload',
+    payloadBody:
+      'A payload is a plain record with rules declared next to the field. The Facet macro collects the annotations at compile time and generates the validation.',
+    controller: 'The controller',
+    controllerBody:
+      'Controllers are plain classes, no base class. The annotation registers the route; the body argument type is deserialized and handed to your code.',
+    validation: 'Validating input',
+    validationBody:
+      'Facet.validate returns a ValidationResult — no exceptions. The contract with Quartz is direct: a Facet FieldError becomes a Quartz FieldError, and BindError becomes a 400 problem+json.',
+    run: 'Running',
+    runBody: 'Quartz.configure sets the port and OpenAPI title; Quartz.run starts the server.',
+    test: 'Testing',
+    testBody:
+      'The specs in each repo are the real testing reference today: run crystal spec inside the project. The in-memory client is internal in 0.1.x.',
+    errors: 'Error format',
+    errorsBody:
+      'Every error is application/problem+json (RFC 9457). The type field is the stable identifier for programmatic handling — these are the nine values emitted by Quartz:',
+  },
   code: {
     copy: 'Copy',
   },

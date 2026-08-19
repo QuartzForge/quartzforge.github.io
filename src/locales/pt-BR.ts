@@ -56,6 +56,31 @@ export default {
     noteBody:
       'obsidian, pulse e vault não lançaram v1 — a API é desenhada a partir das specs aprovadas, mas pode mudar. Esta página não documenta APIs: documenta visão e roadmap.',
   },
+  docs: {
+    title: 'Documentação',
+    subtitle: 'Do zero a uma API rodando — cada bloco abaixo compila contra quartz 0.1.1 e facet 0.1.0.',
+    step: 'Passo {n}',
+    installation: 'Instalação',
+    installationBody:
+      'Adicione os shards ao shard.yml. Cada peça é independente — instale só o que usar.',
+    payload: 'Defina o payload',
+    payloadBody:
+      'Um payload é um record comum com regras declaradas ao lado do campo. A macro do Facet coleta as annotations em compile-time e gera a validação.',
+    controller: 'O controller',
+    controllerBody:
+      'Controllers são classes comuns, sem classe-base. A annotation registra a rota; o tipo do argumento body é desserializado e entregue já validado pelo seu código.',
+    validation: 'Validando a entrada',
+    validationBody:
+      'Facet.validate devolve um ValidationResult — sem exceção. O contrato com o Quartz é direto: FieldError do Facet vira FieldError do Quartz, e o BindError vira 400 problem+json.',
+    run: 'Rodando',
+    runBody: 'Quartz.configure define a porta e o título do OpenAPI; Quartz.run sobe o servidor.',
+    test: 'Testando',
+    testBody:
+      'As specs de cada repo são a referência real de teste hoje: rodar crystal spec dentro do projeto. O client in-memory é interno na 0.1.x.',
+    errors: 'Formato de erro',
+    errorsBody:
+      'Todo erro é application/problem+json (RFC 9457). O campo type é o identificador estável para tratamento programático — estes são os nove valores emitidos pelo Quartz:',
+  },
   code: {
     copy: 'Copiar',
   },
