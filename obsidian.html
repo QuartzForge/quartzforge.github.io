@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>obsidian — data mapper tipado para Crystal | QuartzForge</title>
+<meta name="description" content="Data mapper com carregamento de relações verificado em tempo de compilação. O N+1 vira erro de build.">
+<meta name="color-scheme" content="dark light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/quartzforge.css">
+<script>
+  (function () {
+    document.documentElement.classList.add('js');
+    try { if (localStorage.getItem('qf-theme') === 'light') document.documentElement.setAttribute('data-theme', 'light'); } catch (e) {}
+  })();
+</script>
+</head>
+<body>
+
+<header class="nav" data-od-id="site-nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span>Quartz<em>Forge</em></a>
+    <nav class="nav-links" aria-label="Principal">
+      <a href="index.html">Visão geral</a>
+      <a href="ecosystem.html" aria-current="page">Ecossistema</a>
+      <a href="docs.html">Documentação</a>
+    </nav>
+    <div class="nav-end">
+      <button class="icon-btn" data-theme-toggle aria-label="Ativar tema claro">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a class="btn btn-primary btn-sm" href="docs.html#modelo">Guia</a>
+      <button class="icon-btn nav-burger" data-burger aria-expanded="false" aria-controls="drawer" aria-label="Abrir menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" data-open="false">
+  <a href="index.html">Visão geral</a><a href="ecosystem.html">Ecossistema</a><a href="docs.html">Documentação</a>
+  <p class="drawer-label">Projetos</p>
+  <a href="quartz.html">quartz — HTTP</a><a href="vault.html">vault — OAuth</a><a href="pulse.html">pulse — filas</a><a href="facet.html">facet — validação</a><a href="obsidian.html">obsidian — dados</a>
+</div>
+
+<main data-od-id="obsidian-main">
+
+  <section class="hero" data-od-id="obsidian-hero">
+    <span class="facet" aria-hidden="true"></span>
+    <div class="wrap hero-grid">
+      <div>
+        <div class="pkg-top" style="margin-bottom:20px">
+          <span class="pkg-glyph" style="--pkg: var(--prism)" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span>
+          <div><div class="pkg-name" style="font-size:17px">obsidian</div><div class="pkg-role">Data mapper tipado</div></div>
+          <span class="pill pill-accent" style="margin-inline-start:12px"><span class="dot"></span>estável · v0.9</span>
+        </div>
+
+        <h1 data-od-id="obsidian-title">A query devolve um tipo que só conhece o que você carregou.</h1>
+        <p class="lede">
+          Não é um aviso, nem um <em>linter</em>, nem um modo estrito opcional. O retorno de
+          <code class="mono">.preload(:customer)</code> é literalmente um tipo diferente do retorno de
+          <code class="mono">.preload(:customer, :line_items)</code> — e o compilador trata a diferença.
+        </p>
+
+        <div class="cmd" style="margin-top:28px">
+          <div class="cmd-body">
+            <pre><span class="cm"># shard.yml</span>
+dependencies:
+  obsidian:
+    github: quartzforge/obsidian
+    version: ~&gt; 0.9</pre>
+            <button class="copy" data-copy aria-label="Copiar dependência"><span data-copy-label>copiar</span></button>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="docs.html#modelo">Modelo e migração <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn-ghost" href="ecosystem.html">Ver o ecossistema</a>
+        </div>
+        <p class="hero-note"><span>Crystal ≥ 1.14</span><span>·</span><span>PostgreSQL 14+</span><span>·</span><span>MIT</span></p>
+      </div>
+
+      <div class="panel" data-reveal data-od-id="obsidian-code">
+        <div class="panel-head">
+          <div class="panel-tabs" role="tablist" aria-label="Exemplos de obsidian" data-tabs="ob">
+            <button role="tab" data-tab="model" aria-selected="true" data-file="src/models/invoice.cr">modelo</button>
+            <button role="tab" data-tab="query" aria-selected="false" data-file="src/reports/monthly.cr">query</button>
+            <button role="tab" data-tab="tx" aria-selected="false" data-file="src/services/invoices.cr">transação</button>
+          </div>
+          <span class="panel-file" data-panel-label="ob">src/models/invoice.cr</span>
+        </div>
+
+<pre class="code" data-panel-group="ob" data-panel="model"><code><span class="t-kw">class</span> <span class="t-cls">Invoice</span> &lt; <span class="t-cls">Obsidian::Model</span>
+  <span class="t-fn">table</span> <span class="t-sym">:invoices</span>
+
+  <span class="t-fn">column</span> id          : <span class="t-cls">UUID</span> = <span class="t-cls">UUID</span>.v7, primary: <span class="t-kw">true</span>
+  <span class="t-fn">column</span> total_cents : <span class="t-cls">Int64</span>
+  <span class="t-fn">column</span> status      : <span class="t-cls">Status</span>
+  <span class="t-fn">column</span> metadata    : <span class="t-cls">JSON::Any</span>, type: <span class="t-sym">:jsonb</span>
+  <span class="t-fn">column</span> tags        : <span class="t-cls">Array</span>(<span class="t-cls">String</span>), default: <span class="t-sym">%w[]</span>
+  <span class="t-fn">column</span> issued_at   : <span class="t-cls">Time</span>
+  <span class="t-fn">column</span> deleted_at  : <span class="t-cls">Time</span>?     <span class="t-cm"># soft delete opt-in</span>
+
+  <span class="t-fn">belongs_to</span> customer   : <span class="t-cls">Customer</span>
+  <span class="t-fn">has_many</span>   line_items : <span class="t-cls">LineItem</span>
+  <span class="t-fn">has_many</span>   payments   : <span class="t-cls">Payment</span>
+
+  <span class="t-fn">scope</span> <span class="t-sym">:overdue</span> { <span class="t-fn">where</span>(<span class="t-str">"issued_at &lt; ?"</span>, <span class="t-num">30</span>.days.ago) }
+
+  <span class="t-kw">enum</span> <span class="t-cls">Status</span>
+    <span class="t-cls">Draft</span>; <span class="t-cls">Sent</span>; <span class="t-cls">Paid</span>; <span class="t-cls">Overdue</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+
+<pre class="code" data-panel-group="ob" data-panel="query" hidden><code><span class="t-cm"># the builder is composable: each step returns another query</span>
+base = <span class="t-cls">Invoice</span>.query.<span class="t-fn">overdue</span>.<span class="t-fn">where</span>(status: <span class="t-sym">:sent</span>)
+
+<span class="t-kw">if</span> customer_filter
+  base = base.<span class="t-fn">where</span>(customer_id: customer_filter)
+<span class="t-kw">end</span>
+
+report = base
+  .<span class="t-fn">preload</span>(<span class="t-sym">:customer</span>, line_items: <span class="t-sym">:product</span>)
+  .<span class="t-fn">order</span>(issued_at: <span class="t-sym">:asc</span>)
+  .<span class="t-fn">limit</span>(<span class="t-num">500</span>)
+
+<span class="t-cm"># two queries in total, not 501</span>
+report.<span class="t-fn">each</span> <span class="t-kw">do</span> |invoice|
+  <span class="t-fn">puts</span> <span class="t-str">"#{invoice.customer.name}: #{invoice.line_items.sum(&amp;.amount_cents)}"</span>
+<span class="t-kw">end</span>
+
+<span class="t-cm"># aggregates without loading a single row</span>
+<span class="t-cls">Invoice</span>.query.<span class="t-fn">where</span>(status: <span class="t-sym">:paid</span>).<span class="t-fn">sum</span>(<span class="t-sym">:total_cents</span>)
+<span class="t-cls">Invoice</span>.query.<span class="t-fn">group_by</span>(<span class="t-sym">:status</span>).<span class="t-fn">count</span></code></pre>
+
+<pre class="code" data-panel-group="ob" data-panel="tx" hidden><code><span class="t-cls">Obsidian</span>.<span class="t-fn">transaction</span> <span class="t-kw">do</span> |tx|
+  invoice = <span class="t-cls">Invoice</span>.<span class="t-fn">create!</span>(
+    customer_id: attrs.customer_id,
+    total_cents: attrs.total_cents,
+    issued_at:   <span class="t-cls">Time</span>.utc,
+  )
+
+  attrs.line_items.<span class="t-fn">each</span> { |i| <span class="t-cls">LineItem</span>.<span class="t-fn">create!</span>(invoice_id: invoice.id, **i.<span class="t-fn">to_named</span>) }
+
+  <span class="t-cm"># the job joins the SAME transaction (pulse integration)</span>
+  <span class="t-cls">SendInvoice</span>.<span class="t-fn">new</span>(invoice.id).<span class="t-fn">enqueue</span>(tx)
+
+  <span class="t-cm"># a rollback here undoes invoice, line items and job together</span>
+  <span class="t-kw">raise</span> <span class="t-cls">Obsidian::Rollback</span>.<span class="t-fn">new</span> <span class="t-kw">unless</span> <span class="t-cls">Credit</span>.<span class="t-fn">reserve</span>(invoice, tx)
+<span class="t-kw">end</span></code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================== o mecanismo em detalhe -->
+  <section class="section section-tint" data-od-id="obsidian-mechanism">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Como isso funciona</p>
+        <h2>Um tipo por combinação de <code class="mono">preload</code>.</h2>
+        <p>
+          A macro de query gera, na compilação, um tipo cujos métodos de relação existem apenas para
+          as relações pedidas. Não há verificação em runtime porque não há o que verificar: o método
+          simplesmente não foi gerado.
+        </p>
+      </div>
+
+      <div class="split" data-reveal>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-file" style="margin-inline-start:0; padding-block:11px">o que o compilador enxerga</span></div>
+<pre class="code"><code><span class="t-cls">Invoice</span>.query.<span class="t-fn">preload</span>(<span class="t-sym">:customer</span>)
+<span class="t-cm">#  =&gt; Obsidian::Loaded(Invoice, {customer: Customer})</span>
+<span class="t-cm">#     .customer     ✓ exists</span>
+<span class="t-cm">#     .line_items   ✗ does not exist</span>
+
+<span class="t-cls">Invoice</span>.query.<span class="t-fn">preload</span>(<span class="t-sym">:customer</span>, line_items: <span class="t-sym">:product</span>)
+<span class="t-cm">#  =&gt; Obsidian::Loaded(Invoice, {</span>
+<span class="t-cm">#       customer:   Customer,</span>
+<span class="t-cm">#       line_items: Loaded(LineItem, {product: Product})</span>
+<span class="t-cm">#     })</span>
+<span class="t-cm">#     .customer                   ✓</span>
+<span class="t-cm">#     .line_items                 ✓</span>
+<span class="t-cm">#     .line_items.first.product   ✓</span>
+<span class="t-cm">#     .payments                   ✗</span></code></pre>
+        </div>
+
+        <div>
+          <ul class="feature-list">
+            <li>
+              <span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 13 4 4L19 7"/></svg></span>
+              <span><strong>Aninhamento também é verificado</strong><code class="mono">line_items: :product</code> só libera <code class="mono">.product</code> dentro de <code class="mono">.line_items</code>. Um nível esquecido continua sendo erro de build.</span>
+            </li>
+            <li>
+              <span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 13 4 4L19 7"/></svg></span>
+              <span><strong>Passa por assinatura de método</strong>Uma função que recebe <code class="mono">Loaded(Invoice, {customer: Customer})</code> documenta no tipo o que ela precisa que já esteja carregado.</span>
+            </li>
+            <li>
+              <span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 13 4 4L19 7"/></svg></span>
+              <span><strong>O autocompletar segue a mesma regra</strong>Relações não carregadas não aparecem na lista do editor — você descobre o problema enquanto digita.</span>
+            </li>
+            <li>
+              <span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 13 4 4L19 7"/></svg></span>
+              <span><strong>Escapatória explícita quando precisa</strong><code class="mono">invoice.load(:payments)</code> existe e dispara uma query — mas você teve que escrever, então está visível na revisão.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" data-od-id="obsidian-api">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Mapeamento de tipos</p>
+        <h2>Postgres de verdade, não o menor denominador comum.</h2>
+      </div>
+      <div class="table-wrap" data-reveal>
+        <table>
+          <caption class="sr-only">Mapeamento entre tipos Crystal e Postgres</caption>
+          <thead><tr><th scope="col">Crystal</th><th scope="col">Postgres</th><th scope="col">Observação</th></tr></thead>
+          <tbody>
+            <tr><td>UUID</td><td>uuid</td><td><code>UUID.v7</code> como padrão dá ordenação temporal no índice primário.</td></tr>
+            <tr><td>Time</td><td>timestamptz</td><td>Sempre UTC na aplicação; a conversão de fuso fica na borda.</td></tr>
+            <tr><td>Enum</td><td>enum nativo</td><td>A migração cria o tipo; adicionar valor é migração, não deploy silencioso.</td></tr>
+            <tr><td>JSON::Any</td><td>jsonb</td><td>Operadores <code>-&gt;&gt;</code> e <code>@&gt;</code> disponíveis no builder.</td></tr>
+            <tr><td>Array(T)</td><td>T[]</td><td>Array nativo, com <code>ANY</code> e <code>&amp;&amp;</code> no <code>where</code>.</td></tr>
+            <tr><td>BigDecimal</td><td>numeric</td><td>Sem ida e volta por float — valores monetários chegam exatos.</td></tr>
+            <tr><td>T?</td><td>NULL permitido</td><td>Nulidade é do tipo Crystal; a migração é gerada a partir dele.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-warn" style="margin-top:var(--gap)">
+        <strong>Quando não usar obsidian</strong>
+        <p>
+          Ele assume PostgreSQL e não pretende ser portátil para MySQL ou SQLite — os tipos nativos e
+          o <code class="mono">SKIP LOCKED</code> que o <code class="mono">pulse</code> aproveita fazem
+          parte do desenho. Se você precisa de vários bancos, um driver genérico serve melhor.
+        </p>
+      </div>
+
+      <nav class="pager" aria-label="Outros projetos">
+        <a href="facet.html"><span class="p-dir">← anterior</span><span class="p-name">facet — validação isolada</span></a>
+        <a href="pulse.html" class="next"><span class="p-dir">próximo →</span><span class="p-name">pulse — fila em Postgres</span></a>
+      </nav>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer" data-od-id="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a class="brand" href="index.html" style="margin-bottom:14px"><span class="brand-mark" aria-hidden="true"></span>Quartz<em>Forge</em></a>
+        <p class="muted" style="font-size:13.5px; max-width:30ch">Projetos oficiais para construir aplicações completas em Crystal.</p>
+      </div>
+      <div class="footer-col"><h4>Projetos</h4><a href="quartz.html">quartz</a><a href="vault.html">vault</a><a href="pulse.html">pulse</a><a href="facet.html">facet</a><a href="obsidian.html">obsidian</a></div>
+      <div class="footer-col"><h4>Documentação</h4><a href="docs.html">Início rápido</a><a href="docs.html#instalacao">Instalação</a><a href="docs.html#primeira-rota">Primeira rota</a><a href="docs.html#implantacao">Implantação</a></div>
+      <div class="footer-col"><h4>Comunidade</h4><a href="index.html#repositorios">GitHub</a><a href="index.html#repositorios">Discussões</a><a href="index.html#repositorios">Guia de contribuição</a><a href="index.html#repositorios">Política de versões</a></div>
+    </div>
+    <div class="footer-bottom"><span>© <span data-year>2026</span> QuartzForge</span><span>MIT</span><span class="sp">Feito em Crystal</span></div>
+  </div>
+</footer>
+
+<script src="js/quartzforge.js"></script>
+</body>
+</html>

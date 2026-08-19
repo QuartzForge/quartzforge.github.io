@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ecossistema — QuartzForge</title>
+<meta name="description" content="Os cinco projetos oficiais do QuartzForge: quartz, vault, pulse, facet e obsidian. Escopo, dependências e matriz de compatibilidade.">
+<meta name="color-scheme" content="dark light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/quartzforge.css">
+<script>
+  (function () {
+    document.documentElement.classList.add('js');
+    try {
+      var t = localStorage.getItem('qf-theme');
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body>
+
+<header class="nav" data-od-id="site-nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span>Quartz<em>Forge</em></a>
+    <nav class="nav-links" aria-label="Principal">
+      <a href="index.html">Visão geral</a>
+      <a href="ecosystem.html" aria-current="page">Ecossistema</a>
+      <a href="docs.html">Documentação</a>
+    </nav>
+    <div class="nav-end">
+      <button class="icon-btn" data-theme-toggle aria-label="Ativar tema claro">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a class="btn btn-primary btn-sm" href="docs.html">Começar</a>
+      <button class="icon-btn nav-burger" data-burger aria-expanded="false" aria-controls="drawer" aria-label="Abrir menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" data-open="false">
+  <a href="index.html">Visão geral</a>
+  <a href="ecosystem.html">Ecossistema</a>
+  <a href="docs.html">Documentação</a>
+  <p class="drawer-label">Projetos</p>
+  <a href="quartz.html">quartz — HTTP</a>
+  <a href="vault.html">vault — OAuth</a>
+  <a href="pulse.html">pulse — filas</a>
+  <a href="facet.html">facet — validação</a>
+  <a href="obsidian.html">obsidian — dados</a>
+</div>
+
+<main data-od-id="ecosystem-main">
+
+  <section class="hero" style="padding-bottom:clamp(24px,3vw,40px)" data-od-id="ecosystem-hero">
+    <span class="facet" aria-hidden="true"></span>
+    <div class="wrap">
+      <p class="kicker">Ecossistema</p>
+      <h1 style="font-size:clamp(34px,5.2vw,60px); max-width:18ch" data-od-id="ecosystem-title">
+        Cinco projetos com escopos que não se sobrepõem.
+      </h1>
+      <p class="lede" style="max-width:62ch">
+        Cada um resolve um problema inteiro e para por aí. Você escolhe quantos entram no seu
+        <code class="mono">shard.yml</code> — e nenhum deles reclama da ausência dos outros.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:clamp(28px,3.5vw,48px)" data-od-id="ecosystem-list">
+    <div class="wrap">
+
+      <div class="chips" data-filter-bar role="group" aria-label="Filtrar projetos por escopo">
+        <button class="chip" data-cat-filter="all" aria-pressed="true">todos</button>
+        <button class="chip" data-cat-filter="web" aria-pressed="false">web</button>
+        <button class="chip" data-cat-filter="dados" aria-pressed="false">dados</button>
+        <button class="chip" data-cat-filter="assincrono" aria-pressed="false">assíncrono</button>
+        <button class="chip" data-cat-filter="identidade" aria-pressed="false">identidade</button>
+        <button class="chip" data-cat-filter="validacao" aria-pressed="false">validação</button>
+        <span class="pill" style="margin-inline-start:auto" data-filter-count>5 projetos</span>
+      </div>
+
+      <div class="grid grid-2">
+
+        <!-- quartz -->
+        <article class="card" data-cat="web" style="--pkg: var(--accent)" data-od-id="eco-quartz">
+          <div class="pkg-top">
+            <span class="pkg-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h10M4 17h13"/></svg></span>
+            <div>
+              <div class="pkg-name">quartz</div>
+              <div class="pkg-role">Framework HTTP</div>
+            </div>
+            <span class="pill pill-accent" style="margin-inline-start:auto"><span class="dot"></span>estável</span>
+          </div>
+          <p>APIs robustas em Crystal: roteador em radix tree resolvido na compilação, controllers com parâmetros tipados, middlewares declarados na ordem em que rodam e respostas de erro em RFC 9457.</p>
+          <ul class="feature-list" style="gap:11px; margin-top:4px">
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Rotas nomeadas com geração reversa de URL</span></li>
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Streaming, SSE e WebSocket na mesma app</span></li>
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Contexto de requisição com <code class="mono">RequestID</code> propagado</span></li>
+          </ul>
+          <div class="pkg-meta">
+            <span>v0.9</span><span>·</span><span>MIT</span>
+            <a class="link-arrow" href="quartz.html" style="margin-inline-start:auto">abrir <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <!-- obsidian -->
+        <article class="card" data-cat="dados" style="--pkg: var(--prism)" data-od-id="eco-obsidian">
+          <div class="pkg-top">
+            <span class="pkg-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span>
+            <div>
+              <div class="pkg-name">obsidian</div>
+              <div class="pkg-role">Data mapper tipado</div>
+            </div>
+            <span class="pill pill-accent" style="margin-inline-start:auto"><span class="dot"></span>estável</span>
+          </div>
+          <p>Mapeia tabelas para tipos Crystal e verifica o carregamento de relações em tempo de compilação. Uma relação fora do <code class="mono">preload</code> não existe no tipo devolvido — logo, não compila.</p>
+          <ul class="feature-list" style="gap:11px; margin-top:4px">
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Query builder componível, sem string solta</span></li>
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Migrações versionadas com <code class="mono">forge db</code></span></li>
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Enums, <code class="mono">jsonb</code> e arrays mapeados nativamente</span></li>
+          </ul>
+          <div class="pkg-meta">
+            <span>v0.9</span><span>·</span><span>MIT</span>
+            <a class="link-arrow" href="obsidian.html" style="margin-inline-start:auto">abrir <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <!-- pulse -->
+        <article class="card" data-cat="assincrono dados" style="--pkg: var(--ok)" data-od-id="eco-pulse">
+          <div class="pkg-top">
+            <span class="pkg-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg></span>
+            <div>
+              <div class="pkg-name">pulse</div>
+              <div class="pkg-role">Fila de jobs</div>
+            </div>
+            <span class="pill pill-warn" style="margin-inline-start:auto"><span class="dot"></span>beta</span>
+          </div>
+          <p>Fila de background nativa de Postgres. O job entra na mesma transação que gravou o dado, então não existe o caso clássico de “enfileirou mas o commit falhou”.</p>
+          <ul class="feature-list" style="gap:11px; margin-top:4px">
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Retentativas com backoff e fila morta</span></li>
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Unicidade por chave e janela de tempo</span></li>
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Agendamento cron dentro do próprio binário</span></li>
+          </ul>
+          <div class="pkg-meta">
+            <span>v0.8</span><span>·</span><span>MIT</span>
+            <a class="link-arrow" href="pulse.html" style="margin-inline-start:auto">abrir <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <!-- facet -->
+        <article class="card" data-cat="validacao web" style="--pkg: var(--warn)" data-od-id="eco-facet">
+          <div class="pkg-top">
+            <span class="pkg-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 13 4 4L19 7"/></svg></span>
+            <div>
+              <div class="pkg-name">facet</div>
+              <div class="pkg-role">Validação isolada</div>
+            </div>
+            <span class="pill pill-accent" style="margin-inline-start:auto"><span class="dot"></span>estável</span>
+          </div>
+          <p>Validação de verdade desacoplada: não conhece HTTP, não conhece banco, não conhece o QuartzForge. Roda igual dentro de um consumidor de fila, de um CLI ou de outro framework.</p>
+          <ul class="feature-list" style="gap:11px; margin-top:4px">
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Coerção declarada por tipo, sem adivinhação</span></li>
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Schemas aninhados e listas com limite</span></li>
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Mensagens traduzíveis, com chave estável por erro</span></li>
+          </ul>
+          <div class="pkg-meta">
+            <span>v0.9</span><span>·</span><span>MIT</span>
+            <a class="link-arrow" href="facet.html" style="margin-inline-start:auto">abrir <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <!-- vault -->
+        <article class="card" data-cat="identidade web" style="--pkg: var(--prism)" data-od-id="eco-vault">
+          <div class="pkg-top">
+            <span class="pkg-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+            <div>
+              <div class="pkg-name">vault</div>
+              <div class="pkg-role">Cliente OAuth</div>
+            </div>
+            <span class="pill pill-accent" style="margin-inline-start:auto"><span class="dot"></span>estável</span>
+          </div>
+          <p>Um cliente OAuth 2.1 para vários provedores com a mesma saída. Cada provedor devolve o perfil no formato dele; <code class="mono">vault</code> devolve sempre uma <code class="mono">Identity</code>.</p>
+          <ul class="feature-list" style="gap:11px; margin-top:4px">
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>PKCE e verificação de <code class="mono">state</code> por padrão</span></li>
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Renovação de token e revogação explícitas</span></li>
+            <li><span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></span><span>Provedor customizado em uma classe</span></li>
+          </ul>
+          <div class="pkg-meta">
+            <span>v0.9</span><span>·</span><span>MIT</span>
+            <a class="link-arrow" href="vault.html" style="margin-inline-start:auto">abrir <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== matriz de compatibilidade -->
+  <section class="section section-tint" data-od-id="section-matrix">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Matriz de compatibilidade</p>
+        <h2>O que cada projeto exige — e o que ele só aproveita se estiver lá.</h2>
+        <p>
+          “Opcional” significa que o projeto detecta o outro em tempo de compilação e liga a
+          integração. Sem ele, nada quebra: você só escreve a cola à mão.
+        </p>
+      </div>
+
+      <div class="table-wrap" data-reveal data-od-id="matrix-table">
+        <table>
+          <caption class="sr-only">Dependências e integrações entre os projetos do QuartzForge</caption>
+          <thead>
+            <tr>
+              <th scope="col">Projeto</th>
+              <th scope="col">Crystal</th>
+              <th scope="col">Exige</th>
+              <th scope="col">Integra se presente</th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>quartz</td>
+              <td>≥ 1.14</td>
+              <td>nada além da stdlib</td>
+              <td>facet · vault · obsidian</td>
+              <td><span class="pill pill-accent"><span class="dot"></span>estável</span></td>
+            </tr>
+            <tr>
+              <td>obsidian</td>
+              <td>≥ 1.14</td>
+              <td>PostgreSQL 14+</td>
+              <td>facet · pulse</td>
+              <td><span class="pill pill-accent"><span class="dot"></span>estável</span></td>
+            </tr>
+            <tr>
+              <td>pulse</td>
+              <td>≥ 1.14</td>
+              <td>PostgreSQL 14+</td>
+              <td>obsidian (mesma conexão)</td>
+              <td><span class="pill pill-warn"><span class="dot"></span>beta</span></td>
+            </tr>
+            <tr>
+              <td>facet</td>
+              <td>≥ 1.12</td>
+              <td>nada além da stdlib</td>
+              <td>quartz · obsidian</td>
+              <td><span class="pill pill-accent"><span class="dot"></span>estável</span></td>
+            </tr>
+            <tr>
+              <td>vault</td>
+              <td>≥ 1.14</td>
+              <td>cliente HTTP da stdlib</td>
+              <td>quartz (rotas de callback)</td>
+              <td><span class="pill pill-accent"><span class="dot"></span>estável</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:var(--gap)" data-reveal>
+        <div class="callout">
+          <strong>Uma infra só</strong>
+          <p>Fora do Postgres, o conjunto inteiro não pede nenhum serviço externo obrigatório.</p>
+        </div>
+        <div class="callout callout-ok">
+          <strong>Adoção parcial é caso de uso, não gambiarra</strong>
+          <p><code class="mono">facet</code> e <code class="mono">vault</code> são os mais usados fora do QuartzForge — e é assim que devem ser.</p>
+        </div>
+        <div class="callout callout-warn">
+          <strong>pulse ainda é beta</strong>
+          <p>A API de agendamento pode mudar antes do 1.0. As mudanças ficam registradas no changelog do projeto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ escolha -->
+  <section class="section" data-od-id="section-choose">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Por onde começar</p>
+        <h2>Três caminhos comuns.</h2>
+      </div>
+
+      <div class="grid grid-3" data-reveal>
+        <div class="card" data-od-id="path-new">
+          <h3>Projeto novo</h3>
+          <p>Comece pelo CLI: ele monta a estrutura com os cinco já ligados e uma migração de exemplo.</p>
+          <div class="cmd" style="max-width:none; margin-top:auto">
+            <div class="cmd-body" style="padding:12px 14px">
+              <pre style="font-size:12.5px"><span class="pfx">$</span> forge new app --db postgres</pre>
+              <button class="copy" data-copy aria-label="Copiar comando"><span data-copy-label>copiar</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="card" data-od-id="path-existing">
+          <h3>API que já existe</h3>
+          <p>Entre por <code class="mono">facet</code>. Ele não conhece HTTP nem banco, então dá para validar um endpoint por vez sem tocar no resto.</p>
+          <div class="pkg-meta" style="margin-top:auto">
+            <a class="link-arrow" href="facet.html">ver facet <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <div class="card" data-od-id="path-queue">
+          <h3>Tirar o Redis do caminho</h3>
+          <p>Entre por <code class="mono">pulse</code>. Se você já tem Postgres, a fila passa a viver na mesma transação dos seus dados.</p>
+          <div class="pkg-meta" style="margin-top:auto">
+            <a class="link-arrow" href="pulse.html">ver pulse <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer" data-od-id="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a class="brand" href="index.html" style="margin-bottom:14px"><span class="brand-mark" aria-hidden="true"></span>Quartz<em>Forge</em></a>
+        <p class="muted" style="font-size:13.5px; max-width:30ch">Projetos oficiais para construir aplicações completas em Crystal.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Projetos</h4>
+        <a href="quartz.html">quartz</a><a href="vault.html">vault</a><a href="pulse.html">pulse</a><a href="facet.html">facet</a><a href="obsidian.html">obsidian</a>
+      </div>
+      <div class="footer-col">
+        <h4>Documentação</h4>
+        <a href="docs.html">Início rápido</a><a href="docs.html#instalacao">Instalação</a><a href="docs.html#primeira-rota">Primeira rota</a><a href="docs.html#implantacao">Implantação</a>
+      </div>
+      <div class="footer-col">
+        <h4>Comunidade</h4>
+        <a href="index.html#repositorios">GitHub</a><a href="index.html#repositorios">Discussões</a><a href="index.html#repositorios">Guia de contribuição</a><a href="index.html#repositorios">Política de versões</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> QuartzForge</span><span>MIT</span><span class="sp">Feito em Crystal</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/quartzforge.js"></script>
+</body>
+</html>
