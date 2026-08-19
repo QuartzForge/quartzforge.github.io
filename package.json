@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "fetch-versions": "crystal run scripts/fetch_versions.cr",
+    "build": "npm run fetch-versions && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "vitest"
