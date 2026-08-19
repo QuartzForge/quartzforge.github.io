@@ -14,6 +14,23 @@ export default {
     development: 'Em desenvolvimento',
     released: 'Lançado',
   },
+  home: {
+    heroTitle: 'O ecossistema para APIs sérias em Crystal.',
+    heroSubtitle:
+      'QuartzForge reúne framework HTTP, validação, dados, filas e autenticação — cada peça independente, instalada separadamente.',
+    installLabel: 'Instalação — shard.yml',
+    ctaDocs: 'Ler a documentação',
+    ctaEcosystem: 'Ver o ecossistema',
+    projectsTitle: 'Projetos',
+    principlesTitle: 'Princípios que atravessam o ecossistema',
+    principles: [
+      { title: 'A macro só coleta', body: 'Nenhuma lógica dentro de macro. O runtime é Crystal comum, com stack traces de verdade.' },
+      { title: 'Wiring errado é erro de compilação', body: 'Dependência não registrada, rota conflitante, regra malformada — o build falha nomeando o problema.' },
+      { title: 'Sem exceção para fluxo esperado', body: 'Validação devolve um resultado. Erros de API são problem+json RFC 9457.' },
+    ],
+    roadmapTitle: 'O que vem',
+    roadmapSubtitle: 'Em desenvolvimento — API não lançada, sujeita a mudança.',
+  },
   roadmap: {
     title: 'Roadmap',
     disclaimer: 'Planejado — não disponível.',
