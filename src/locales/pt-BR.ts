@@ -14,6 +14,13 @@ export default {
     development: 'Em desenvolvimento',
     released: 'Lançado',
   },
+  project: {
+    inDevelopment: 'Em desenvolvimento',
+    noExamples:
+      'API não lançada — sem exemplos de código até o primeiro release. O conteúdo abaixo é a visão de projeto.',
+    gapTitle: 'A lacuna que preenche',
+    whenNotTitle: 'Quando não usar',
+  },
   home: {
     heroTitle: 'O ecossistema para APIs sérias em Crystal.',
     heroSubtitle:
