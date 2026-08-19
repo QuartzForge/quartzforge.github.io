@@ -10,6 +10,17 @@ export default {
     pulse: 'pulse — filas',
     vault: 'vault — OAuth',
   },
+  status: {
+    development: 'Em desenvolvimento',
+    released: 'Lançado',
+  },
+  roadmap: {
+    title: 'Roadmap',
+    disclaimer: 'Planejado — não disponível.',
+  },
+  code: {
+    copy: 'Copiar',
+  },
   theme: {
     toggle: 'Ativar tema claro',
   },

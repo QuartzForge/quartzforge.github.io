@@ -10,6 +10,17 @@ export default {
     pulse: 'pulse — jobs',
     vault: 'vault — OAuth',
   },
+  status: {
+    development: 'In development',
+    released: 'Released',
+  },
+  roadmap: {
+    title: 'Roadmap',
+    disclaimer: 'Planned — not available.',
+  },
+  code: {
+    copy: 'Copy',
+  },
   theme: {
     toggle: 'Switch to light theme',
   },
