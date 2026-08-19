@@ -42,6 +42,20 @@ export default {
     title: 'Roadmap',
     disclaimer: 'Planejado — não disponível.',
   },
+  ecosystem: {
+    title: 'Ecossistema',
+    subtitle:
+      'Cinco projetos independentes, instalados separadamente, desenhados para funcionarem juntos.',
+    matrixTitle: 'Matriz de compatibilidade',
+    columnProject: 'Projeto',
+    columnStatus: 'Status',
+    columnCrystal: 'Crystal',
+    columnLicense: 'Licença',
+    columnDeps: 'Dependências',
+    noteTitle: 'Em desenvolvimento',
+    noteBody:
+      'obsidian, pulse e vault não lançaram v1 — a API é desenhada a partir das specs aprovadas, mas pode mudar. Esta página não documenta APIs: documenta visão e roadmap.',
+  },
   code: {
     copy: 'Copiar',
   },
