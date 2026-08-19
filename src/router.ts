@@ -5,7 +5,7 @@ import DocsView from './views/DocsView.vue'
 import ProjectView from './views/ProjectView.vue'
 
 export const router = createRouter({
-  history: createWebHistory('/quartz-website/'),
+  history: createWebHistory('/'),
   routes: [
     { path: '/', name: 'home', component: HomeView },
     { path: '/ecosystem', name: 'ecosystem', component: EcosystemView },
