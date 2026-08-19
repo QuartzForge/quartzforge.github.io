@@ -36,7 +36,7 @@ const examples = computed(() => projectExamples[props.projectId])
         </div>
 
         <p class="mt-6 text-xs text-neutral-500">
-          Crystal {{ project.status === 'released' ? '~> 1.21' : '~> 1.21 (planejado)' }} · MIT
+          Crystal {{ project.status === 'released' ? '~> 1.21' : `~> 1.21 (${t('project.planned')})` }} · MIT
           · <a :href="`https://github.com/${project.repo}`" class="text-neutral-400 underline decoration-neutral-700 hover:text-neutral-200">{{ project.repo }}</a>
         </p>
       </div>

@@ -25,7 +25,7 @@ const { t } = useI18n()
         <ul class="mt-2 space-y-1 text-sm">
           <li><RouterLink to="/docs" class="text-neutral-400 hover:text-neutral-100">{{ t('footer.quickStart') }}</RouterLink></li>
           <li><RouterLink to="/docs#instalacao" class="text-neutral-400 hover:text-neutral-100">{{ t('footer.installation') }}</RouterLink></li>
-          <li><RouterLink to="/docs#primeira-rota" class="text-neutral-400 hover:text-neutral-100">{{ t('footer.firstRoute') }}</RouterLink></li>
+          <li><RouterLink to="/docs#controller" class="text-neutral-400 hover:text-neutral-100">{{ t('footer.firstRoute') }}</RouterLink></li>
         </ul>
       </div>
     </div>

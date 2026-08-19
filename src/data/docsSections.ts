@@ -1,4 +1,4 @@
-// Each code block below compiles against quartz 0.1.1 and facet 0.1.0.
+// Each code block below is taken from the shipped quartz 0.1.1 and facet 0.1.0 examples.
 export interface DocSection {
   id: string
   headingKey: string

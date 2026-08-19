@@ -16,6 +16,7 @@ export default {
   },
   project: {
     inDevelopment: 'Em desenvolvimento',
+    planned: 'planejado',
     noExamples:
       'API não lançada — sem exemplos de código até o primeiro release. O conteúdo abaixo é a visão de projeto.',
     gapTitle: 'A lacuna que preenche',
@@ -58,7 +59,7 @@ export default {
   },
   docs: {
     title: 'Documentação',
-    subtitle: 'Do zero a uma API rodando — cada bloco abaixo compila contra quartz 0.1.1 e facet 0.1.0.',
+    subtitle: 'Do zero a uma API rodando — os exemplos abaixo vêm dos exemplos enviados com quartz 0.1.1 e facet 0.1.0 e do README.',
     step: 'Passo {n}',
     installation: 'Instalação',
     installationBody:
