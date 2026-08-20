@@ -1,7 +1,5 @@
 {
   "quartz": { "version": "0.1.1", "released": true, "crystal": "~> 1.21" },
   "facet": { "version": "0.1.0", "released": true, "crystal": "~> 1.21" },
-  "obsidian": { "version": null, "released": false, "crystal": "~> 1.21" },
-  "pulse": { "version": null, "released": false, "crystal": "~> 1.21" },
   "vault": { "version": null, "released": false, "crystal": "~> 1.21" }
 }

@@ -4,7 +4,7 @@ require "http/client"
 # Fetches the latest GitHub release version for every QuartzForge repo at
 # build time. Failure (offline, rate limit, no release yet) degrades to
 # `released: false` — the site never displays a fabricated version number.
-REPOS = %w[quartz facet obsidian pulse vault]
+REPOS = %w[quartz facet vault]
 
 struct ReleaseInfo
   include JSON::Serializable

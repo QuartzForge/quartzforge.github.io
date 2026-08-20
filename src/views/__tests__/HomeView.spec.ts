@@ -30,21 +30,27 @@ describe('HomeView', () => {
     }
   })
 
-  it('renders the six package cards including the ecosystem card', () => {
+  it('renders the four package cards including the ecosystem card', () => {
     const w = mountHome()
-    expect(w.findAll('[data-pkg-card]')).toHaveLength(6)
+    expect(w.findAll('[data-pkg-card]')).toHaveLength(4)
     expect(w.text()).toContain('todos')
   })
 
-  it('marks the compiler demo as concept', () => {
+  it('no longer shows the obsidian compiler demo or the concept badge', () => {
     const w = mountHome()
-    expect(w.find('#compilador').exists()).toBe(true)
-    expect(w.find('[data-concept-badge]').text()).toContain('conceito')
+    expect(w.find('[data-concept-badge]').exists()).toBe(false)
+    expect(w.find('#compilador').exists()).toBe(false)
+    expect(w.text()).not.toContain('conceito')
+  })
+
+  it('drops the hero note from the hero', () => {
+    const w = mountHome()
+    expect(w.text()).not.toContain('MIT ·')
   })
 
   it('shows the proof rows waiting for CI and the honest warning alert', () => {
     const w = mountHome()
-    expect(w.text()).toContain('aguardando CI')
+    expect(w.text()).toContain('aguardando o CI')
     const alert = w.find('[role="alert"]')
     expect(alert.exists()).toBe(true)
     expect(alert.text()).toContain('Por que os campos estão vazios')

@@ -1,5 +1,5 @@
 // Each code block below is taken from the shipped quartz 0.1.1 and facet 0.1.0 examples.
-export type DocGroup = 'comecando' | 'guias' | 'referencia'
+export type DocGroup = 'comecando' | 'guias' | 'projetos'
 
 export interface DocSection {
   id: string
@@ -16,22 +16,20 @@ export interface DocProjectLink {
   keywords: string
 }
 
-// Sidebar groups mirror the template sidebar. The "Referência" group carries
+// Sidebar groups mirror the template sidebar. The "Projetos" group carries
 // no guide sections — the view fills it with the project links and the
 // ecosystem link.
 export const docsGroups: { id: DocGroup; titleKey: string; sectionIds: string[] }[] = [
   { id: 'comecando', titleKey: 'docs.groupGettingStarted', sectionIds: ['instalacao', 'rodar', 'testar'] },
   { id: 'guias', titleKey: 'docs.groupGuides', sectionIds: ['payload', 'controller', 'validacao', 'erros'] },
-  { id: 'referencia', titleKey: 'docs.groupReference', sectionIds: [] },
+  { id: 'projetos', titleKey: 'docs.groupProjects', sectionIds: [] },
 ]
 
-// Project links rendered in the Referência group. Keywords feed the docs
+// Project links rendered in the Projetos group. Keywords feed the docs
 // search, which matches link text plus this field.
 export const docsProjectLinks: DocProjectLink[] = [
   { to: '/quartz', textKey: 'nav.quartz', keywords: 'http api router middleware' },
   { to: '/facet', textKey: 'nav.facet', keywords: 'validação validation schema validar' },
-  { to: '/obsidian', textKey: 'nav.obsidian', keywords: 'orm data mapper banco postgres' },
-  { to: '/pulse', textKey: 'nav.pulse', keywords: 'fila job jobs postgres' },
   { to: '/vault', textKey: 'nav.vault', keywords: 'oauth identidade login' },
 ]
 

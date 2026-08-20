@@ -1,7 +1,7 @@
 export type ProjectStatus = 'released' | 'design'
 
 export interface Project {
-  id: 'quartz' | 'facet' | 'obsidian' | 'pulse' | 'vault'
+  id: 'quartz' | 'facet' | 'vault'
   name: string
   role: string
   tagline: string
@@ -58,50 +58,6 @@ export const projects: Project[] = [
     ],
     whenNotToUse:
       'If you want ActiveRecord-style validation on mutable entities with dirty tracking, facet targets immutable structs — entity validation is a post-v1 decision.',
-  },
-  {
-    id: 'obsidian',
-    name: 'obsidian',
-    role: 'Data',
-    tagline: 'Compile-time verified relation loading — the N+1 is a build error.',
-    description:
-      'Typed data mapper for Crystal with explicit relations (ManyToOne, OneToMany) and no lazy loading ever: a relation you did not load does not compile.',
-    status: 'design',
-    repo: 'QuartzForge/obsidian',
-    accent: 'violet',
-    gap: [
-      'Avram and Marten are alive but unsatisfying; the community consensus is raw SQL plus DB::Serializable.',
-      'The ecosystem wants something that is not another ActiveRecord.',
-    ],
-    roadmap: [
-      'Annotation-declared entities and repositories',
-      'Compile-time verified loading via load: { :relation }',
-      'Transactions and unit of work',
-      'Settled entity/column annotation syntax',
-    ],
-    whenNotToUse:
-      'If you prefer raw SQL with DB::Serializable — the community default — obsidian adds a layer you may not want.',
-  },
-  {
-    id: 'pulse',
-    name: 'pulse',
-    role: 'Jobs',
-    tagline: 'Postgres-native background jobs — no Redis, no extra broker.',
-    description:
-      'Background job queue native to Postgres: SKIP LOCKED to claim, LISTEN/NOTIFY to wake. One database to operate.',
-    status: 'design',
-    repo: 'QuartzForge/pulse',
-    accent: 'emerald',
-    gap: [
-      'Redis-backed queues exist (sidekiq.cr). The gap is a Postgres-native queue.',
-    ],
-    roadmap: [
-      'Queue declaration and retries with exponential backoff',
-      'Unique jobs for a window',
-      'Worker CLI',
-    ],
-    whenNotToUse:
-      'If you already run Redis and want mature retry UIs, the existing Redis ecosystem may serve better.',
   },
   {
     id: 'vault',

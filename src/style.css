@@ -32,8 +32,7 @@
   --border: #E2E8F0;
   --input: #E2E8F0;
   --ring: #6D28D9;
-  --pkg-quartz: #6D28D9; --pkg-obsidian: #475569; --pkg-facet: #0891B2;
-  --pkg-forge: #D97706; --pkg-pulse: #16A34A; --pkg-vault: #1D4ED8;
+  --pkg-quartz: #6D28D9; --pkg-facet: #0891B2; --pkg-vault: #1D4ED8;
 }
 
 .dark {
@@ -56,8 +55,7 @@
   --border: #334155;
   --input: #334155;
   --ring: #7C3AED;
-  --pkg-quartz: #7C3AED; --pkg-obsidian: #64748B; --pkg-facet: #06B6D4;
-  --pkg-forge: #F59E0B; --pkg-pulse: #22C55E; --pkg-vault: #2563EB;
+  --pkg-quartz: #7C3AED; --pkg-facet: #06B6D4; --pkg-vault: #2563EB;
 }
 
 @theme inline {

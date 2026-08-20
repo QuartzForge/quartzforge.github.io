@@ -21,12 +21,14 @@ describe('EcosystemView', () => {
     const w = mountEco()
 
     const chips = w.findAll('[data-cat-filter]')
-    expect(chips.length).toBeGreaterThanOrEqual(6)
+    expect(chips).toHaveLength(4)
+    expect(chips.map((c) => c.text())).not.toContain('dados')
+    expect(chips.map((c) => c.text())).not.toContain('filas')
     expect(chips.map((c) => c.attributes('aria-pressed')).every((p) => p === 'false' || p === 'true')).toBe(true)
 
     const counter = w.find('[data-filter-count]')
     expect(counter.exists()).toBe(true)
-    expect(counter.text()).toContain('5')
+    expect(counter.text()).toContain('3')
 
     const table = w.find('[data-slot="table"]')
     expect(table.exists()).toBe(true)
@@ -35,27 +37,27 @@ describe('EcosystemView', () => {
 
   it('filters the cards by scope and updates the counter', async () => {
     const w = mountEco()
-    await w.find('[data-cat-filter="dados"]').trigger('click')
+    await w.find('[data-cat-filter="web"]').trigger('click')
 
     const visible = visibleCards(w)
     expect(visible).toHaveLength(1)
-    expect(visible[0].attributes('data-cat')).toBe('dados')
+    expect(visible[0].attributes('data-cat')).toBe('web')
 
     const counter = w.find('[data-filter-count]')
     expect(counter.text()).toContain('1')
-    expect(counter.text()).not.toContain('5')
+    expect(counter.text()).not.toContain('3')
   })
 
   it('marks exactly the active chip as pressed', async () => {
     const w = mountEco()
-    await w.find('[data-cat-filter="dados"]').trigger('click')
+    await w.find('[data-cat-filter="validacao"]').trigger('click')
 
     const chips = w.findAll('[data-cat-filter]')
     expect(chips.filter((c) => c.attributes('aria-pressed') === 'true')).toHaveLength(1)
-    expect(w.find('[data-cat-filter="dados"]').attributes('aria-pressed')).toBe('true')
+    expect(w.find('[data-cat-filter="validacao"]').attributes('aria-pressed')).toBe('true')
 
     await w.find('[data-cat-filter="oauth"]').trigger('click')
-    expect(w.find('[data-cat-filter="dados"]').attributes('aria-pressed')).toBe('false')
+    expect(w.find('[data-cat-filter="validacao"]').attributes('aria-pressed')).toBe('false')
     expect(w.find('[data-cat-filter="oauth"]').attributes('aria-pressed')).toBe('true')
   })
 
@@ -71,7 +73,7 @@ describe('EcosystemView', () => {
     ])
 
     const rows = w.findAll('[data-slot="table-body"] [data-slot="table-row"]')
-    expect(rows).toHaveLength(5)
+    expect(rows).toHaveLength(3)
     const first = rows[0].findAll('[data-slot="table-cell"]')
     expect(first[0].text()).toBe('quartz')
     expect(first[0].attributes('class')).toContain('font-mono')

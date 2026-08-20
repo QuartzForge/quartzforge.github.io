@@ -1,10 +1,9 @@
 # QuartzForge website
 
 The public site for the QuartzForge ecosystem: a Vue 3 single-page app built with
-Vite and Tailwind CSS 4, with internationalized content in Brazilian Portuguese
-(default) and English. It presents the QuartzForge projects (quartz, facet,
-obsidian, pulse, vault) with their real release status, documentation and
-roadmaps.
+Vite and Tailwind CSS 4, with internationalized content in English (default) and
+Brazilian Portuguese. It presents the QuartzForge projects (quartz, facet,
+vault) with their real release status, documentation and roadmaps.
 
 ## Requirements
 
@@ -67,8 +66,7 @@ fabricated version number.
   against the real modules (quartz 0.1.1, facet 0.1.0). Never invent APIs.
 - i18n covers prose and interface only. Code, file names and terminal output never
   pass through `$t()`.
-- Unreleased modules (obsidian, pulse, vault) show concept, status and roadmap —
-  zero code examples.
+- Unreleased modules (vault) show concept, status and roadmap — zero code examples.
 
 ## legacy/
 

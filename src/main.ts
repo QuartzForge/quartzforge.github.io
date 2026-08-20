@@ -7,8 +7,8 @@ import ptBR from './locales/pt-BR'
 import en from './locales/en'
 import { revealDirective } from './composables/useReveal'
 
-const savedLocale = localStorage.getItem('qf-locale') ?? 'pt-BR'
-const locale = savedLocale === 'en' ? 'en' : 'pt-BR'
+const savedLocale = localStorage.getItem('qf-locale') ?? 'en'
+const locale = savedLocale === 'pt-BR' ? 'pt-BR' : 'en'
 
 document.documentElement.classList.add('js')
 

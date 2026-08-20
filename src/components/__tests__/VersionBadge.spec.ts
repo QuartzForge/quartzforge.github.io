@@ -6,7 +6,7 @@ import ptBR from '../../locales/pt-BR'
 import en from '../../locales/en'
 
 vi.mock('../../data/versions.json', () => ({
-  default: { quartz: { version: '0.1.1', released: true }, facet: { version: '0.1.0', released: true }, obsidian: { released: false } },
+  default: { quartz: { version: '0.1.1', released: true }, facet: { version: '0.1.0', released: true }, vault: { released: false } },
 }))
 
 function mountBadge(projectId: string) {
@@ -23,7 +23,7 @@ describe('VersionBadge', () => {
   })
 
   it('shows an honest in-development pill for unreleased projects', () => {
-    const w = mountBadge('obsidian')
+    const w = mountBadge('vault')
     expect(w.get('[data-slot="badge"]').classes()).toContain('bg-secondary')
     expect(w.text()).toContain('em desenvolvimento')
   })

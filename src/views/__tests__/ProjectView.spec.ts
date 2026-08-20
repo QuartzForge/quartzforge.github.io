@@ -35,10 +35,10 @@ describe('ProjectView', () => {
     const releasedLink = released.find('[data-hero-note] a')
     expect(releasedLink.exists()).toBe(true)
     expect(releasedLink.attributes('href')).toBe('https://github.com/QuartzForge/facet')
-    const design = mountProject('pulse')
+    const design = mountProject('vault')
     const designLink = design.find('[data-hero-note] a')
     expect(designLink.exists()).toBe(false)
-    expect(design.find('[data-hero-note]').text()).toContain('QuartzForge/pulse')
+    expect(design.find('[data-hero-note]').text()).toContain('QuartzForge/vault')
   })
 
   it('shows the when-not-to-use section as a warning alert', () => {
@@ -51,7 +51,7 @@ describe('ProjectView', () => {
   })
 
   it('shows an honest in-development placeholder for design projects', () => {
-    const w = mountProject('obsidian')
+    const w = mountProject('vault')
     const placeholder = w.find('[data-placeholder]')
     expect(placeholder.exists()).toBe(true)
     expect(placeholder.text()).toContain(ptBR.project.inDevelopment)

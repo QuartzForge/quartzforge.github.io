@@ -147,7 +147,7 @@ const problemJson = `{
             >
               {{ t(s.headingKey) }}
             </a>
-            <template v-if="g.id === 'referencia'">
+            <template v-if="g.id === 'projetos'">
               <RouterLink
                 v-for="l in docsProjectLinks"
                 :key="l.to"

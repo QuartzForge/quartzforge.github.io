@@ -60,4 +60,14 @@ describe('DocsView', () => {
     const w = mountDocs()
     expect(w.findAll('#erros code').length).toBeGreaterThanOrEqual(9)
   })
+
+  it('keeps the sidebar project links to quartz, facet and vault only', () => {
+    const w = mountDocs()
+    const sidebar = w.find('[data-docs-nav]')
+    expect(sidebar.text()).not.toContain('obsidian')
+    expect(sidebar.text()).not.toContain('pulse')
+    expect(sidebar.text()).toContain('quartz')
+    expect(sidebar.text()).toContain('facet')
+    expect(sidebar.text()).toContain('vault')
+  })
 })

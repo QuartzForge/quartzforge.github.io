@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ArrowDown, ArrowRight, Boxes, Check, Clock, List, ShieldCheck, TriangleAlert } from '@lucide/vue'
+import { ArrowDown, ArrowRight, Boxes, Clock, List, ShieldCheck, TriangleAlert } from '@lucide/vue'
 import { projects, type Project } from '../data/projects'
 import versions from '../data/versions.json'
 import { quartzExample, facetExample } from '../data/examples'
 import CmdPanel from '../components/CmdPanel.vue'
 import CodeTabs from '../components/CodeTabs.vue'
-import CodeBlock from '../components/CodeBlock.vue'
 import VersionBadge from '../components/VersionBadge.vue'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader } from '../components/ui/card'
-import { Badge } from '../components/ui/badge'
 import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert'
 
 const { t, tm } = useI18n()
@@ -23,8 +21,6 @@ function listOf<T>(key: string): T {
   return tm(key) as unknown as T
 }
 
-const heroNote = computed(() => listOf<string[]>('home.heroNote'))
-const compilerPoints = computed(() => listOf<{ title: string; body: string }[]>('compiler.points'))
 const archPoints = computed(() => listOf<{ title: string; body: string }[]>('arch.points'))
 const archArrows = computed(() => listOf<string[]>('arch.arrows'))
 const principles = computed(() => listOf<{ title: string; body: string }[]>('principles.list'))
@@ -54,24 +50,12 @@ const installTabs = computed(() => {
 })
 
 // Display order comes from the handoff template, not from projects.ts.
-const pkgOrder = ['quartz', 'vault', 'pulse', 'facet', 'obsidian'] as const
+const pkgOrder = ['quartz', 'facet', 'vault'] as const
 const pkgCards = computed(() =>
   pkgOrder
     .map((id) => projects.find((p) => p.id === id))
     .filter((p): p is Project => p !== undefined),
 )
-
-// The obsidian concept demo: loading a relation that was never requested is
-// a compile error, and the error message names the missing preload.
-const compilerSource = `invoices = Invoice.query
-  .where(status: :overdue)
-  .preload(:customer)           # only customer was loaded
-  .limit(200)
-
-invoices.each do |invoice|
-  charge(invoice.customer.email)      # ✓ loaded
-  record(invoice.payments.last)       # ✗ not loaded
-end`
 </script>
 
 <template>
@@ -103,17 +87,13 @@ end`
               <RouterLink to="/ecosystem">{{ t('home.ctaEcosystem') }}</RouterLink>
             </Button>
           </div>
-
-          <p class="mt-6 font-mono text-xs text-muted-foreground">
-            <span v-for="(part, i) in heroNote" :key="i">{{ i > 0 ? ' ' : '' }}{{ part }}</span>
-          </p>
         </div>
 
         <CodeTabs v-reveal :tabs="heroTabs" />
       </div>
     </section>
 
-    <!-- ====================================================== os 5 projetos -->
+    <!-- ====================================================== os 3 projetos -->
     <section id="projetos" class="border-b border-border">
       <div class="wrap py-16">
         <div class="max-w-2xl">
@@ -124,7 +104,7 @@ end`
           <p class="mt-3 text-muted-foreground">{{ t('home.projectsBody') }}</p>
         </div>
 
-        <div v-reveal class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div v-reveal class="mt-10 grid gap-4 sm:grid-cols-2">
           <RouterLink
             v-for="p in pkgCards"
             :key="p.id"
@@ -164,60 +144,6 @@ end`
               <ArrowRight class="size-4" aria-hidden="true" />
             </p>
           </RouterLink>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================ o floreio: erro em tempo de compilação -->
-    <section id="compilador" class="border-b border-border bg-muted/40">
-      <div class="wrap py-16">
-        <div class="max-w-2xl">
-          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            {{ t('compiler.kicker') }}
-          </p>
-          <h2 class="mt-3 text-3xl font-semibold tracking-tight">{{ t('compiler.title') }}</h2>
-          <p class="mt-3 text-muted-foreground">{{ t('compiler.body') }}</p>
-        </div>
-
-        <div v-reveal class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Card class="gap-0 overflow-hidden py-0">
-            <div class="flex items-center justify-between gap-2 border-b border-border px-6 py-4">
-              <span class="truncate font-mono text-xs text-muted-foreground">src/reports/overdue.cr</span>
-              <Badge variant="secondary" data-concept-badge>{{ t('compiler.concept') }}</Badge>
-            </div>
-            <CodeBlock :code="compilerSource" :framed="false" />
-          </Card>
-
-          <div>
-            <Card class="gap-0 overflow-hidden py-0">
-              <CardHeader class="border-b border-border px-6 py-4">
-                <span class="font-mono text-xs text-muted-foreground">$ crystal build</span>
-              </CardHeader>
-              <CardContent class="p-0">
-                <pre class="overflow-x-auto p-4 font-mono text-sm leading-relaxed text-foreground/90">Compiling billing…
-
-<span class="font-semibold text-destructive">Error</span> in src/reports/overdue.cr:7:18
-
-  relation <span class="text-muted-foreground">`payments`</span> was not preloaded
-  on <span class="text-primary">Invoice::Loaded(:customer)</span>
-
-  <span class="text-muted-foreground">hint:</span> .preload(:customer, :payments)
-
-<span class="font-semibold text-destructive">1 error</span> · no binary produced</pre>
-              </CardContent>
-            </Card>
-
-            <ul class="mt-6 space-y-3">
-              <li v-for="point in compilerPoints" :key="point.title" class="flex items-start gap-3">
-                <span class="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground" aria-hidden="true">
-                  <Check class="size-3.5" />
-                </span>
-                <p class="text-sm text-muted-foreground">
-                  <span class="font-medium text-foreground">{{ point.title }}.</span> {{ point.body }}
-                </p>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
     </section>
@@ -262,24 +188,6 @@ end`
             <div class="flex items-center gap-2 py-3 font-mono text-xs text-muted-foreground">
               <ArrowDown class="size-4" aria-hidden="true" />
               {{ archArrows[1] }}
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-              <Card class="gap-0 py-4">
-                <CardContent class="py-0">
-                  <p class="font-mono text-sm font-semibold">obsidian</p>
-                  <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.obsidian') }}</p>
-                </CardContent>
-              </Card>
-              <Card class="gap-0 py-4">
-                <CardContent class="py-0">
-                  <p class="font-mono text-sm font-semibold">pulse</p>
-                  <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.pulse') }}</p>
-                </CardContent>
-              </Card>
-            </div>
-            <div class="flex items-center gap-2 py-3 font-mono text-xs text-muted-foreground">
-              <ArrowDown class="size-4" aria-hidden="true" />
-              {{ archArrows[2] }}
             </div>
             <Card class="gap-0 border-primary/30 py-4">
               <CardContent class="py-0">

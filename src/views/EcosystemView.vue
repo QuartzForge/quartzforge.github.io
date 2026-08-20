@@ -21,14 +21,12 @@ import {
 
 const { t } = useI18n()
 
-// Display order comes from the handoff template: quartz, obsidian, pulse,
-// facet, vault. Scope follows Ruling P — one identity per tool, and the chip
-// set is exactly {web, dados, validacao, filas, oauth}.
-const pkgOrder = ['quartz', 'obsidian', 'pulse', 'facet', 'vault'] as const
+// Display order comes from the handoff template: quartz, facet, vault.
+// Scope follows Ruling P — one identity per tool, and the chip set is
+// exactly {web, validacao, oauth}.
+const pkgOrder = ['quartz', 'facet', 'vault'] as const
 const scopeOf: Record<Project['id'], string> = {
   quartz: 'web',
-  obsidian: 'dados',
-  pulse: 'filas',
   facet: 'validacao',
   vault: 'oauth',
 }
@@ -42,9 +40,7 @@ const pkgCards = computed(() =>
 const filters = [
   { id: 'all', key: 'ecosystem.chipsAll' },
   { id: 'web', key: 'ecosystem.scope.web' },
-  { id: 'dados', key: 'ecosystem.scope.dados' },
   { id: 'validacao', key: 'ecosystem.scope.validacao' },
-  { id: 'filas', key: 'ecosystem.scope.filas' },
   { id: 'oauth', key: 'ecosystem.scope.oauth' },
 ]
 
@@ -60,13 +56,11 @@ function isVisible(p: Project): boolean {
 // The compatibility matrix keeps only real constraints: crystal constraint
 // comes from versions.json, license is MIT across the org, and the
 // dependency column reports what each project assumes about the environment
-// (CONTEXT.md): quartz/facet need nothing beyond the stdlib, obsidian/pulse
-// assume PostgreSQL, vault uses the stdlib HTTP client.
+// (CONTEXT.md): quartz/facet need nothing beyond the stdlib, vault uses the
+// stdlib HTTP client.
 const depsKey: Record<Project['id'], string> = {
   quartz: 'ecosystem.deps.stdlib',
   facet: 'ecosystem.deps.stdlib',
-  obsidian: 'ecosystem.deps.postgres',
-  pulse: 'ecosystem.deps.postgres',
   vault: 'ecosystem.deps.http',
 }
 </script>
@@ -86,7 +80,7 @@ const depsKey: Record<Project['id'], string> = {
       </div>
     </section>
 
-    <!-- ================================================== os cinco projetos -->
+    <!-- ================================================== os três projetos -->
     <section class="border-b border-border">
       <div class="wrap py-16">
         <div
@@ -125,8 +119,6 @@ const depsKey: Record<Project['id'], string> = {
             <CardHeader class="flex-row items-center gap-3">
               <span class="text-lg" :style="{ color: 'var(--pkg)' }" aria-hidden="true">
                 <svg v-if="p.id === 'quartz'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h10M4 17h13"/></svg>
-                <svg v-else-if="p.id === 'obsidian'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
-                <svg v-else-if="p.id === 'pulse'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>
                 <svg v-else-if="p.id === 'facet'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 13 4 4L19 7"/></svg>
                 <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
               </span>

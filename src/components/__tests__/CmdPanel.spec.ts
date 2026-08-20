@@ -6,7 +6,7 @@ import ptBR from '../../locales/pt-BR'
 import en from '../../locales/en'
 
 const tabs = [
-  { id: 'cli', label: 'cli', code: '$ forge new billing\n$ cd billing && forge dev' },
+  { id: 'cli', label: 'cli', code: '$ crystal build src/app.cr\n$ ./app' },
 ]
 
 const i18n = createI18n({ legacy: false, locale: 'pt-BR', messages: { 'pt-BR': ptBR, en } })
@@ -44,7 +44,7 @@ describe('CmdPanel', () => {
     const w = mountPanel()
     await w.find('[data-copy]').trigger('click')
     await new Promise((r) => setTimeout(r, 0))
-    expect(writeText).toHaveBeenCalledWith('forge new billing\ncd billing && forge dev')
+    expect(writeText).toHaveBeenCalledWith('crystal build src/app.cr\n./app')
   })
 
   it('falls back to execCommand when clipboard is unavailable', async () => {
