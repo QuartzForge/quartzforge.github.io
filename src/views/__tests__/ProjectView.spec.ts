@@ -18,31 +18,47 @@ function mountProject(projectId: string) {
 }
 
 describe('ProjectView', () => {
-  it('renders the hero with the hex package identity', () => {
+  it('renders the hero with the flat package glyph, h1 and mono hero note', () => {
     const w = mountProject('quartz')
-    expect(w.find('.pkg-glyph').exists()).toBe(true)
+    const glyph = w.find('[data-project-glyph]')
+    expect(glyph.exists()).toBe(true)
+    expect(glyph.attributes('style')).toContain('var(--pkg-quartz)')
     expect(w.find('h1').exists()).toBe(true)
-    expect(w.find('.hero-note').exists()).toBe(true)
+    const note = w.find('[data-hero-note]')
+    expect(note.exists()).toBe(true)
+    expect(note.text()).toContain('Crystal')
+    expect(note.text()).toContain('MIT')
   })
 
-  it('renders the when-not-to-use section as an alert', () => {
+  it('shows the when-not-to-use section as a warning alert', () => {
     const w = mountProject('quartz')
-    expect(w.find('[role="alert"]').exists()).toBe(true)
+    const alert = w.find('[data-slot="alert"]')
+    expect(alert.exists()).toBe(true)
+    expect(alert.attributes('role')).toBe('alert')
+    expect(alert.classes().join(' ')).toContain('amber')
+    expect(w.text()).toContain(ptBR.project.whenNotTitle)
   })
 
-  it('shows an honest in-development panel for design projects', () => {
+  it('shows an honest in-development placeholder for design projects', () => {
     const w = mountProject('obsidian')
-    expect(w.text()).toContain('em desenvolvimento')
-    expect(w.find('.panel').exists()).toBe(true)
+    const placeholder = w.find('[data-placeholder]')
+    expect(placeholder.exists()).toBe(true)
+    expect(placeholder.text()).toContain(ptBR.project.inDevelopment)
+    expect(placeholder.text()).toContain(ptBR.project.notYet)
+    expect(w.findComponent({ name: 'CodeTabs' }).exists()).toBe(false)
   })
 
-  it('renders the pager', () => {
+  it('renders the pager with prev and next labels', () => {
     const w = mountProject('facet')
-    expect(w.find('.pager').exists()).toBe(true)
+    const pager = w.find('[data-pager]')
+    expect(pager.exists()).toBe(true)
+    expect(pager.text()).toContain(ptBR.project.pager.prev)
+    expect(pager.text()).toContain(ptBR.project.pager.next)
   })
 
-  it('keeps the 404 branch for an unknown project', () => {
+  it('keeps the 404 branch with translated text for an unknown project', () => {
     const w = mountProject('unknown')
     expect(w.text()).toContain('404')
+    expect(w.text()).toContain(ptBR.project.notFound)
   })
 })

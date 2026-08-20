@@ -37,6 +37,7 @@ export default {
       prev: 'See the ecosystem',
       next: 'Read the documentation',
     },
+    notFound: 'Project not found',
   },
   home: {
     heroKicker: 'Full framework · Crystal ~> 1.21',
