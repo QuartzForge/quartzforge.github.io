@@ -27,30 +27,33 @@ describe('DocsView', () => {
 
   it('renders the docs shell: sidebar groups, crumb, main and pager', () => {
     const w = mountDocs()
-    expect(w.find('.docs-side').exists()).toBe(true)
-    expect(w.findAll('.docs-nav .grp').length).toBeGreaterThanOrEqual(3)
-    expect(w.find('.docs-nav').attributes('aria-label')).toBe('Documentação')
-    expect(w.find('.crumb').exists()).toBe(true)
-    expect(w.find('.pager').exists()).toBe(true)
+    expect(w.find('[data-docs-side]').exists()).toBe(true)
+    expect(w.findAll('[data-docs-nav] [data-nav-group]').length).toBeGreaterThanOrEqual(3)
+    expect(w.find('[data-docs-nav]').attributes('aria-label')).toBe(ptBR.docs.navLabel)
+    expect(w.find('[data-crumb]').exists()).toBe(true)
+    expect(w.find('[data-pager]').exists()).toBe(true)
   })
 
-  it('filters the sidebar nav by keywords and shows the empty state', async () => {
+  it('filters the sidebar nav by keywords and shows the exact empty state', async () => {
     const w = mountDocs()
     const input = w.find('#docs-search')
     await input.setValue('rota')
-    const visible = w.findAll('.docs-nav a:not([hidden])')
+    const visible = w.findAll('[data-docs-nav] a:not([hidden])')
     expect(visible.length).toBeGreaterThan(0)
     expect(visible.every((a) => a.isVisible())).toBe(true)
     await input.setValue('  zzzz-nada  ')
-    const empty = w.find('.docs-nav .empty')
-    expect(empty.isVisible()).toBe(true)
+    const empty = w.find('[data-search-empty]')
+    expect(empty.exists()).toBe(true)
     expect(empty.text()).toBe('Nenhuma página para “zzzz-nada”.')
   })
 
   it('toggles the sidebar with the mobile button', async () => {
     const w = mountDocs()
-    await w.find('[data-docs-toggle]').trigger('click')
-    expect(w.find('.docs-side').attributes('data-open')).toBe('true')
+    const toggle = w.find('[data-docs-toggle]')
+    await toggle.trigger('click')
+    expect(w.find('[data-docs-side]').attributes('data-open')).toBe('true')
+    await toggle.trigger('click')
+    expect(w.find('[data-docs-side]').attributes('data-open')).toBe('false')
   })
 
   it('renders the RFC 9457 section with the nine error types', () => {

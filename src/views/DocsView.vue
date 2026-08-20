@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ArrowLeft, ArrowRight, Menu, Search } from '@lucide/vue'
 import { docsGroups, docsProjectLinks, docsSections, type DocProjectLink, type DocSection } from '../data/docsSections'
 import { useScrollSpy } from '../composables/useScrollSpy'
 import CodeBlock from '../components/CodeBlock.vue'
+import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Separator } from '../components/ui/separator'
 
 const { t } = useI18n()
 
 // Sidebar state: data-open toggles visibility on mobile; the '/' shortcut
-// opens it and focuses the search box (js/quartzforge.js 140-195, 175-183).
+// opens it and focuses the search box.
 const sideOpen = ref(false)
 const q = ref('')
-const searchInput = ref<HTMLInputElement | null>(null)
 // Display form of the query: trimmed, but not lowercased — the match form
 // is `query`, the empty-state message shows what the user actually typed.
 const trimmedQuery = computed(() => q.value.trim())
@@ -58,7 +61,7 @@ const hits = computed(() => {
 
 function clearSearch(): void {
   q.value = ''
-  searchInput.value?.blur()
+  document.getElementById('docs-search')?.blur()
 }
 
 function onDocKeydown(ev: KeyboardEvent): void {
@@ -67,7 +70,7 @@ function onDocKeydown(ev: KeyboardEvent): void {
   if (tag === 'INPUT' || tag === 'TEXTAREA') return
   ev.preventDefault()
   sideOpen.value = true
-  searchInput.value?.focus()
+  document.getElementById('docs-search')?.focus()
 }
 
 onMounted(() => document.addEventListener('keydown', onDocKeydown))
@@ -101,126 +104,164 @@ const problemJson = `{
 </script>
 
 <template>
-  <div class="docs">
+  <div class="wrap grid lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_200px]">
     <!-- ========================================================== sidebar -->
-    <aside class="docs-side" :data-open="sideOpen">
-      <div class="search">
-        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <aside
+      data-docs-side
+      class="py-10 lg:sticky lg:top-[64px] lg:h-fit lg:max-h-[calc(100vh-64px)] lg:overflow-y-auto lg:border-r lg:border-border lg:py-14 lg:pr-8"
+      :class="sideOpen ? 'block' : 'hidden lg:block'"
+      :data-open="sideOpen"
+    >
+      <div class="relative">
+        <Search
+          class="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+          aria-hidden="true"
+        />
         <label class="sr-only" for="docs-search">{{ t('docs.searchLabel') }}</label>
-        <input
+        <Input
           id="docs-search"
-          ref="searchInput"
           v-model="q"
           type="search"
           :placeholder="t('docs.searchPlaceholder')"
+          class="pl-8 pr-12"
           autocomplete="off"
           @keydown.escape="clearSearch"
-        >
-        <kbd>/</kbd>
+        />
+        <kbd
+          class="absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-border px-1.5 font-mono text-[10px] text-muted-foreground"
+        >/</kbd>
       </div>
 
-      <nav class="docs-nav" :aria-label="t('docs.navLabel')">
-        <div v-for="g in docsGroups" :key="g.id" class="grp" :hidden="!groupVisible(g)">
-          <p>{{ t(g.titleKey) }}</p>
-          <a
-            v-for="s in groupSections(g)"
-            :key="s.id"
-            :href="`#${s.id}`"
-            :data-keywords="s.keywords"
-            :hidden="!sectionVisible(s)"
-          >
-            {{ t(s.headingKey) }}
-          </a>
-          <template v-if="g.id === 'referencia'">
-            <RouterLink
-              v-for="l in docsProjectLinks"
-              :key="l.to"
-              :to="l.to"
-              :data-keywords="l.keywords"
-              :hidden="!projectVisible(l)"
+      <nav data-docs-nav class="mt-6 flex flex-col gap-6" :aria-label="t('docs.navLabel')">
+        <div v-for="g in docsGroups" :key="g.id" data-nav-group :hidden="!groupVisible(g)">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">{{ t(g.titleKey) }}</p>
+          <div class="mt-2 flex flex-col gap-0.5">
+            <a
+              v-for="s in groupSections(g)"
+              :key="s.id"
+              :href="`#${s.id}`"
+              :hidden="!sectionVisible(s)"
+              class="rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              :class="activeId === s.id && 'bg-primary/10 font-medium text-primary'"
+              :aria-current="activeId === s.id ? 'true' : undefined"
             >
-              {{ t(l.textKey) }}
-            </RouterLink>
-            <RouterLink
-              to="/ecosystem"
-              data-keywords="matriz compatibilidade versões"
-              :hidden="!ecosystemVisible()"
-            >
-              {{ t('nav.ecosystem') }}
-            </RouterLink>
-          </template>
+              {{ t(s.headingKey) }}
+            </a>
+            <template v-if="g.id === 'referencia'">
+              <RouterLink
+                v-for="l in docsProjectLinks"
+                :key="l.to"
+                :to="l.to"
+                :hidden="!projectVisible(l)"
+                class="rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                {{ t(l.textKey) }}
+              </RouterLink>
+              <RouterLink
+                to="/ecosystem"
+                :hidden="!ecosystemVisible()"
+                class="rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                {{ t('nav.ecosystem') }}
+              </RouterLink>
+            </template>
+          </div>
         </div>
 
-        <p class="empty" :hidden="hits > 0">{{ t('docs.searchEmpty', { query: trimmedQuery }) }}</p>
+        <p
+          v-if="hits === 0"
+          data-search-empty
+          class="rounded-md border border-dashed border-border px-3 py-2 text-sm text-muted-foreground"
+        >
+          {{ t('docs.searchEmpty', { query: trimmedQuery }) }}
+        </p>
       </nav>
     </aside>
 
     <!-- ============================================================ conteúdo -->
-    <main class="docs-main">
-      <button
-        class="btn btn-ghost btn-sm only-mobile"
+    <main class="min-w-0 py-10 lg:py-14 lg:pl-10">
+      <Button
+        variant="ghost"
+        size="sm"
         data-docs-toggle
         :aria-expanded="sideOpen"
-        style="margin-bottom: 20px"
+        class="mb-6 lg:hidden"
         @click="sideOpen = !sideOpen"
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <Menu class="size-4" aria-hidden="true" />
         {{ t('docs.sidebarToggle') }}
-      </button>
+      </Button>
 
-      <p class="crumb">
+      <p data-crumb class="flex items-center gap-1.5 text-sm text-muted-foreground">
         <span>{{ t('docs.crumb') }}</span>
         <span aria-hidden="true">/</span>
         <span>{{ t(crumbGroup.titleKey) }}</span>
       </p>
-      <h1>{{ t('docs.quickStart') }}</h1>
-      <p class="lede">{{ t('docs.subtitle') }}</p>
+      <h1 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{{ t('docs.quickStart') }}</h1>
+      <p class="mt-3 max-w-[62ch] text-lg text-muted-foreground">{{ t('docs.subtitle') }}</p>
 
-      <section v-for="s in docsSections" :id="s.id" :key="s.id">
-        <h2>{{ t(s.headingKey) }}</h2>
-        <p>{{ t(s.bodyKey) }}</p>
+      <Separator class="my-10" />
 
-        <CodeBlock v-if="s.code" :code="s.code.code" :file="s.code.file" />
+      <section v-for="s in docsSections" :id="s.id" :key="s.id" class="mb-12 last:mb-0">
+        <h2 class="text-2xl font-semibold tracking-tight">{{ t(s.headingKey) }}</h2>
+        <p class="mt-3 max-w-[62ch] text-muted-foreground">{{ t(s.bodyKey) }}</p>
 
-        <!-- RFC 9457: the nine error types and a sample problem document. -->
+        <div v-if="s.code" class="mt-5">
+          <CodeBlock :code="s.code.code" :file="s.code.file" />
+        </div>
+
+        <!-- RFC 9457: a sample problem document and the nine error types. -->
         <template v-if="s.id === 'erros'">
-          <div class="panel">
-            <div class="panel-head">
-              <span class="panel-file" style="margin-inline-start: 0">application/problem+json</span>
-            </div>
-            <pre class="code">{{ problemJson }}</pre>
+          <div class="mt-5">
+            <CodeBlock :code="problemJson" lang="json" file="application/problem+json" />
           </div>
-          <ul>
-            <li v-for="type in problemTypes" :key="type">
-              <code>quartzforge.org/errors/{{ type }}</code>
-            </li>
-          </ul>
+          <div class="mt-6 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+            <code
+              v-for="type in problemTypes"
+              :key="type"
+              class="rounded-md border border-border px-2.5 py-1.5 font-mono text-xs"
+            >
+              quartzforge.org/errors/{{ type }}
+            </code>
+          </div>
         </template>
       </section>
 
-      <nav class="pager" :aria-label="t('docs.pagerLabel')">
-        <RouterLink to="/ecosystem">
-          <span class="p-dir" aria-hidden="true">←</span>
-          <span class="p-name">{{ t('docs.pager.prev') }}</span>
-        </RouterLink>
-        <RouterLink :to="docsProjectLinks[0].to" class="next">
-          <span class="p-name">{{ t('docs.pager.next') }}</span>
-          <span class="p-dir" aria-hidden="true">→</span>
-        </RouterLink>
+      <Separator class="mt-10" />
+
+      <nav data-pager class="mt-8 flex items-center justify-between gap-4" :aria-label="t('docs.pagerLabel')">
+        <Button as-child variant="outline" size="sm">
+          <RouterLink to="/ecosystem" class="flex items-center gap-2">
+            <ArrowLeft class="size-4" aria-hidden="true" />
+            {{ t('docs.pager.prev') }}
+          </RouterLink>
+        </Button>
+        <Button as-child size="sm">
+          <RouterLink :to="docsProjectLinks[0].to" class="flex items-center gap-2">
+            {{ t('docs.pager.next') }}
+            <ArrowRight class="size-4" aria-hidden="true" />
+          </RouterLink>
+        </Button>
       </nav>
     </main>
 
     <!-- ============================================================== TOC -->
-    <nav class="docs-toc" :aria-label="t('docs.onThisPage')">
-      <p class="t-title">{{ t('docs.onThisPage') }}</p>
-      <a
-        v-for="s in docsSections"
-        :key="s.id"
-        :href="`#${s.id}`"
-        :data-active="activeId === s.id ? 'true' : 'false'"
-      >
-        {{ t(s.headingKey) }}
-      </a>
+    <nav class="hidden xl:block" :aria-label="t('docs.onThisPage')">
+      <div class="sticky top-[64px] max-h-[calc(100vh-64px)] overflow-y-auto py-14 pl-6">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">{{ t('docs.onThisPage') }}</p>
+        <div class="mt-3 flex flex-col border-l border-border">
+          <a
+            v-for="s in docsSections"
+            :key="s.id"
+            :href="`#${s.id}`"
+            class="-ml-px border-l-2 border-transparent px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            :class="activeId === s.id && 'border-primary font-medium text-primary'"
+            :aria-current="activeId === s.id ? 'true' : undefined"
+          >
+            {{ t(s.headingKey) }}
+          </a>
+        </div>
+      </div>
     </nav>
   </div>
 </template>
