@@ -29,6 +29,7 @@ describe('DocsView', () => {
     const w = mountDocs()
     expect(w.find('.docs-side').exists()).toBe(true)
     expect(w.findAll('.docs-nav .grp').length).toBeGreaterThanOrEqual(3)
+    expect(w.find('.docs-nav').attributes('aria-label')).toBe('Documentação')
     expect(w.find('.crumb').exists()).toBe(true)
     expect(w.find('.pager').exists()).toBe(true)
   })
@@ -40,8 +41,10 @@ describe('DocsView', () => {
     const visible = w.findAll('.docs-nav a:not([hidden])')
     expect(visible.length).toBeGreaterThan(0)
     expect(visible.every((a) => a.isVisible())).toBe(true)
-    await input.setValue('zzzz-nada')
-    expect(w.find('.docs-nav .empty').isVisible()).toBe(true)
+    await input.setValue('  zzzz-nada  ')
+    const empty = w.find('.docs-nav .empty')
+    expect(empty.isVisible()).toBe(true)
+    expect(empty.text()).toContain('zzzz-nada')
   })
 
   it('toggles the sidebar with the mobile button', async () => {

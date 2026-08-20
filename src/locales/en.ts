@@ -192,6 +192,7 @@ export default {
     searchPlaceholder: 'Search…',
     searchLabel: 'Search the documentation',
     searchEmpty: 'No pages for “{query}”.',
+    navLabel: 'Documentation',
     sidebarToggle: 'Documentation outline',
     groupGettingStarted: 'Getting started',
     groupGuides: 'Guides',

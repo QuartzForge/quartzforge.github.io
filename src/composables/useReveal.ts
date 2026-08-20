@@ -1,4 +1,4 @@
-import type { Directive } from 'vue'
+import type { ObjectDirective } from 'vue'
 
 let revealObserver: IntersectionObserver | null = null
 
@@ -16,7 +16,7 @@ function ensureObserver() {
   )
 }
 
-export const revealDirective: Directive<HTMLElement> = {
+export const revealDirective: ObjectDirective<HTMLElement> = {
   mounted(el) {
     el.setAttribute('data-reveal', '')
     ensureObserver()

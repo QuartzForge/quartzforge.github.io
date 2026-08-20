@@ -12,6 +12,9 @@ const { t } = useI18n()
 const sideOpen = ref(false)
 const q = ref('')
 const searchInput = ref<HTMLInputElement | null>(null)
+// Display form of the query: trimmed, but not lowercased — the match form
+// is `query`, the empty-state message shows what the user actually typed.
+const trimmedQuery = computed(() => q.value.trim())
 const query = computed(() => q.value.trim().toLowerCase())
 
 const sectionsById = Object.fromEntries(docsSections.map((s) => [s.id, s])) as Record<string, DocSection>
@@ -116,7 +119,7 @@ const problemJson = `{
         <kbd>/</kbd>
       </div>
 
-      <nav class="docs-nav" aria-label="Documentação">
+      <nav class="docs-nav" :aria-label="t('docs.navLabel')">
         <div v-for="g in docsGroups" :key="g.id" class="grp" :hidden="!groupVisible(g)">
           <p>{{ t(g.titleKey) }}</p>
           <a
@@ -148,7 +151,7 @@ const problemJson = `{
           </template>
         </div>
 
-        <p class="empty" :hidden="hits > 0">{{ t('docs.searchEmpty', { query: q }) }}</p>
+        <p class="empty" :hidden="hits > 0">{{ t('docs.searchEmpty', { query: trimmedQuery }) }}</p>
       </nav>
     </aside>
 
