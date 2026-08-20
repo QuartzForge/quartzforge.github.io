@@ -6,8 +6,10 @@ import SiteHeader from '../SiteHeader.vue'
 import ptBR from '../../locales/pt-BR'
 import en from '../../locales/en'
 
-// The header watches route.path (drawer closes on navigation), so it needs a
-// real router in the mount — the app itself installs the same plugin.
+// The header watches route.path (the mobile Sheet closes on navigation), so
+// it needs a real router in the mount — the app itself installs the same
+// plugin. reka-ui dialogs render into a portal on document.body, so the
+// Sheet content is queried there, not inside the wrapper.
 function createTestRouter() {
   const blank = { template: '<div />' }
   return createRouter({
@@ -28,10 +30,21 @@ function mountHeader() {
   })
 }
 
+function sheetContent(): HTMLElement | null {
+  return document.querySelector('[data-slot="sheet-content"]')
+}
+
+// reka-ui presence runs on animation frames; wait a beat for the portal to
+// mount or unmount.
+function settle(): Promise<void> {
+  return new Promise((r) => setTimeout(r, 80))
+}
+
 describe('SiteHeader', () => {
   beforeEach(() => {
     localStorage.clear()
-    document.documentElement.removeAttribute('data-theme')
+    document.documentElement.classList.remove('dark')
+    document.body.innerHTML = ''
   })
 
   it('shows the hex brand mark and the three top-level links', () => {
@@ -50,32 +63,42 @@ describe('SiteHeader', () => {
     expect(wrapper.text()).toContain('Overview')
   })
 
-  it('toggles theme, persists and updates the document attribute', async () => {
+  it('toggles theme, persists and flips the .dark class on documentElement', async () => {
     const wrapper = mountHeader()
     await wrapper.find('[data-theme-toggle]').trigger('click')
-    expect(document.documentElement.dataset.theme).toBe('light')
-    expect(localStorage.getItem('qf-theme')).toBe('light')
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+    expect(localStorage.getItem('qf-theme')).toBe('dark')
     await wrapper.find('[data-theme-toggle]').trigger('click')
-    expect(document.documentElement.dataset.theme).toBeUndefined()
+    expect(document.documentElement.classList.contains('dark')).toBe(false)
+    expect(localStorage.getItem('qf-theme')).toBe('light')
   })
 
-  it('opens and closes the mobile drawer', async () => {
+  it('opens and closes the mobile drawer (shadcn Sheet) with top-level and project links', async () => {
     const wrapper = mountHeader()
-    expect(wrapper.find('.drawer').attributes('data-open')).toBe('false')
+    expect(sheetContent()).toBeNull()
     await wrapper.find('[data-burger]').trigger('click')
-    expect(wrapper.find('.drawer').attributes('data-open')).toBe('true')
+    await settle()
+    const content = sheetContent()
+    expect(content).not.toBeNull()
+    expect(content?.textContent).toContain('Visão geral')
+    expect(content?.textContent).toContain('Ecossistema')
+    expect(content?.textContent).toContain('Documentação')
+    expect(content?.textContent).toContain('quartz — HTTP')
+    expect(content?.textContent).toContain('facet — validação')
+    expect(content?.textContent).toContain('vault — OAuth')
     await wrapper.find('[data-burger]').trigger('click')
-    expect(wrapper.find('.drawer').attributes('data-open')).toBe('false')
+    await settle()
+    expect(sheetContent()).toBeNull()
   })
 
   it('closes the drawer when the route changes', async () => {
     const wrapper = mountHeader()
     await wrapper.find('[data-burger]').trigger('click')
-    expect(wrapper.find('.drawer').attributes('data-open')).toBe('true')
+    await settle()
+    expect(sheetContent()).not.toBeNull()
     await (wrapper.vm.$router as ReturnType<typeof createTestRouter>).push('/docs')
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('.drawer').attributes('data-open')).toBe('false')
-    expect(document.body.style.overflow).toBe('')
+    await settle()
+    expect(sheetContent()).toBeNull()
   })
 
   it('marks the active top-level link with aria-current', () => {
@@ -101,7 +124,7 @@ describe('SiteHeader', () => {
       html.indexOf('data-theme-toggle'),
       html.indexOf('github.com/QuartzForge'),
       html.indexOf('data-lang-toggle'),
-      html.indexOf('nav-cta'),
+      html.indexOf('data-nav-cta'),
       html.indexOf('data-burger'),
     ]
     expect(order.every((i) => i >= 0)).toBe(true)

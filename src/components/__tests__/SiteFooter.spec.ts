@@ -13,7 +13,7 @@ function mountFooter() {
 }
 
 describe('SiteFooter', () => {
-  it('shows brand, four columns and the bottom bar with the current year', () => {
+  it('shows brand, four sections and the bottom bar with the current year', () => {
     const wrapper = mountFooter()
     expect(wrapper.find('.brand-mark').exists()).toBe(true)
     expect(wrapper.findAll('.footer-col').length).toBe(4)

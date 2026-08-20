@@ -11,8 +11,8 @@
     <script>
       (function () {
         try {
-          var t = localStorage.getItem('qf-theme');
-          if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+          if (localStorage.getItem('qf-theme') === 'light') document.documentElement.classList.remove('dark');
+          else document.documentElement.classList.add('dark');
         } catch (e) {}
       })();
     </script>

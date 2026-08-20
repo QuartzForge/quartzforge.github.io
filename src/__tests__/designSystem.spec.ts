@@ -27,10 +27,12 @@ describe('design system contract (shadcn-vue flat palette)', () => {
     expect(html).toContain('preconnect')
   })
 
-  it('index.html bootstraps the theme before paint without flash', () => {
+  it('index.html bootstraps the .dark class before paint without flash', () => {
     const html = readFileSync(`${root}index.html`, 'utf8')
     expect(html).toMatch(/localStorage\.getItem\('qf-theme'\)/)
-    expect(html).toMatch(/data-theme.*light/)
+    expect(html).toMatch(/classList\.add\('dark'\)/)
+    expect(html).toMatch(/classList\.remove\('dark'\)/)
+    expect(html).not.toMatch(/data-theme/)
   })
 
   it('style.css declares the flat palette tokens', () => {

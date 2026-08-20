@@ -13,8 +13,8 @@ export default {
   header: {
     guide: 'Começar',
     github: 'Repositórios no GitHub',
-    lang: 'Trocar idioma',
     burger: 'Abrir menu',
+    navLabel: 'Principal',
   },
   drawer: {
     projects: 'Projetos',
@@ -25,9 +25,6 @@ export default {
   },
   project: {
     inDevelopment: 'Em desenvolvimento',
-    planned: 'planejado',
-    noExamples:
-      'API não lançada — sem exemplos de código até o primeiro release. O conteúdo abaixo é a visão de projeto.',
     gapTitle: 'A lacuna que preenche',
     whenNotTitle: 'Quando não usar',
     roadmapKicker: 'Roadmap',
@@ -135,14 +132,7 @@ export default {
     primary: 'Guia de início',
     secondary: 'Comparar os projetos',
   },
-  roadmap: {
-    title: 'Roadmap',
-    disclaimer: 'Planejado — não disponível.',
-  },
   ecosystem: {
-    title: 'Ecossistema',
-    subtitle:
-      'Cinco projetos independentes, instalados separadamente, desenhados para funcionarem juntos.',
     heroKicker: 'Ecossistema',
     heroTitle: 'Cinco projetos com escopos que não se sobrepõem.',
     heroLede:
@@ -185,10 +175,8 @@ export default {
       'obsidian, pulse e vault não lançaram v1 — a API é desenhada a partir das specs aprovadas, mas pode mudar. Esta página não documenta APIs: documenta visão e roadmap.',
   },
   docs: {
-    title: 'Documentação',
     quickStart: 'Início rápido',
     subtitle: 'Do zero a uma API rodando — os exemplos abaixo vêm dos exemplos enviados com quartz 0.1.1 e facet 0.1.0 e do README.',
-    step: 'Passo {n}',
     searchPlaceholder: 'Buscar…',
     searchLabel: 'Buscar na documentação',
     searchEmpty: 'Nenhuma página para “{query}”.',

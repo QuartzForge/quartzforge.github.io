@@ -13,8 +13,8 @@ export default {
   header: {
     guide: 'Get started',
     github: 'GitHub repositories',
-    lang: 'Change language',
     burger: 'Open menu',
+    navLabel: 'Main',
   },
   drawer: {
     projects: 'Projects',
@@ -25,9 +25,6 @@ export default {
   },
   project: {
     inDevelopment: 'In development',
-    planned: 'planned',
-    noExamples:
-      'API not released — no code examples until the first release. The content below is the project vision.',
     gapTitle: 'The gap it fills',
     whenNotTitle: 'When not to use',
     roadmapKicker: 'Roadmap',
@@ -135,14 +132,7 @@ export default {
     primary: 'Getting-started guide',
     secondary: 'Compare the projects',
   },
-  roadmap: {
-    title: 'Roadmap',
-    disclaimer: 'Planned — not available.',
-  },
   ecosystem: {
-    title: 'Ecosystem',
-    subtitle:
-      'Five independent projects, installed separately, designed to work together.',
     heroKicker: 'Ecosystem',
     heroTitle: 'Five projects with scopes that never overlap.',
     heroLede:
@@ -185,10 +175,8 @@ export default {
       'obsidian, pulse and vault have not released v1 — the API is designed from approved specs but may change. This page does not document APIs: it documents vision and roadmap.',
   },
   docs: {
-    title: 'Documentation',
     quickStart: 'Quick start',
     subtitle: 'From zero to a running API — the examples below are taken from the shipped quartz 0.1.1 and facet 0.1.0 examples and README.',
-    step: 'Step {n}',
     searchPlaceholder: 'Search…',
     searchLabel: 'Search the documentation',
     searchEmpty: 'No pages for “{query}”.',
