@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import { describe, it, expect } from 'vitest'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
+import { join } from 'node:path'
 
 // NOTE: vite rewrites `new URL(x, import.meta.url)` at transform time into a
 // resolution against a virtual `/@fs/...` path (no trailing slash), making the
@@ -9,7 +10,15 @@ import { readFileSync } from 'node:fs'
 const base = import.meta.url
 const root = new URL('../..', base).pathname
 
-describe('design system contract (handoff 5de6783c)', () => {
+function walk(dir: string): string[] {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
+    entry.isDirectory()
+      ? walk(join(dir, entry.name))
+      : [join(dir, entry.name)],
+  )
+}
+
+describe('design system contract (shadcn-vue flat palette)', () => {
   it('index.html loads Space Grotesk and Roboto Mono with preconnect', () => {
     const html = readFileSync(`${root}index.html`, 'utf8')
     expect(html).toContain('https://fonts.googleapis.com')
@@ -24,18 +33,31 @@ describe('design system contract (handoff 5de6783c)', () => {
     expect(html).toMatch(/data-theme.*light/)
   })
 
-  it('style.css declares the contract tokens', () => {
+  it('style.css declares the flat palette tokens', () => {
     const css = readFileSync(`${root}src/style.css`, 'utf8')
-    expect(css).toContain('--accent:     #7C3AED')
-    expect(css).toContain('--bg:        #0F172A')
-    expect(css).toContain('--t-kw:  hsl(219, 54%, 64%)')
-    expect(css).toContain('--code-bg:   #0B1120')
-    expect(css).toContain("--crystal-hex: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)")
+    expect(css).toContain('--primary: #7C3AED')
+    expect(css).toContain('--background: #0F172A')
+    expect(css).toContain('--pkg-quartz: #7C3AED')
+    expect(css).toMatch(/\.dark\s*\{/)
+    expect(css).not.toContain('--t-kw')
   })
 
-  it('style.css overrides tokens for the light theme and keeps code panels dark', () => {
+  it('style.css keeps the hexagonal brand mark and base behavior', () => {
     const css = readFileSync(`${root}src/style.css`, 'utf8')
-    expect(css).toMatch(/\[data-theme='light'\]\s*\{/)
-    expect(css).toMatch(/--bg:\s*#F8FAFC/)
+    expect(css).toContain('--crystal-hex: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)')
+    expect(css).toContain('[data-reveal]')
+    expect(css).toContain('scroll-padding-top')
+    expect(css).toContain('.sr-only')
+  })
+
+  it('removes all gradients from style.css and views (flat palette)', () => {
+    const files = [
+      ...walk(`${root}src`).filter((f) => f.endsWith('.vue')),
+      `${root}src/style.css`,
+    ]
+    for (const file of files) {
+      const content = readFileSync(file, 'utf8')
+      expect(content).not.toMatch(/conic-gradient|radial-gradient|linear-gradient/)
+    }
   })
 })
