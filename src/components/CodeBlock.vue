@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { bundledLanguages, getSingletonHighlighter, type BundledLanguage } from 'shiki'
+import { crystalTheme } from '../theme/crystal'
+import { useCopy } from '../composables/useCopy'
 
-const props = defineProps<{
-  code: string
-  lang?: string
-  file?: string
-}>()
-
-const { t } = useI18n()
+const props = defineProps<{ code: string; lang?: string; file?: string }>()
 
 const html = ref('')
 const failed = ref(false)
+const { copied, copy } = useCopy()
 let renderSeq = 0
 
 // Shiki v4's codeToHtml is async and its highlighter does not auto-load
@@ -23,14 +19,14 @@ async function render() {
   const seq = ++renderSeq
   const lang = props.lang ?? 'crystal'
   try {
-    const highlighter = await getSingletonHighlighter({ themes: ['github-dark'] })
+    const highlighter = await getSingletonHighlighter({ themes: [crystalTheme] })
     const requested: BundledLanguage | 'text' =
       lang in bundledLanguages ? (lang as BundledLanguage) : 'text'
     if (!highlighter.getLoadedLanguages().includes(requested)) {
       await highlighter.loadLanguage(requested)
     }
     if (seq !== renderSeq) return
-    html.value = highlighter.codeToHtml(props.code, { lang: requested, theme: 'github-dark' })
+    html.value = highlighter.codeToHtml(props.code, { lang: requested, theme: 'quartzforge' })
     failed.value = false
   } catch {
     if (seq !== renderSeq) return
@@ -39,19 +35,27 @@ async function render() {
 }
 
 watch(() => [props.code, props.lang], render, { immediate: true })
-
-function copy() {
-  navigator.clipboard.writeText(props.code)
-}
 </script>
 
 <template>
-  <div class="overflow-hidden rounded-lg border border-neutral-800 bg-neutral-900">
-    <div v-if="file" class="flex items-center justify-between border-b border-neutral-800 px-4 py-2">
-      <span class="font-mono text-xs text-neutral-500">{{ file }}</span>
-      <button class="text-xs text-neutral-400 hover:text-neutral-100" @click="copy">{{ t('code.copy') }}</button>
+  <div class="panel">
+    <div class="panel-head">
+      <span v-if="file" class="panel-file">{{ file }}</span>
+      <!-- Without a .panel-file span nothing pushes the copy button right,
+           so the button takes the margin itself. -->
+      <button
+        class="copy"
+        data-copy
+        :data-copied="copied || undefined"
+        :aria-label="copied ? 'copiado' : 'copiar'"
+        :style="{ marginInlineStart: file ? undefined : 'auto' }"
+        @click="copy(code)"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        <span>{{ copied ? 'copiado' : 'copiar' }}</span>
+      </button>
     </div>
-    <div v-if="!failed && html" class="overflow-x-auto text-sm" v-html="html" />
-    <pre v-else class="p-4 text-sm">{{ code }}</pre>
+    <div v-if="!failed && html" class="overflow-x-auto" v-html="html" />
+    <pre v-else class="code">{{ code }}</pre>
   </div>
 </template>
