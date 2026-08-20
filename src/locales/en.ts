@@ -14,6 +14,7 @@ export default {
     guide: 'Get started',
     github: 'GitHub repositories',
     lang: 'Change language',
+    burger: 'Open menu',
   },
   drawer: {
     projects: 'Projects',
@@ -31,21 +32,98 @@ export default {
     whenNotTitle: 'When not to use',
   },
   home: {
-    heroTitle: 'The ecosystem for serious Crystal APIs.',
-    heroSubtitle:
-      'QuartzForge brings together an HTTP framework, validation, data, jobs and auth — each piece independent, installed separately.',
-    installLabel: 'Installation — shard.yml',
+    heroKicker: 'Full framework · Crystal ~> 1.21',
+    heroLead: 'A whole stack, in a language',
+    markWord: 'compiled',
+    heroBody:
+      'QuartzForge brings together five official projects covering an application end to end — HTTP, validation, data, jobs and login. None of them requires the others. Together, the compiler sees the whole application.',
+    heroNote: ['MIT', '·', 'no runtime, no VM', '·', 'single binary', '·', 'Linux · macOS · FreeBSD'],
     ctaDocs: 'Read the documentation',
     ctaEcosystem: 'See the ecosystem',
-    projectsTitle: 'Projects',
-    principlesTitle: 'Principles across the ecosystem',
-    principles: [
-      { title: 'The macro only collects', body: 'No logic inside macros. The runtime is plain Crystal, with real stack traces.' },
-      { title: 'Wiring mistakes are compile errors', body: 'Unregistered dependency, conflicting route, malformed rule — the build fails naming the problem.' },
-      { title: 'No exceptions for expected flow', body: 'Validation returns a result. API errors are RFC 9457 problem+json.' },
+    projectsKicker: 'Five projects, zero scavenging',
+    projectsTitle: 'Each piece solves one scope. None forces the next.',
+    projectsBody:
+      'You can ship an API with just quartz, use facet inside a Lucky project, or drop pulse into a service that already exists. Using everything together means the compiler sees the whole application.',
+    role: {
+      quartz: 'HTTP',
+      vault: 'OAuth',
+      pulse: 'Jobs',
+      facet: 'Validation',
+      obsidian: 'Data',
+    },
+    allProjects: 'all',
+    allRole: 'Ecosystem',
+    allBody:
+      'Compatibility matrix, dependencies between the projects and what each one assumes about your database and runtime.',
+    openEcosystem: 'Open the ecosystem',
+  },
+  compiler: {
+    kicker: 'The main argument',
+    title: 'The N+1 never reaches production because it never passes the build.',
+    body:
+      'In almost every ORM, a forgotten preload is a problem that only shows up under load. In obsidian, the query returns a type that only knows the relations you loaded — touching any other is a compile error.',
+    concept: 'concept',
+    points: [
+      { title: 'The message already carries the fix', body: 'The compiler knows which preload is missing because it built the type.' },
+      { title: 'It works for the editor too', body: 'The same type feeds autocomplete: unloaded relations do not appear in the list.' },
+      { title: 'No hidden lazy loading', body: 'There is no silent fallback that fires a query inside a loop.' },
     ],
-    roadmapTitle: 'What is next',
-    roadmapSubtitle: 'In development — API not released, subject to change.',
+  },
+  arch: {
+    kicker: 'How the pieces fit together',
+    title: 'Coupling by contract, not by inheritance.',
+    body:
+      'The projects know each other through small interfaces. quartz accepts any validator that answers #validate; pulse uses the same connection obsidian already opened. Swapping one piece does not break the others.',
+    diag: {
+      lead: 'takes the request, routes, responds',
+      facet: 'validates and returns a type',
+      vault: 'user identity',
+      obsidian: 'reads and writes, relations verified',
+      pulse: 'queues what is slow',
+      pg: 'data and queue in one place',
+    },
+    arrows: ['raw body', 'typed value', 'same connection'],
+    points: [
+      { title: 'One binary for everything', body: 'API, worker, migrations and scheduled tasks come from the same build. Deploy is copying a file.' },
+      { title: 'One infrastructure dependency', body: 'Postgres. The queue lives in it, sessions can live in it, and no Redis is required along the way.' },
+      { title: 'No runtime discovery', body: 'Routes, columns and jobs are resolved at compile time. No directory scanning at boot.' },
+      { title: 'Macros only where they pay off', body: 'Metaprogramming stays in schema and column definitions. The rest is plain Crystal the LSP understands.' },
+    ],
+    link: 'See the compatibility matrix',
+  },
+  principles: {
+    kicker: 'Principles',
+    title: 'Four decisions that explain the rest.',
+    list: [
+      { title: 'Explicit > automatic magic', body: 'No file is loaded by naming convention. If something runs, it is written somewhere you can open.' },
+      { title: 'The type is the documentation', body: 'Signatures carry the intent. A Facet::Valid(NewInvoice) needs no comment explaining what already passed.' },
+      { title: 'Each piece lives alone', body: 'No project depends on another QuartzForge project to work. Adopting one does not force adopting five.' },
+      { title: 'Errors are data, not exceptions', body: 'Validation, OAuth and persistence return results that the case statement forces you to handle.' },
+    ],
+  },
+  proof: {
+    kicker: 'Proof, not promise',
+    title: 'Named workloads, numbers only after CI.',
+    body:
+      'We do not publish benchmarks until the harness runs on neutral hardware and the result is reproducible by anyone. Until then, the rows below stay blank.',
+    rows: [
+      'Simple JSON API, 1 route, no database',
+      'List 500 records with two preloaded relations',
+      'Enqueue and process 10k jobs in Postgres',
+      'Clean build of the example project, no cache',
+    ],
+    pending: '— awaiting CI',
+    noteTitle: 'Why the fields are empty',
+    noteBody:
+      'A number without methodology is marketing. The rows above stay blank until the quartzforge/benchmarks repository publishes CI-signed results with declared hardware and compiler version.',
+  },
+  cta: {
+    kicker: 'Start with the scope that hurts today',
+    title: 'Adopt one project. Adopt all five. Same door.',
+    body:
+      'The getting-started guide takes about ten minutes and ends with a running API, a validating schema and an applied migration.',
+    primary: 'Getting-started guide',
+    secondary: 'Compare the projects',
   },
   roadmap: {
     title: 'Roadmap',

@@ -14,6 +14,7 @@ export default {
     guide: 'Começar',
     github: 'Repositórios no GitHub',
     lang: 'Trocar idioma',
+    burger: 'Abrir menu',
   },
   drawer: {
     projects: 'Projetos',
@@ -31,21 +32,98 @@ export default {
     whenNotTitle: 'Quando não usar',
   },
   home: {
-    heroTitle: 'O ecossistema para APIs sérias em Crystal.',
-    heroSubtitle:
-      'QuartzForge reúne framework HTTP, validação, dados, filas e autenticação — cada peça independente, instalada separadamente.',
-    installLabel: 'Instalação — shard.yml',
+    heroKicker: 'Framework completo · Crystal ~> 1.21',
+    heroLead: 'Uma stack inteira, numa linguagem',
+    markWord: 'compilada',
+    heroBody:
+      'QuartzForge reúne cinco projetos oficiais que cobrem o caminho inteiro de uma aplicação — HTTP, validação, dados, filas e login. Nenhum deles exige os outros. Juntos, o compilador enxerga a aplicação de ponta a ponta.',
+    heroNote: ['MIT', '·', 'sem runtime, sem VM', '·', 'binário único', '·', 'Linux · macOS · FreeBSD'],
     ctaDocs: 'Ler a documentação',
     ctaEcosystem: 'Ver o ecossistema',
-    projectsTitle: 'Projetos',
-    principlesTitle: 'Princípios que atravessam o ecossistema',
-    principles: [
-      { title: 'A macro só coleta', body: 'Nenhuma lógica dentro de macro. O runtime é Crystal comum, com stack traces de verdade.' },
-      { title: 'Wiring errado é erro de compilação', body: 'Dependência não registrada, rota conflitante, regra malformada — o build falha nomeando o problema.' },
-      { title: 'Sem exceção para fluxo esperado', body: 'Validação devolve um resultado. Erros de API são problem+json RFC 9457.' },
+    projectsKicker: 'Cinco projetos, zero garimpo',
+    projectsTitle: 'Cada peça resolve um escopo. Nenhuma obriga a próxima.',
+    projectsBody:
+      'Você pode subir uma API só com quartz, usar facet dentro de um projeto Lucky, ou colocar pulse num serviço que já existe. O ganho de usar tudo junto é o compilador enxergar a aplicação inteira.',
+    role: {
+      quartz: 'HTTP',
+      vault: 'OAuth',
+      pulse: 'Filas',
+      facet: 'Validação',
+      obsidian: 'Dados',
+    },
+    allProjects: 'todos',
+    allRole: 'Ecossistema',
+    allBody:
+      'Matriz de compatibilidade, dependências entre os projetos e o que cada um assume do seu banco e do seu runtime.',
+    openEcosystem: 'Abrir ecossistema',
+  },
+  compiler: {
+    kicker: 'O argumento principal',
+    title: 'O N+1 não chega em produção porque não passa do build.',
+    body:
+      'Em quase toda ORM, esquecer um preload é um problema que só aparece sob carga. Em obsidian, a query devolve um tipo que só conhece as relações que você carregou — acessar qualquer outra é erro de compilação.',
+    concept: 'conceito',
+    points: [
+      { title: 'A mensagem já traz a correção', body: 'O compilador sabe qual preload falta porque ele montou o tipo.' },
+      { title: 'Vale para o editor também', body: 'O mesmo tipo alimenta o autocompletar: relações não carregadas não aparecem na lista.' },
+      { title: 'Sem lazy loading escondido', body: 'Não existe fallback silencioso que dispara uma query dentro de um laço.' },
     ],
-    roadmapTitle: 'O que vem',
-    roadmapSubtitle: 'Em desenvolvimento — API não lançada, sujeita a mudança.',
+  },
+  arch: {
+    kicker: 'Como as peças se encaixam',
+    title: 'Acoplamento por contrato, não por herança.',
+    body:
+      'Os projetos se conhecem por interfaces pequenas. quartz aceita qualquer validador que responda a #validate; pulse usa a mesma conexão que obsidian já abriu. Trocar uma peça não derruba as outras.',
+    diag: {
+      lead: 'recebe a requisição, roteia, responde',
+      facet: 'valida e devolve tipo',
+      vault: 'identidade do usuário',
+      obsidian: 'lê e grava, relações verificadas',
+      pulse: 'enfileira o que é lento',
+      pg: 'dados e fila no mesmo lugar',
+    },
+    arrows: ['body cru', 'valor tipado', 'mesma conexão'],
+    points: [
+      { title: 'Um binário para tudo', body: 'API, worker, migrações e tarefas agendadas saem do mesmo build. O deploy é copiar um arquivo.' },
+      { title: 'Uma dependência de infra', body: 'Postgres. A fila mora nele, as sessões podem morar nele, e não há Redis obrigatório no caminho.' },
+      { title: 'Sem descoberta em runtime', body: 'Rotas, colunas e jobs são resolvidos na compilação. Não há varredura de diretórios no boot.' },
+      { title: 'Macros só onde valem a pena', body: 'Metaprogramação fica nas definições de schema e coluna. O resto é Crystal comum, que o LSP entende.' },
+    ],
+    link: 'Ver a matriz de compatibilidade',
+  },
+  principles: {
+    kicker: 'Princípios',
+    title: 'Quatro decisões que explicam o resto.',
+    list: [
+      { title: 'Explícito > automágico', body: 'Nenhum arquivo é carregado por convenção de nome. Se algo roda, está escrito em algum lugar que você pode abrir.' },
+      { title: 'O tipo é a documentação', body: 'Assinaturas carregam a intenção. Um Facet::Valid(NovaFatura) não precisa de comentário explicando o que já passou.' },
+      { title: 'Cada peça vive sozinha', body: 'Nenhum projeto depende de outro do QuartzForge para funcionar. Adotar um não obriga a adotar cinco.' },
+      { title: 'Erro é dado, não exceção', body: 'Validação, OAuth e persistência devolvem resultados que o case obriga você a tratar.' },
+    ],
+  },
+  proof: {
+    kicker: 'Prova, não promessa',
+    title: 'Cargas nomeadas, números só depois do CI.',
+    body:
+      'Não publicamos comparativos até o harness rodar em máquina neutra e o resultado estar reproduzível por qualquer pessoa. Enquanto isso, as linhas abaixo ficam com traço.',
+    rows: [
+      'API JSON simples, 1 rota, sem banco',
+      'Listar 500 registros com duas relações pré-carregadas',
+      'Enfileirar e processar 10 mil jobs em Postgres',
+      'Build limpo do projeto de exemplo, sem cache',
+    ],
+    pending: '— aguardando CI',
+    noteTitle: 'Por que os campos estão vazios',
+    noteBody:
+      'Um número sem metodologia é marketing. As linhas acima ficam com traço até o repositório quartzforge/benchmarks publicar os resultados assinados pelo CI, com hardware e versão de compilador declarados.',
+  },
+  cta: {
+    kicker: 'Comece pelo escopo que dói hoje',
+    title: 'Adote um projeto. Adote os cinco. A porta é a mesma.',
+    body:
+      'O guia de início leva cerca de dez minutos e termina com uma API rodando, um schema validando e uma migração aplicada.',
+    primary: 'Guia de início',
+    secondary: 'Comparar os projetos',
   },
   roadmap: {
     title: 'Roadmap',

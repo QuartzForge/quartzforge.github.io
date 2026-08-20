@@ -74,7 +74,7 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
           <span class="mono">{{ locale === 'en' ? 'pt' : 'en' }}</span>
         </button>
         <RouterLink to="/docs" class="btn btn-primary btn-sm nav-cta">{{ t('header.guide') }}</RouterLink>
-        <button class="icon-btn nav-burger" data-burger :aria-expanded="open ? 'true' : 'false'" aria-controls="drawer" aria-label="Abrir menu" @click="toggleDrawer">
+        <button class="icon-btn nav-burger" data-burger :aria-expanded="open ? 'true' : 'false'" aria-controls="drawer" :aria-label="t('header.burger')" @click="toggleDrawer">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
       </div>
