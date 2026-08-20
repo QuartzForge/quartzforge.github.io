@@ -49,14 +49,6 @@ describe('HomeView', () => {
     expect(w.text()).not.toContain('MIT ·')
   })
 
-  it('shows the proof rows waiting for CI and the honest warning alert', () => {
-    const w = mountHome()
-    expect(w.text()).toContain('aguardando o CI')
-    const alert = w.find('[role="alert"]')
-    expect(alert.exists()).toBe(true)
-    expect(alert.text()).toContain('Por que os campos estão vazios')
-  })
-
   it('renders no decorative facet or gradient', () => {
     const w = mountHome()
     expect(w.find('.facet').exists()).toBe(false)

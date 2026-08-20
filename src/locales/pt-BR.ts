@@ -84,22 +84,6 @@ export default {
       { title: 'Erro é dado, não exceção', body: 'Validação, OAuth e persistência devolvem resultados que o case obriga você a tratar.' },
     ],
   },
-  proof: {
-    kicker: 'Prova, não promessa',
-    title: 'Cargas nomeadas, números só depois do CI.',
-    body:
-      'Não publicamos comparativos até o harness rodar em máquina neutra e o resultado estar reproduzível por qualquer pessoa. Enquanto isso, as linhas abaixo aguardam o CI.',
-    rows: [
-      'API JSON simples, 1 rota, sem banco',
-      'Validar 10 mil payloads de cadastro',
-      'Fluxo de login OAuth com PKCE',
-      'Build limpo do projeto de exemplo, sem cache',
-    ],
-    pending: 'aguardando o CI',
-    noteTitle: 'Por que os campos estão vazios',
-    noteBody:
-      'Um número sem metodologia é marketing. As linhas acima aguardam um harness neutro publicar resultados assinados pelo CI, com hardware e versão de compilador declarados, reproduzíveis por qualquer pessoa.',
-  },
   cta: {
     kicker: 'Comece pelo escopo que dói hoje',
     title: 'Adote um projeto. Adote os três. A porta é a mesma.',

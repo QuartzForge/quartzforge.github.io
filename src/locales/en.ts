@@ -84,22 +84,6 @@ export default {
       { title: 'Errors are data, not exceptions', body: 'Validation, OAuth and persistence return results that the case statement forces you to handle.' },
     ],
   },
-  proof: {
-    kicker: 'Proof, not promise',
-    title: 'Named workloads, numbers only after CI.',
-    body:
-      'We do not publish benchmarks until the harness runs on neutral hardware and the result is reproducible by anyone. Until then, the rows below await CI.',
-    rows: [
-      'Simple JSON API, 1 route, no database',
-      'Validate 10k signup payloads',
-      'OAuth login flow with PKCE',
-      'Clean build of the example project, no cache',
-    ],
-    pending: 'awaiting CI',
-    noteTitle: 'Why the fields are empty',
-    noteBody:
-      'A number without methodology is marketing. The rows above wait for a neutral harness to publish CI-signed results with declared hardware and compiler version, reproducible by anyone.',
-  },
   cta: {
     kicker: 'Start with the scope that hurts today',
     title: 'Adopt one project. Adopt all three. Same door.',

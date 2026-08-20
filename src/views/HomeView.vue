@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ArrowDown, ArrowRight, Boxes, Clock, List, ShieldCheck, TriangleAlert } from '@lucide/vue'
+import { ArrowDown, ArrowRight, Boxes, Clock, List, ShieldCheck } from '@lucide/vue'
 import { projects, type Project } from '../data/projects'
 import versions from '../data/versions.json'
 import { quartzExample, facetExample } from '../data/examples'
@@ -10,7 +10,6 @@ import CodeTabs from '../components/CodeTabs.vue'
 import VersionBadge from '../components/VersionBadge.vue'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader } from '../components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert'
 
 const { t, tm } = useI18n()
 
@@ -24,7 +23,6 @@ function listOf<T>(key: string): T {
 const archPoints = computed(() => listOf<{ title: string; body: string }[]>('arch.points'))
 const archArrows = computed(() => listOf<string[]>('arch.arrows'))
 const principles = computed(() => listOf<{ title: string; body: string }[]>('principles.list'))
-const proofRows = computed(() => listOf<string[]>('proof.rows'))
 
 const heroTabs = [
   { label: 'quartz', file: 'src/app.cr', code: quartzExample },
