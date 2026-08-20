@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { Check, Copy } from '@lucide/vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import CodeBlock from './CodeBlock.vue'
+import { Button } from './ui/button'
+import { useCopy } from '../composables/useCopy'
 
 const props = defineProps<{ tabs: { label: string; file: string; code: string }[] }>()
+
+const { t } = useI18n()
+const { copied, copy } = useCopy()
 
 const active = ref(props.tabs[0]?.label ?? '')
 const activeTab = computed(() => props.tabs.find((t) => t.label === active.value) ?? props.tabs[0])
@@ -18,16 +25,30 @@ const activeTab = computed(() => props.tabs.find((t) => t.label === active.value
             {{ tab.label }}
           </TabsTrigger>
         </TabsList>
-        <span
-          v-if="activeTab"
-          class="font-mono text-xs text-muted-foreground truncate"
-          data-panel-label
-        >
-          {{ activeTab.file }}
-        </span>
+        <div class="flex min-w-0 items-center gap-2">
+          <span
+            v-if="activeTab"
+            class="font-mono text-xs text-muted-foreground truncate"
+            data-panel-label
+          >
+            {{ activeTab.file }}
+          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            data-copy
+            :data-copied="copied || undefined"
+            :aria-label="copied ? t('code.copied') : t('code.copy')"
+            @click="copy(activeTab?.code ?? '')"
+          >
+            <Check v-if="copied" aria-hidden="true" />
+            <Copy v-else aria-hidden="true" />
+            <span>{{ copied ? t('code.copied') : t('code.copy') }}</span>
+          </Button>
+        </div>
       </div>
       <TabsContent v-for="tab in tabs" :key="tab.label" :value="tab.label">
-        <CodeBlock :code="tab.code" :file="tab.file" />
+        <CodeBlock :code="tab.code" :framed="false" />
       </TabsContent>
     </Tabs>
   </div>

@@ -8,7 +8,10 @@ import { useCopy } from '../composables/useCopy'
 
 const { t } = useI18n()
 
-const props = defineProps<{ code: string; lang?: string; file?: string }>()
+const props = withDefaults(
+  defineProps<{ code: string; lang?: string; file?: string; framed?: boolean }>(),
+  { framed: true },
+)
 
 const html = ref('')
 const failed = ref(false)
@@ -45,24 +48,32 @@ watch(() => [props.code, props.lang], render, { immediate: true })
 </script>
 
 <template>
-  <div class="border border-border bg-card rounded-lg overflow-hidden">
-    <div class="flex items-center gap-2 px-4 py-2 border-b border-border">
-      <span v-if="file" class="font-mono text-xs text-muted-foreground truncate">{{ file }}</span>
-      <Button
-        variant="ghost"
-        size="sm"
-        class="ms-auto"
-        data-copy
-        :data-copied="copied || undefined"
-        :aria-label="copied ? t('code.copied') : t('code.copy')"
-        @click="copy(code)"
-      >
-        <Check v-if="copied" aria-hidden="true" />
-        <Copy v-else aria-hidden="true" />
-        <span>{{ copied ? t('code.copied') : t('code.copy') }}</span>
-      </Button>
+  <template v-if="framed">
+    <div class="border border-border bg-card rounded-lg overflow-hidden">
+      <div class="flex items-center gap-2 px-4 py-2 border-b border-border">
+        <span v-if="file" class="font-mono text-xs text-muted-foreground truncate">{{ file }}</span>
+        <Button
+          variant="ghost"
+          size="sm"
+          class="ms-auto"
+          data-copy
+          :data-copied="copied || undefined"
+          :aria-label="copied ? t('code.copied') : t('code.copy')"
+          @click="copy(code)"
+        >
+          <Check v-if="copied" aria-hidden="true" />
+          <Copy v-else aria-hidden="true" />
+          <span>{{ copied ? t('code.copied') : t('code.copy') }}</span>
+        </Button>
+      </div>
+      <div v-if="!failed && html" class="p-4 overflow-x-auto" v-html="html" />
+      <pre v-else class="p-4 overflow-x-auto bg-transparent font-mono text-sm text-foreground/90">{{ code }}</pre>
     </div>
-    <div v-if="!failed && html" class="p-4 overflow-x-auto" v-html="html" />
-    <pre v-else class="p-4 overflow-x-auto bg-transparent font-mono text-sm text-foreground/90">{{ code }}</pre>
+  </template>
+  <!-- Unframed: the caller owns the frame, the file label and the copy
+       action (CodeTabs, shadcn Cards) — this renders the bare code body. -->
+  <div v-else class="overflow-x-auto p-4">
+    <div v-if="!failed && html" v-html="html" />
+    <pre v-else class="bg-transparent font-mono text-sm text-foreground/90">{{ code }}</pre>
   </div>
 </template>

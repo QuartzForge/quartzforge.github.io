@@ -4,7 +4,7 @@ import SiteFooter from './components/SiteFooter.vue'
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral-950 text-neutral-100">
+  <div class="min-h-screen bg-background text-foreground">
     <SiteHeader />
     <main>
       <RouterView />

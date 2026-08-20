@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ArrowDown, ArrowRight, Boxes, Check, Clock, List, ShieldCheck, TriangleAlert } from '@lucide/vue'
 import { projects, type Project } from '../data/projects'
 import versions from '../data/versions.json'
 import { quartzExample, facetExample } from '../data/examples'
 import CmdPanel from '../components/CmdPanel.vue'
 import CodeTabs from '../components/CodeTabs.vue'
-import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert'
+import CodeBlock from '../components/CodeBlock.vue'
 import VersionBadge from '../components/VersionBadge.vue'
+import { Button } from '../components/ui/button'
+import { Card, CardContent, CardHeader } from '../components/ui/card'
+import { Badge } from '../components/ui/badge'
+import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert'
 
 const { t, tm } = useI18n()
 
@@ -55,31 +60,52 @@ const pkgCards = computed(() =>
     .map((id) => projects.find((p) => p.id === id))
     .filter((p): p is Project => p !== undefined),
 )
+
+// The obsidian concept demo: loading a relation that was never requested is
+// a compile error, and the error message names the missing preload.
+const compilerSource = `invoices = Invoice.query
+  .where(status: :overdue)
+  .preload(:customer)           # only customer was loaded
+  .limit(200)
+
+invoices.each do |invoice|
+  charge(invoice.customer.email)      # ✓ loaded
+  record(invoice.payments.last)       # ✗ not loaded
+end`
 </script>
 
 <template>
   <div>
     <!-- ============================================================= hero -->
-    <section class="hero">
-      <span class="facet" aria-hidden="true"></span>
-      <div class="wrap hero-grid">
+    <section class="border-b border-border">
+      <div class="wrap grid gap-10 py-16 lg:grid-cols-2 lg:items-center lg:gap-14 lg:py-24">
         <div>
-          <p class="kicker">{{ t('home.heroKicker') }}</p>
-          <h1>{{ t('home.heroLead') }} <span class="mark">{{ t('home.markWord') }}</span>.</h1>
-          <p class="lede">{{ t('home.heroBody') }}</p>
+          <p data-hero-kicker class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {{ t('home.heroKicker') }}
+          </p>
+          <h1 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+            {{ t('home.heroLead') }} <span class="text-primary">{{ t('home.markWord') }}</span>.
+          </h1>
+          <p class="mt-5 max-w-[62ch] text-lg text-muted-foreground">{{ t('home.heroBody') }}</p>
 
-          <CmdPanel :tabs="installTabs" />
-
-          <div class="hero-actions">
-            <RouterLink to="/docs" class="btn btn-primary">
-              {{ t('home.ctaDocs') }}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </RouterLink>
-            <RouterLink to="/ecosystem" class="btn btn-ghost">{{ t('home.ctaEcosystem') }}</RouterLink>
+          <div data-panel-cmd class="mt-8">
+            <CmdPanel :tabs="installTabs" />
           </div>
 
-          <p class="hero-note">
-            <span v-for="(part, i) in heroNote" :key="i">{{ part }}</span>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <Button as-child>
+              <RouterLink to="/docs">
+                {{ t('home.ctaDocs') }}
+                <ArrowRight class="size-4" aria-hidden="true" />
+              </RouterLink>
+            </Button>
+            <Button variant="outline" as-child>
+              <RouterLink to="/ecosystem">{{ t('home.ctaEcosystem') }}</RouterLink>
+            </Button>
+          </div>
+
+          <p class="mt-6 font-mono text-xs text-muted-foreground">
+            <span v-for="(part, i) in heroNote" :key="i">{{ i > 0 ? ' ' : '' }}{{ part }}</span>
           </p>
         </div>
 
@@ -88,101 +114,107 @@ const pkgCards = computed(() =>
     </section>
 
     <!-- ====================================================== os 5 projetos -->
-    <section class="section" id="projetos">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="kicker">{{ t('home.projectsKicker') }}</p>
-          <h2>{{ t('home.projectsTitle') }}</h2>
-          <p>{{ t('home.projectsBody') }}</p>
+    <section id="projetos" class="border-b border-border">
+      <div class="wrap py-16">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {{ t('home.projectsKicker') }}
+          </p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-tight">{{ t('home.projectsTitle') }}</h2>
+          <p class="mt-3 text-muted-foreground">{{ t('home.projectsBody') }}</p>
         </div>
 
-        <div v-reveal class="grid grid-3">
+        <div v-reveal class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <RouterLink
             v-for="p in pkgCards"
             :key="p.id"
             :to="`/${p.id}`"
-            class="card pkg"
+            data-pkg-card
+            class="flex flex-col gap-4 rounded-xl border border-border bg-card p-6 shadow-sm transition-colors hover:border-primary/40"
             :style="{ '--pkg': `var(--pkg-${p.id})` }"
           >
-            <div class="pkg-top">
-              <span class="pkg-glyph" aria-hidden="true">
-                <svg v-if="p.id === 'quartz'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h10M4 17h13"/></svg>
-                <svg v-else-if="p.id === 'vault'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-                <svg v-else-if="p.id === 'pulse'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>
-                <svg v-else-if="p.id === 'facet'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 13 4 4L19 7"/></svg>
-                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
-              </span>
-              <div>
-                <div class="pkg-name">{{ p.name }}</div>
-                <div class="pkg-role">{{ t(`home.role.${p.id}`) }}</div>
-              </div>
+            <span class="h-0.5 w-10 rounded-full" :style="{ background: 'var(--pkg)' }" aria-hidden="true"></span>
+            <div>
+              <p class="font-semibold">{{ p.name }}</p>
+              <p class="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                {{ t(`home.role.${p.id}`) }}
+              </p>
             </div>
-            <p>{{ p.description }}</p>
-            <div class="pkg-meta"><VersionBadge :project-id="p.id" /></div>
+            <p class="text-sm text-muted-foreground">{{ p.description }}</p>
+            <div class="mt-auto flex items-center gap-2">
+              <VersionBadge :project-id="p.id" />
+            </div>
           </RouterLink>
 
-          <RouterLink to="/ecosystem" class="card pkg" style="--pkg: var(--muted)">
-            <div class="pkg-top">
-              <span class="pkg-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 17.5h7M17.5 14v7"/></svg></span>
-              <div>
-                <div class="pkg-name">{{ t('home.allProjects') }}</div>
-                <div class="pkg-role">{{ t('home.allRole') }}</div>
-              </div>
+          <RouterLink
+            to="/ecosystem"
+            data-pkg-card
+            class="flex flex-col gap-4 rounded-xl border border-border bg-card p-6 shadow-sm transition-colors hover:border-primary/40"
+          >
+            <span class="h-0.5 w-10 rounded-full bg-muted-foreground/40" aria-hidden="true"></span>
+            <div>
+              <p class="font-semibold">{{ t('home.allProjects') }}</p>
+              <p class="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                {{ t('home.allRole') }}
+              </p>
             </div>
-            <p>{{ t('home.allBody') }}</p>
-            <div class="pkg-meta"><span class="link-arrow">{{ t('home.openEcosystem') }} <span aria-hidden="true">→</span></span></div>
+            <p class="text-sm text-muted-foreground">{{ t('home.allBody') }}</p>
+            <p class="mt-auto inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+              {{ t('home.openEcosystem') }}
+              <ArrowRight class="size-4" aria-hidden="true" />
+            </p>
           </RouterLink>
         </div>
       </div>
     </section>
 
     <!-- ============================ o floreio: erro em tempo de compilação -->
-    <section class="section section-tint" id="compilador">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="kicker">{{ t('compiler.kicker') }}</p>
-          <h2>{{ t('compiler.title') }}</h2>
-          <p>{{ t('compiler.body') }}</p>
+    <section id="compilador" class="border-b border-border bg-muted/40">
+      <div class="wrap py-16">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {{ t('compiler.kicker') }}
+          </p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-tight">{{ t('compiler.title') }}</h2>
+          <p class="mt-3 text-muted-foreground">{{ t('compiler.body') }}</p>
         </div>
 
-        <div v-reveal class="split">
-          <div class="panel">
-            <div class="panel-head">
-              <span class="panel-file" style="margin-inline-start:0; padding-block:11px">src/reports/overdue.cr</span>
-              <span class="pill pill-warn" style="margin-inline-start:auto">{{ t('compiler.concept') }}</span>
+        <div v-reveal class="mt-10 grid gap-6 lg:grid-cols-2">
+          <Card class="gap-0 overflow-hidden py-0">
+            <div class="flex items-center justify-between gap-2 border-b border-border px-6 py-4">
+              <span class="truncate font-mono text-xs text-muted-foreground">src/reports/overdue.cr</span>
+              <Badge variant="secondary" data-concept-badge>{{ t('compiler.concept') }}</Badge>
             </div>
-            <pre class="code"><code>invoices = <span class="t-cls">Invoice</span>.query
-  .<span class="t-fn">where</span>(status: <span class="t-sym">:overdue</span>)
-  .<span class="t-fn">preload</span>(<span class="t-sym">:customer</span>)           <span class="t-cm"># only customer was loaded</span>
-  .<span class="t-fn">limit</span>(<span class="t-num">200</span>)
-
-invoices.<span class="t-fn">each</span> <span class="t-kw">do</span> |invoice|
-<span class="line-ok">  charge(invoice.customer.email)      <span class="t-cm"># ✓ loaded</span></span>
-<span class="line-bad">  record(invoice.<span class="bad">payments</span>.last)      <span class="t-cm"># ✗ not loaded</span></span>
-<span class="t-kw">end</span></code></pre>
-          </div>
+            <CodeBlock :code="compilerSource" :framed="false" />
+          </Card>
 
           <div>
-            <div class="panel">
-              <div class="panel-head">
-                <span class="panel-file" style="margin-inline-start:0; padding-block:11px">$ crystal build</span>
-              </div>
-              <pre class="code"><code><span class="t-cm">Compiling billing…</span>
+            <Card class="gap-0 overflow-hidden py-0">
+              <CardHeader class="border-b border-border px-6 py-4">
+                <span class="font-mono text-xs text-muted-foreground">$ crystal build</span>
+              </CardHeader>
+              <CardContent class="p-0">
+                <pre class="overflow-x-auto p-4 font-mono text-sm leading-relaxed text-foreground/90">Compiling billing…
 
-<span style="color:var(--danger)">Error</span> in src/reports/overdue.cr:<span class="t-num">7</span>:<span class="t-num">18</span>
+<span class="font-semibold text-destructive">Error</span> in src/reports/overdue.cr:7:18
 
-  relation <span class="t-str">`payments`</span> was not preloaded
-  on <span class="t-cls">Invoice::Loaded(:customer)</span>
+  relation <span class="text-muted-foreground">`payments`</span> was not preloaded
+  on <span class="text-primary">Invoice::Loaded(:customer)</span>
 
-  <span class="t-cm">hint:</span> .preload(<span class="t-sym">:customer</span>, <span class="t-sym">:payments</span>)
+  <span class="text-muted-foreground">hint:</span> .preload(:customer, :payments)
 
-<span style="color:var(--danger)">1 error</span> · no binary produced</code></pre>
-            </div>
+<span class="font-semibold text-destructive">1 error</span> · no binary produced</pre>
+              </CardContent>
+            </Card>
 
-            <ul class="feature-list" style="margin-top: 26px">
-              <li v-for="point in compilerPoints" :key="point.title">
-                <span class="fl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 13 4 4L19 7"/></svg></span>
-                <span><strong>{{ point.title }}</strong>{{ point.body }}</span>
+            <ul class="mt-6 space-y-3">
+              <li v-for="point in compilerPoints" :key="point.title" class="flex items-start gap-3">
+                <span class="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground" aria-hidden="true">
+                  <Check class="size-3.5" />
+                </span>
+                <p class="text-sm text-muted-foreground">
+                  <span class="font-medium text-foreground">{{ point.title }}.</span> {{ point.body }}
+                </p>
               </li>
             </ul>
           </div>
@@ -191,68 +223,93 @@ invoices.<span class="t-fn">each</span> <span class="t-kw">do</span> |invoice|
     </section>
 
     <!-- ==================================================== como se encaixam -->
-    <section class="section" id="arquitetura">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="kicker">{{ t('arch.kicker') }}</p>
-          <h2>{{ t('arch.title') }}</h2>
-          <p>{{ t('arch.body') }}</p>
+    <section id="arquitetura" class="border-b border-border">
+      <div class="wrap py-16">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {{ t('arch.kicker') }}
+          </p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-tight">{{ t('arch.title') }}</h2>
+          <p class="mt-3 text-muted-foreground">{{ t('arch.body') }}</p>
         </div>
 
-        <div v-reveal class="split">
-          <div class="diag">
-            <div class="diag-row">
-              <div class="diag-node" data-lead="true">
-                <span class="n">quartz</span>
-                <span class="d">{{ t('arch.diag.lead') }}</span>
-              </div>
+        <div v-reveal class="mt-10 grid gap-10 lg:grid-cols-2">
+          <div class="mx-auto flex w-full max-w-md flex-col">
+            <Card class="gap-0 border-primary/30 py-4">
+              <CardContent class="py-0">
+                <p class="font-mono text-sm font-semibold">quartz</p>
+                <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.lead') }}</p>
+              </CardContent>
+            </Card>
+            <div class="flex items-center gap-2 py-3 font-mono text-xs text-muted-foreground">
+              <ArrowDown class="size-4" aria-hidden="true" />
+              {{ archArrows[0] }}
             </div>
-            <div class="diag-arrow">{{ archArrows[0] }}</div>
-            <div class="diag-row">
-              <div class="diag-node">
-                <span class="n">facet</span>
-                <span class="d">{{ t('arch.diag.facet') }}</span>
-              </div>
-              <div class="diag-node">
-                <span class="n">vault</span>
-                <span class="d">{{ t('arch.diag.vault') }}</span>
-              </div>
+            <div class="grid grid-cols-2 gap-3">
+              <Card class="gap-0 py-4">
+                <CardContent class="py-0">
+                  <p class="font-mono text-sm font-semibold">facet</p>
+                  <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.facet') }}</p>
+                </CardContent>
+              </Card>
+              <Card class="gap-0 py-4">
+                <CardContent class="py-0">
+                  <p class="font-mono text-sm font-semibold">vault</p>
+                  <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.vault') }}</p>
+                </CardContent>
+              </Card>
             </div>
-            <div class="diag-arrow">{{ archArrows[1] }}</div>
-            <div class="diag-row">
-              <div class="diag-node">
-                <span class="n">obsidian</span>
-                <span class="d">{{ t('arch.diag.obsidian') }}</span>
-              </div>
-              <div class="diag-node">
-                <span class="n">pulse</span>
-                <span class="d">{{ t('arch.diag.pulse') }}</span>
-              </div>
+            <div class="flex items-center gap-2 py-3 font-mono text-xs text-muted-foreground">
+              <ArrowDown class="size-4" aria-hidden="true" />
+              {{ archArrows[1] }}
             </div>
-            <div class="diag-arrow">{{ archArrows[2] }}</div>
-            <div class="diag-row">
-              <div class="diag-node">
-                <span class="n">PostgreSQL</span>
-                <span class="d">{{ t('arch.diag.pg') }}</span>
-              </div>
+            <div class="grid grid-cols-2 gap-3">
+              <Card class="gap-0 py-4">
+                <CardContent class="py-0">
+                  <p class="font-mono text-sm font-semibold">obsidian</p>
+                  <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.obsidian') }}</p>
+                </CardContent>
+              </Card>
+              <Card class="gap-0 py-4">
+                <CardContent class="py-0">
+                  <p class="font-mono text-sm font-semibold">pulse</p>
+                  <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.pulse') }}</p>
+                </CardContent>
+              </Card>
             </div>
+            <div class="flex items-center gap-2 py-3 font-mono text-xs text-muted-foreground">
+              <ArrowDown class="size-4" aria-hidden="true" />
+              {{ archArrows[2] }}
+            </div>
+            <Card class="gap-0 border-primary/30 py-4">
+              <CardContent class="py-0">
+                <p class="font-mono text-sm font-semibold">PostgreSQL</p>
+                <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.pg') }}</p>
+              </CardContent>
+            </Card>
           </div>
 
           <div>
-            <ul class="feature-list">
-              <li v-for="(point, i) in archPoints" :key="point.title">
-                <span class="fl-icon" aria-hidden="true">
-                  <svg v-if="i === 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><path d="M10 6.5h4a3 3 0 0 1 3 3V14"/></svg>
-                  <svg v-else-if="i === 1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3v18M5 8l7-5 7 5v8l-7 5-7-5Z"/></svg>
-                  <svg v-else-if="i === 2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                  <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 17h16M4 12h16M4 7h16"/><circle cx="8" cy="7" r="1.6" fill="currentColor"/><circle cx="15" cy="12" r="1.6" fill="currentColor"/><circle cx="11" cy="17" r="1.6" fill="currentColor"/></svg>
+            <ul class="space-y-3">
+              <li v-for="(point, i) in archPoints" :key="point.title" class="flex items-start gap-3">
+                <span class="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground" aria-hidden="true">
+                  <Boxes v-if="i === 0" class="size-3.5" />
+                  <ShieldCheck v-else-if="i === 1" class="size-3.5" />
+                  <Clock v-else-if="i === 2" class="size-3.5" />
+                  <List v-else class="size-3.5" />
                 </span>
-                <span><strong>{{ point.title }}</strong>{{ point.body }}</span>
+                <p class="text-sm text-muted-foreground">
+                  <span class="font-medium text-foreground">{{ point.title }}.</span> {{ point.body }}
+                </p>
               </li>
             </ul>
 
-            <RouterLink to="/ecosystem" class="link-arrow" style="margin-top:26px">
-              {{ t('arch.link') }} <span aria-hidden="true">→</span>
+            <RouterLink
+              to="/ecosystem"
+              class="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              {{ t('arch.link') }}
+              <ArrowRight class="size-4" aria-hidden="true" />
             </RouterLink>
           </div>
         </div>
@@ -260,39 +317,50 @@ invoices.<span class="t-fn">each</span> <span class="t-kw">do</span> |invoice|
     </section>
 
     <!-- ============================================================ princípios -->
-    <section class="section section-tint">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="kicker">{{ t('principles.kicker') }}</p>
-          <h2>{{ t('principles.title') }}</h2>
+    <section class="border-b border-border bg-muted/40">
+      <div class="wrap py-16">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {{ t('principles.kicker') }}
+          </p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-tight">{{ t('principles.title') }}</h2>
         </div>
 
-        <div v-reveal class="grid grid-4">
-          <div v-for="principle in principles" :key="principle.title" class="card">
-            <h3>{{ principle.title }}</h3>
-            <p>{{ principle.body }}</p>
-          </div>
+        <div v-reveal class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Card v-for="principle in principles" :key="principle.title" class="gap-3 py-5">
+            <CardHeader class="px-5">
+              <p class="text-base font-semibold">{{ principle.title }}</p>
+            </CardHeader>
+            <CardContent class="px-5">
+              <p class="text-sm text-muted-foreground">{{ principle.body }}</p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>
 
     <!-- ================================================================ prova -->
-    <section class="section" id="prova">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="kicker">{{ t('proof.kicker') }}</p>
-          <h2>{{ t('proof.title') }}</h2>
-          <p>{{ t('proof.body') }}</p>
+    <section id="prova" class="border-b border-border">
+      <div class="wrap py-16">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {{ t('proof.kicker') }}
+          </p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-tight">{{ t('proof.title') }}</h2>
+          <p class="mt-3 text-muted-foreground">{{ t('proof.body') }}</p>
         </div>
 
-        <div v-reveal class="proof">
-          <div v-for="row in proofRows" :key="row" class="proof-row">
-            <div class="w"><b>{{ row }}</b></div>
-            <div class="v">{{ t('proof.pending') }}</div>
-          </div>
+        <div v-reveal class="mt-10 space-y-2">
+          <Card v-for="row in proofRows" :key="row" class="flex-row items-center justify-between gap-4 py-0">
+            <div class="px-6 py-3">
+              <p class="text-sm font-medium">{{ row }}</p>
+            </div>
+            <p class="px-6 py-3 font-mono text-xs text-muted-foreground">{{ t('proof.pending') }}</p>
+          </Card>
         </div>
 
-        <Alert>
+        <Alert variant="warning" class="mt-8 max-w-3xl">
+          <TriangleAlert aria-hidden="true" />
           <AlertTitle>{{ t('proof.noteTitle') }}</AlertTitle>
           <AlertDescription>{{ t('proof.noteBody') }}</AlertDescription>
         </Alert>
@@ -300,20 +368,27 @@ invoices.<span class="t-fn">each</span> <span class="t-kw">do</span> |invoice|
     </section>
 
     <!-- ================================================================ CTA -->
-    <section class="section" id="repositorios">
-      <div class="wrap">
-        <div v-reveal class="cta">
-          <span class="facet" aria-hidden="true" style="inset-inline-end:-30%; top:-60%; opacity:.35"></span>
-          <p class="kicker" style="justify-content:center; margin-bottom:8px">{{ t('cta.kicker') }}</p>
-          <h2>{{ t('cta.title') }}</h2>
-          <p>{{ t('cta.body') }}</p>
-          <div class="cta-actions">
-            <RouterLink to="/docs" class="btn btn-primary">
-              {{ t('cta.primary') }}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </RouterLink>
-            <RouterLink to="/ecosystem" class="btn btn-ghost">{{ t('cta.secondary') }}</RouterLink>
-          </div>
+    <section id="repositorios">
+      <div class="wrap py-16">
+        <div v-reveal class="mx-auto max-w-2xl">
+          <Card class="items-center px-8 py-12 text-center">
+            <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              {{ t('cta.kicker') }}
+            </p>
+            <h2 class="mt-4 text-3xl font-semibold tracking-tight">{{ t('cta.title') }}</h2>
+            <p class="mt-4 text-muted-foreground">{{ t('cta.body') }}</p>
+            <div class="mt-8 flex flex-wrap justify-center gap-3">
+              <Button as-child>
+                <RouterLink to="/docs">
+                  {{ t('cta.primary') }}
+                  <ArrowRight class="size-4" aria-hidden="true" />
+                </RouterLink>
+              </Button>
+              <Button variant="outline" as-child>
+                <RouterLink to="/ecosystem">{{ t('cta.secondary') }}</RouterLink>
+              </Button>
+            </div>
+          </Card>
         </div>
       </div>
     </section>
