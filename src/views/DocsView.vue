@@ -229,14 +229,14 @@ const problemJson = `{
 
       <Separator class="mt-10" />
 
-      <nav data-pager class="mt-8 flex items-center justify-between gap-4" :aria-label="t('docs.pagerLabel')">
+      <nav data-pager class="mt-8 flex flex-wrap items-center justify-between gap-4" :aria-label="t('docs.pagerLabel')">
         <Button as-child variant="outline" size="sm">
           <RouterLink to="/ecosystem" class="flex items-center gap-2">
             <ArrowLeft class="size-4" aria-hidden="true" />
             {{ t('docs.pager.prev') }}
           </RouterLink>
         </Button>
-        <Button as-child size="sm">
+        <Button as-child size="sm" class="ml-auto">
           <RouterLink :to="docsProjectLinks[0].to" class="flex items-center gap-2">
             {{ t('docs.pager.next') }}
             <ArrowRight class="size-4" aria-hidden="true" />

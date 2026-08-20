@@ -83,6 +83,7 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
         <Button
           variant="ghost"
           size="icon"
+          class="hidden sm:inline-flex"
           as="a"
           href="https://github.com/QuartzForge"
           target="_blank"

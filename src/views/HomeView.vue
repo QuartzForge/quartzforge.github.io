@@ -179,7 +179,7 @@ end`
           <p class="mt-3 text-muted-foreground">{{ t('compiler.body') }}</p>
         </div>
 
-        <div v-reveal class="mt-10 grid gap-6 lg:grid-cols-2">
+        <div v-reveal class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card class="gap-0 overflow-hidden py-0">
             <div class="flex items-center justify-between gap-2 border-b border-border px-6 py-4">
               <span class="truncate font-mono text-xs text-muted-foreground">src/reports/overdue.cr</span>

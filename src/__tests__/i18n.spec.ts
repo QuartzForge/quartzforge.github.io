@@ -48,7 +48,7 @@ describe('i18n hardcode guard', () => {
   })
 
   it('no hardcoded sr-only text', () => {
-    const re = /class="[^"]*sr-only[^"]*">([^<{]*[A-Za-zÀ-ÿ][^<{]*?)</g
+    const re = /class="[^"]*sr-only[^"]*"[^>]*>([^<{]*[A-Za-zÀ-ÿ][^<{]*?)</g
     const hits: string[] = []
     for (const file of walk(src)) {
       const content = readFileSync(file, 'utf8')
