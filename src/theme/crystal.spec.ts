@@ -15,7 +15,7 @@ describe('crystalTheme (crystal-lang.org syntax)', () => {
   })
 
   it('uses the contract code background and foreground', () => {
-    expect(theme.colors['editor.background']).toBe('#212121')
+    expect(theme.colors['editor.background']).toBe('#0B1120')
     expect(theme.colors['editor.foreground']).toBe('#e6e6e6')
   })
 

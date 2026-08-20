@@ -16,7 +16,7 @@ describe('CodeBlock', () => {
     const w = mount(CodeBlock, { props: { code: 'class X', file: 'x.cr' } })
     await new Promise((r) => setTimeout(r, 50))
     expect(w.find('.shiki').exists()).toBe(true)
-    expect(w.find('.shiki').attributes('style')).toContain('#212121')
+    expect(w.find('.shiki').attributes('style')).toContain('#0B1120')
   })
 
   it('shows copied state and resets it', async () => {

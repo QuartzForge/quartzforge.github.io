@@ -26,16 +26,16 @@ describe('design system contract (handoff 5de6783c)', () => {
 
   it('style.css declares the contract tokens', () => {
     const css = readFileSync(`${root}src/style.css`, 'utf8')
-    expect(css).toContain('--accent:     oklch(78% 0.155 62)')
-    expect(css).toContain('--bg:        oklch(17%   0 0)')
+    expect(css).toContain('--accent:     #7C3AED')
+    expect(css).toContain('--bg:        #0F172A')
     expect(css).toContain('--t-kw:  hsl(219, 54%, 64%)')
-    expect(css).toContain('--code-bg:   oklch(24.8% 0 0)')
+    expect(css).toContain('--code-bg:   #0B1120')
     expect(css).toContain("--crystal-hex: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)")
   })
 
   it('style.css overrides tokens for the light theme and keeps code panels dark', () => {
     const css = readFileSync(`${root}src/style.css`, 'utf8')
     expect(css).toMatch(/\[data-theme='light'\]\s*\{/)
-    expect(css).toMatch(/--bg:\s*oklch\(99%/)
+    expect(css).toMatch(/--bg:\s*#F8FAFC/)
   })
 })

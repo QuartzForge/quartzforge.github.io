@@ -16,7 +16,7 @@ export const crystalTheme = {
   name: 'quartzforge',
   type: 'dark',
   colors: {
-    'editor.background': '#212121',
+    'editor.background': '#0B1120',
     'editor.foreground': '#e6e6e6',
     'editorLineNumber.foreground': '#8a8a8a',
   },
