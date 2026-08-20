@@ -25,9 +25,9 @@ describe('ProjectView', () => {
     expect(w.find('.hero-note').exists()).toBe(true)
   })
 
-  it('renders the when-not-to-use section as a warn callout', () => {
+  it('renders the when-not-to-use section as an alert', () => {
     const w = mountProject('quartz')
-    expect(w.find('.callout-warn').exists()).toBe(true)
+    expect(w.find('[role="alert"]').exists()).toBe(true)
   })
 
   it('shows an honest in-development panel for design projects', () => {

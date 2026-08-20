@@ -11,14 +11,22 @@ function mountPill(status: 'released' | 'design') {
 }
 
 describe('StatusPill', () => {
-  it('renders the contract pill with a dot', () => {
+  it('renders released as an outline Badge with a primary dot', () => {
     const w = mountPill('released')
-    expect(w.find('.pill').exists()).toBe(true)
-    expect(w.find('.dot').exists()).toBe(true)
+    const badge = w.get('[data-slot="badge"]')
+    expect(badge.classes()).toEqual(expect.arrayContaining(['border', 'text-foreground']))
+    expect(badge.find('span[aria-hidden="true"]').classes()).toContain('bg-primary')
   })
 
-  it('uses pill-ok for released and neutral for design', () => {
-    expect(mountPill('released').find('.pill').classes()).toContain('pill-ok')
-    expect(mountPill('design').find('.pill').classes()).not.toContain('pill-ok')
+  it('renders design as a secondary Badge with a muted dot', () => {
+    const w = mountPill('design')
+    const badge = w.get('[data-slot="badge"]')
+    expect(badge.classes()).toContain('bg-secondary')
+    expect(badge.find('span[aria-hidden="true"]').classes()).toContain('bg-muted-foreground/50')
+  })
+
+  it('translates the label for both statuses', () => {
+    expect(mountPill('released').text()).toContain('estável')
+    expect(mountPill('design').text()).toContain('em desenvolvimento')
   })
 })

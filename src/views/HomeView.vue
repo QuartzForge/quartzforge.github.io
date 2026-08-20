@@ -6,7 +6,7 @@ import versions from '../data/versions.json'
 import { quartzExample, facetExample } from '../data/examples'
 import CmdPanel from '../components/CmdPanel.vue'
 import CodeTabs from '../components/CodeTabs.vue'
-import Callout from '../components/Callout.vue'
+import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert'
 import VersionBadge from '../components/VersionBadge.vue'
 
 const { t, tm } = useI18n()
@@ -292,10 +292,10 @@ invoices.<span class="t-fn">each</span> <span class="t-kw">do</span> |invoice|
           </div>
         </div>
 
-        <Callout variant="warn">
-          <strong>{{ t('proof.noteTitle') }}</strong>
-          <p>{{ t('proof.noteBody') }}</p>
-        </Callout>
+        <Alert>
+          <AlertTitle>{{ t('proof.noteTitle') }}</AlertTitle>
+          <AlertDescription>{{ t('proof.noteBody') }}</AlertDescription>
+        </Alert>
       </div>
     </section>
 

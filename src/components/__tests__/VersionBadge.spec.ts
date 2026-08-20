@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import VersionBadge from '../VersionBadge.vue'
@@ -15,15 +15,16 @@ function mountBadge(projectId: string) {
 }
 
 describe('VersionBadge', () => {
-  beforeEach(() => localStorage.clear())
-
-  it('shows the real version in mono', () => {
+  it('shows the released version in mono inside an outline Badge', () => {
     const w = mountBadge('quartz')
-    expect(w.find('.mono').text()).toBe('v0.1.1')
+    const badge = w.get('[data-slot="badge"]')
+    expect(badge.classes()).toEqual(expect.arrayContaining(['border', 'text-foreground']))
+    expect(badge.find('span.font-mono').text()).toBe('v0.1.1')
   })
 
   it('shows an honest in-development pill for unreleased projects', () => {
     const w = mountBadge('obsidian')
+    expect(w.get('[data-slot="badge"]').classes()).toContain('bg-secondary')
     expect(w.text()).toContain('em desenvolvimento')
   })
 })

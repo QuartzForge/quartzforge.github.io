@@ -34,9 +34,9 @@ describe('HomeView', () => {
     expect(w.find('#compilador .pill').text()).toContain('conceito')
   })
 
-  it('shows the proof rows waiting for CI and the honest callout', () => {
+  it('shows the proof rows waiting for CI and the honest alert', () => {
     const w = mountHome()
     expect(w.text()).toContain('aguardando CI')
-    expect(w.find('.callout-warn').exists()).toBe(true)
+    expect(w.find('[role="alert"]').exists()).toBe(true)
   })
 })

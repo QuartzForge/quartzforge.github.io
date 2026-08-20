@@ -7,7 +7,7 @@ import versions from '../data/versions.json'
 import CodeTabs from '../components/CodeTabs.vue'
 import CmdPanel from '../components/CmdPanel.vue'
 import VersionBadge from '../components/VersionBadge.vue'
-import Callout from '../components/Callout.vue'
+import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert'
 import RoadmapSection from '../components/RoadmapSection.vue'
 
 const props = defineProps<{ projectId: string }>()
@@ -113,10 +113,10 @@ const placeholderCode = computed(() => `# ${t('status.development')}\n"${t('proj
     <!-- ======================================= quando não usar · pager -->
     <section class="section">
       <div class="wrap">
-        <Callout variant="warn">
-          <strong>{{ t('project.whenNotTitle') }} {{ project.name }}</strong>
-          <p>{{ project.whenNotToUse }}</p>
-        </Callout>
+        <Alert>
+          <AlertTitle>{{ t('project.whenNotTitle') }} {{ project.name }}</AlertTitle>
+          <AlertDescription>{{ project.whenNotToUse }}</AlertDescription>
+        </Alert>
 
         <nav class="pager" :aria-label="t('project.pagerLabel')">
           <RouterLink to="/ecosystem">
