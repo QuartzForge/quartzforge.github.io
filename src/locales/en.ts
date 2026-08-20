@@ -10,6 +10,14 @@ export default {
     pulse: 'pulse — jobs',
     vault: 'vault — OAuth',
   },
+  header: {
+    guide: 'Get started',
+    github: 'GitHub repositories',
+    lang: 'Change language',
+  },
+  drawer: {
+    projects: 'Projects',
+  },
   status: {
     development: 'In development',
     released: 'Released',
@@ -83,22 +91,28 @@ export default {
       'Every error is application/problem+json (RFC 9457). The type field is the stable identifier for programmatic handling — these are the nine values emitted by Quartz:',
   },
   code: {
-    copy: 'Copy',
+    copy: 'copy',
+    copied: 'copied',
   },
   theme: {
     toggle: 'Switch to light theme',
+    lang: 'Change language',
   },
   footer: {
     tagline: 'Official projects for building complete applications in Crystal.',
     projects: 'Projects',
     documentation: 'Documentation',
     community: 'Community',
-    quickStart: 'Quick start',
-    installation: 'Installation',
-    firstRoute: 'First route',
     github: 'GitHub',
     discussions: 'Discussions',
     contributing: 'Contributing guide',
+    versionPolicy: 'Version policy',
+    docs: {
+      quickStart: 'Quick start',
+      installation: 'Installation',
+      controller: 'The controller',
+      errors: 'Error format',
+    },
     madeIn: 'Made in Crystal',
   },
 }

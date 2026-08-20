@@ -10,6 +10,14 @@ export default {
     pulse: 'pulse — filas',
     vault: 'vault — OAuth',
   },
+  header: {
+    guide: 'Começar',
+    github: 'Repositórios no GitHub',
+    lang: 'Trocar idioma',
+  },
+  drawer: {
+    projects: 'Projetos',
+  },
   status: {
     development: 'Em desenvolvimento',
     released: 'Lançado',
@@ -83,22 +91,28 @@ export default {
       'Todo erro é application/problem+json (RFC 9457). O campo type é o identificador estável para tratamento programático — estes são os nove valores emitidos pelo Quartz:',
   },
   code: {
-    copy: 'Copiar',
+    copy: 'copiar',
+    copied: 'copiado',
   },
   theme: {
     toggle: 'Ativar tema claro',
+    lang: 'Trocar idioma',
   },
   footer: {
     tagline: 'Projetos oficiais para construir aplicações completas em Crystal.',
     projects: 'Projetos',
     documentation: 'Documentação',
     community: 'Comunidade',
-    quickStart: 'Início rápido',
-    installation: 'Instalação',
-    firstRoute: 'Primeira rota',
     github: 'GitHub',
     discussions: 'Discussões',
     contributing: 'Guia de contribuição',
+    versionPolicy: 'Política de versões',
+    docs: {
+      quickStart: 'Início rápido',
+      installation: 'Instalação',
+      controller: 'O controller',
+      errors: 'Formato de erro',
+    },
     madeIn: 'Feito em Crystal',
   },
 }

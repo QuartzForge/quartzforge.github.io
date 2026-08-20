@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { bundledLanguages, getSingletonHighlighter, type BundledLanguage } from 'shiki'
 import { crystalTheme } from '../theme/crystal'
 import { useCopy } from '../composables/useCopy'
+
+const { t } = useI18n()
 
 const props = defineProps<{ code: string; lang?: string; file?: string }>()
 
@@ -47,12 +50,12 @@ watch(() => [props.code, props.lang], render, { immediate: true })
         class="copy"
         data-copy
         :data-copied="copied || undefined"
-        :aria-label="copied ? 'copiado' : 'copiar'"
+        :aria-label="copied ? t('code.copied') : t('code.copy')"
         :style="{ marginInlineStart: file ? undefined : 'auto' }"
         @click="copy(code)"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-        <span>{{ copied ? 'copiado' : 'copiar' }}</span>
+        <span>{{ copied ? t('code.copied') : t('code.copy') }}</span>
       </button>
     </div>
     <div v-if="!failed && html" class="overflow-x-auto" v-html="html" />
