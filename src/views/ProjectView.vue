@@ -86,8 +86,14 @@ const placeholderCode = computed(() => `# ${t('status.development')}\n"${t('proj
             <span>Crystal {{ versions[project.id as keyof typeof versions].crystal }}</span>
             <span aria-hidden="true"> · </span>
             <span>MIT</span>
-            <span aria-hidden="true"> · </span>
-            <a :href="repoUrl" class="underline-offset-4 hover:underline">{{ project.repo }}</a>
+            <template v-if="project.status === 'released'">
+              <span aria-hidden="true"> · </span>
+              <a :href="repoUrl" class="underline-offset-4 hover:underline">{{ project.repo }}</a>
+            </template>
+            <template v-else>
+              <span aria-hidden="true"> · </span>
+              <span>{{ project.repo }}</span>
+            </template>
           </p>
         </div>
 

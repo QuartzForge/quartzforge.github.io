@@ -10,6 +10,8 @@ import { revealDirective } from './composables/useReveal'
 const savedLocale = localStorage.getItem('qf-locale') ?? 'pt-BR'
 const locale = savedLocale === 'en' ? 'en' : 'pt-BR'
 
+document.documentElement.classList.add('js')
+
 const i18n = createI18n({
   legacy: false,
   locale,

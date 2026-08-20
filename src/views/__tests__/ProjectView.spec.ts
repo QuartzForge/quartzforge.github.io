@@ -30,6 +30,17 @@ describe('ProjectView', () => {
     expect(note.text()).toContain('MIT')
   })
 
+  it('links the repo in the hero note only for released projects', () => {
+    const released = mountProject('facet')
+    const releasedLink = released.find('[data-hero-note] a')
+    expect(releasedLink.exists()).toBe(true)
+    expect(releasedLink.attributes('href')).toBe('https://github.com/QuartzForge/facet')
+    const design = mountProject('pulse')
+    const designLink = design.find('[data-hero-note] a')
+    expect(designLink.exists()).toBe(false)
+    expect(design.find('[data-hero-note]').text()).toContain('QuartzForge/pulse')
+  })
+
   it('shows the when-not-to-use section as a warning alert', () => {
     const w = mountProject('quartz')
     const alert = w.find('[data-slot="alert"]')

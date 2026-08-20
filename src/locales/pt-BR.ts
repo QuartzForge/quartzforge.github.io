@@ -125,7 +125,7 @@ export default {
     pending: '— aguardando CI',
     noteTitle: 'Por que os campos estão vazios',
     noteBody:
-      'Um número sem metodologia é marketing. As linhas acima ficam com traço até o repositório quartzforge/benchmarks publicar os resultados assinados pelo CI, com hardware e versão de compilador declarados.',
+      'Um número sem metodologia é marketing. As linhas acima ficam com traço até um harness neutro publicar resultados assinados pelo CI, com hardware e versão de compilador declarados, reproduzíveis por qualquer pessoa.',
   },
   cta: {
     kicker: 'Comece pelo escopo que dói hoje',

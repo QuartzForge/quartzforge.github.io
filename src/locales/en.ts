@@ -125,7 +125,7 @@ export default {
     pending: '— awaiting CI',
     noteTitle: 'Why the fields are empty',
     noteBody:
-      'A number without methodology is marketing. The rows above stay blank until the quartzforge/benchmarks repository publishes CI-signed results with declared hardware and compiler version.',
+      'A number without methodology is marketing. The rows above stay blank until a neutral harness publishes CI-signed results with declared hardware and compiler version, reproducible by anyone.',
   },
   cta: {
     kicker: 'Start with the scope that hurts today',
