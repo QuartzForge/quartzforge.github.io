@@ -12,25 +12,70 @@ function mountEco() {
   })
 }
 
+function visibleCards(w: ReturnType<typeof mountEco>) {
+  return w.findAll('[data-cat]').filter((card) => card.attributes('hidden') === undefined)
+}
+
 describe('EcosystemView', () => {
-  it('renders chips, the live counter and the matrix', () => {
+  it('renders the shadcn filter chips, the live counter and the matrix', () => {
     const w = mountEco()
-    expect(w.findAll('.chip').length).toBeGreaterThanOrEqual(6)
-    expect(w.find('[data-filter-count]').exists()).toBe(true)
-    expect(w.find('table').exists()).toBe(true)
+
+    const chips = w.findAll('[data-cat-filter]')
+    expect(chips.length).toBeGreaterThanOrEqual(6)
+    expect(chips.map((c) => c.attributes('aria-pressed')).every((p) => p === 'false' || p === 'true')).toBe(true)
+
+    const counter = w.find('[data-filter-count]')
+    expect(counter.exists()).toBe(true)
+    expect(counter.text()).toContain('5')
+
+    const table = w.find('[data-slot="table"]')
+    expect(table.exists()).toBe(true)
+    expect(table.find('[data-slot="table-caption"]').exists()).toBe(true)
   })
 
   it('filters the cards by scope and updates the counter', async () => {
     const w = mountEco()
     await w.find('[data-cat-filter="dados"]').trigger('click')
-    const visible = w.findAll('.pkg:not([hidden])')
-    expect(visible.length).toBeGreaterThan(0)
-    expect(w.find('[data-filter-count]').text()).toContain(String(visible.length))
+
+    const visible = visibleCards(w)
+    expect(visible).toHaveLength(1)
+    expect(visible[0].attributes('data-cat')).toBe('dados')
+
+    const counter = w.find('[data-filter-count]')
+    expect(counter.text()).toContain('1')
+    expect(counter.text()).not.toContain('5')
   })
 
-  it('marks the active chip as pressed', async () => {
+  it('marks exactly the active chip as pressed', async () => {
     const w = mountEco()
     await w.find('[data-cat-filter="dados"]').trigger('click')
+
+    const chips = w.findAll('[data-cat-filter]')
+    expect(chips.filter((c) => c.attributes('aria-pressed') === 'true')).toHaveLength(1)
     expect(w.find('[data-cat-filter="dados"]').attributes('aria-pressed')).toBe('true')
+
+    await w.find('[data-cat-filter="oauth"]').trigger('click')
+    expect(w.find('[data-cat-filter="dados"]').attributes('aria-pressed')).toBe('false')
+    expect(w.find('[data-cat-filter="oauth"]').attributes('aria-pressed')).toBe('true')
+  })
+
+  it('shows the compatibility matrix with real data', () => {
+    const w = mountEco()
+    const headers = w.findAll('[data-slot="table-head"]')
+    expect(headers.map((h) => h.text())).toEqual([
+      ptBR.ecosystem.columnProject,
+      ptBR.ecosystem.columnStatus,
+      ptBR.ecosystem.columnCrystal,
+      ptBR.ecosystem.columnLicense,
+      ptBR.ecosystem.columnDeps,
+    ])
+
+    const rows = w.findAll('[data-slot="table-body"] [data-slot="table-row"]')
+    expect(rows).toHaveLength(5)
+    const first = rows[0].findAll('[data-slot="table-cell"]')
+    expect(first[0].text()).toBe('quartz')
+    expect(first[0].attributes('class')).toContain('font-mono')
+    expect(first[2].text()).toBe('~> 1.21')
+    expect(first[3].text()).toBe('MIT')
   })
 })

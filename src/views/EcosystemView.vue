@@ -1,10 +1,23 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ArrowRight, TriangleAlert } from '@lucide/vue'
 import { projects, type Project } from '../data/projects'
 import versions from '../data/versions.json'
 import VersionBadge from '../components/VersionBadge.vue'
 import StatusPill from '../components/StatusPill.vue'
+import { Button } from '../components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from '../components/ui/card'
+import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '../components/ui/table'
 
 const { t } = useI18n()
 
@@ -61,45 +74,56 @@ const depsKey: Record<Project['id'], string> = {
 <template>
   <div>
     <!-- ============================================================= hero -->
-    <section class="hero" style="padding-bottom: clamp(24px, 3vw, 40px)">
-      <span class="facet" aria-hidden="true"></span>
-      <div class="wrap">
-        <p class="kicker">{{ t('ecosystem.heroKicker') }}</p>
-        <h1 style="font-size: clamp(34px, 5.2vw, 60px); max-width: 18ch">{{ t('ecosystem.heroTitle') }}</h1>
-        <p class="lede" style="max-width: 62ch">{{ t('ecosystem.heroLede') }}</p>
+    <section class="border-b border-border">
+      <div class="wrap py-16 lg:py-24">
+        <p data-hero-kicker class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          {{ t('ecosystem.heroKicker') }}
+        </p>
+        <h1 class="mt-4 max-w-[18ch] text-4xl font-semibold tracking-tight sm:text-5xl">
+          {{ t('ecosystem.heroTitle') }}
+        </h1>
+        <p class="mt-5 max-w-[62ch] text-lg text-muted-foreground">{{ t('ecosystem.heroLede') }}</p>
       </div>
     </section>
 
     <!-- ================================================== os cinco projetos -->
-    <section class="section" style="padding-top: clamp(28px, 3.5vw, 48px)">
-      <div class="wrap">
-        <div class="chips" role="group" :aria-label="t('ecosystem.filterLabel')">
-          <button
+    <section class="border-b border-border">
+      <div class="wrap py-16">
+        <div
+          class="flex flex-wrap items-center gap-2"
+          role="group"
+          :aria-label="t('ecosystem.filterLabel')"
+        >
+          <Button
             v-for="f in filters"
             :key="f.id"
-            class="chip"
+            :variant="active === f.id ? 'default' : 'outline'"
+            size="sm"
             :data-cat-filter="f.id"
             :aria-pressed="active === f.id"
             @click="active = f.id"
           >
             {{ t(f.key) }}
-          </button>
-          <span class="pill" style="margin-inline-start: auto" data-filter-count>
+          </Button>
+          <span
+            class="ml-auto font-mono text-xs text-muted-foreground"
+            data-filter-count
+          >
             {{ t('ecosystem.count', visibleCount) }}
           </span>
         </div>
 
-        <div v-reveal class="grid grid-3">
-          <article
+        <div v-reveal class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Card
             v-for="p in pkgCards"
             :key="p.id"
-            class="card pkg"
             :data-cat="scopeOf[p.id]"
             :hidden="!isVisible(p)"
-            :style="{ '--pkg': `var(--pkg-${p.id})` }"
+            class="gap-0 p-0 transition-colors hover:border-primary/40"
+            :style="{ '--pkg': `var(--pkg-${p.id})`, 'border-left': '2px solid var(--pkg)' }"
           >
-            <div class="pkg-top">
-              <span class="pkg-glyph" aria-hidden="true">
+            <CardHeader class="flex-row items-center gap-3">
+              <span class="text-lg" :style="{ color: 'var(--pkg)' }" aria-hidden="true">
                 <svg v-if="p.id === 'quartz'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h10M4 17h13"/></svg>
                 <svg v-else-if="p.id === 'obsidian'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
                 <svg v-else-if="p.id === 'pulse'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>
@@ -107,59 +131,79 @@ const depsKey: Record<Project['id'], string> = {
                 <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
               </span>
               <div>
-                <div class="pkg-name">{{ p.name }}</div>
-                <div class="pkg-role">{{ t(`ecosystem.role.${p.id}`) }}</div>
+                <p class="font-semibold">{{ p.name }}</p>
+                <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  {{ t(`ecosystem.role.${p.id}`) }}
+                </p>
               </div>
-            </div>
-            <p>{{ p.description }}</p>
-            <div class="pkg-meta">
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-muted-foreground">{{ p.description }}</p>
+            </CardContent>
+            <CardFooter class="justify-between">
               <VersionBadge :project-id="p.id" />
-              <RouterLink :to="`/${p.id}`" class="link-arrow" style="margin-inline-start: auto">
-                {{ t('ecosystem.open') }} <span aria-hidden="true">→</span>
-              </RouterLink>
-            </div>
-          </article>
+              <Button variant="ghost" size="sm" class="text-primary" as-child>
+                <RouterLink :to="`/${p.id}`">
+                  {{ t('ecosystem.open') }}
+                  <ArrowRight class="size-3.5" aria-hidden="true" />
+                </RouterLink>
+              </Button>
+            </CardFooter>
+          </Card>
         </div>
       </div>
     </section>
 
     <!-- ==================================================== matriz de compatibilidade -->
-    <section class="section section-tint">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="kicker">{{ t('ecosystem.matrixTitle') }}</p>
-          <h2>{{ t('ecosystem.matrixLead') }}</h2>
-          <p>{{ t('ecosystem.matrixNote') }}</p>
+    <section>
+      <div class="wrap py-16">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {{ t('ecosystem.matrixTitle') }}
+          </p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-tight">{{ t('ecosystem.matrixLead') }}</h2>
+          <p class="mt-3 text-muted-foreground">{{ t('ecosystem.matrixNote') }}</p>
         </div>
 
-        <div v-reveal class="table-wrap">
-          <table>
-            <caption class="sr-only">{{ t('ecosystem.matrixCaption') }}</caption>
-            <thead>
-              <tr>
-                <th scope="col">{{ t('ecosystem.columnProject') }}</th>
-                <th scope="col">{{ t('ecosystem.columnStatus') }}</th>
-                <th scope="col">{{ t('ecosystem.columnCrystal') }}</th>
-                <th scope="col">{{ t('ecosystem.columnLicense') }}</th>
-                <th scope="col">{{ t('ecosystem.columnDeps') }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="p in pkgCards" :key="p.id">
-                <td>{{ p.name }}</td>
-                <td><StatusPill :status="p.status" /></td>
-                <td>{{ versions[p.id as keyof typeof versions].crystal }}</td>
-                <td>MIT</td>
-                <td>{{ t(depsKey[p.id]) }}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div v-reveal class="mt-10">
+          <Table>
+            <TableCaption class="sr-only">{{ t('ecosystem.matrixCaption') }}</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  {{ t('ecosystem.columnProject') }}
+                </TableHead>
+                <TableHead class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  {{ t('ecosystem.columnStatus') }}
+                </TableHead>
+                <TableHead class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  {{ t('ecosystem.columnCrystal') }}
+                </TableHead>
+                <TableHead class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  {{ t('ecosystem.columnLicense') }}
+                </TableHead>
+                <TableHead class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  {{ t('ecosystem.columnDeps') }}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow v-for="p in pkgCards" :key="p.id">
+                <TableCell class="font-mono">{{ p.name }}</TableCell>
+                <TableCell><StatusPill :status="p.status" /></TableCell>
+                <TableCell class="font-mono">{{ versions[p.id as keyof typeof versions].crystal }}</TableCell>
+                <TableCell>MIT</TableCell>
+                <TableCell>{{ t(depsKey[p.id]) }}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
-        <div class="callout" style="margin-top: var(--gap)">
-          <strong>{{ t('ecosystem.noteTitle') }}</strong>
-          <p>{{ t('ecosystem.noteBody') }}</p>
-        </div>
+        <Alert class="mt-10 max-w-3xl">
+          <TriangleAlert aria-hidden="true" />
+          <AlertTitle>{{ t('ecosystem.noteTitle') }}</AlertTitle>
+          <AlertDescription>{{ t('ecosystem.noteBody') }}</AlertDescription>
+        </Alert>
       </div>
     </section>
   </div>
