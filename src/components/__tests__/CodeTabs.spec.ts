@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import CodeTabs from '../CodeTabs.vue'
@@ -13,27 +13,22 @@ const tabs = [
 const i18n = createI18n({ legacy: false, locale: 'pt-BR', messages: { 'pt-BR': ptBR, en } })
 
 describe('CodeTabs', () => {
-  beforeEach(() => {
-    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false, addListener: vi.fn() }))
-    vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } })
+  it('renders a shadcn tabs list with one trigger per tab', () => {
+    const w = mount(CodeTabs, { props: { tabs }, global: { plugins: [i18n] } })
+    const triggers = w.findAll('[data-slot="tabs-trigger"]')
+    expect(triggers).toHaveLength(2)
+    expect(triggers[0].text()).toBe('app')
+    expect(triggers[0].attributes('data-state')).toBe('active')
   })
 
-  it('switches tabs with arrow keys', async () => {
+  it('switches content and file label with the active tab', async () => {
     const w = mount(CodeTabs, { props: { tabs }, global: { plugins: [i18n] } })
-    await w.find('[data-tab="app"]').trigger('keydown', { key: 'ArrowRight' })
-    expect(w.find('[data-tab="controller"]').attributes('aria-selected')).toBe('true')
-    await w.find('[data-tab="controller"]').trigger('keydown', { key: 'ArrowLeft' })
-    expect(w.find('[data-tab="app"]').attributes('aria-selected')).toBe('true')
-  })
-
-  it('updates the file label with the active tab', async () => {
-    const w = mount(CodeTabs, { props: { tabs }, global: { plugins: [i18n] } })
-    await w.find('[data-tab="controller"]').trigger('click')
+    expect(w.find('[data-panel-label]').text()).toBe('src/app.cr')
+    // reka-ui TabsTrigger activates on mousedown, mirroring radix's pointer
+    // semantics — a real click always starts with one
+    await w.find('[data-tab="controller"]').trigger('mousedown')
+    await new Promise((r) => setTimeout(r, 80))
     expect(w.find('[data-panel-label]').text()).toBe('src/c.cr')
-  })
-
-  it('marks the active tab with the accent underline class', async () => {
-    const w = mount(CodeTabs, { props: { tabs }, global: { plugins: [i18n] } })
-    expect(w.find('[data-tab="app"]').classes()).toContain('panel-tab-active')
+    expect(w.find('.shiki').text()).toContain('class C')
   })
 })

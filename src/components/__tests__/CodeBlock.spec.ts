@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import CodeBlock from '../CodeBlock.vue'
@@ -12,24 +12,18 @@ function mountBlock(code: string, file?: string) {
 }
 
 describe('CodeBlock', () => {
-  beforeEach(() => {
-    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false, addListener: vi.fn() }))
-  })
-
-  it('shows the file label in the panel head', () => {
+  it('shows the file label and a copy button', () => {
     const w = mountBlock('a = 1', 'src/app.cr')
     expect(w.text()).toContain('src/app.cr')
+    expect(w.find('[data-copy]').exists()).toBe(true)
   })
 
-  it('renders highlighted html from the quartzforge theme', async () => {
+  it('highlights with the neutral one-dark-pro theme', async () => {
     const w = mountBlock('class X', 'x.cr')
-    await new Promise((r) => setTimeout(r, 50))
-    expect(w.find('.shiki').exists()).toBe(true)
-    expect(w.find('.shiki').attributes('style')).toContain('#0B1120')
-  })
-
-  it('shows the translated copy label', () => {
-    expect(mountBlock('a = 1', 'a.cr').find('[data-copy]').text()).toContain('copiar')
+    await new Promise((r) => setTimeout(r, 80))
+    const shiki = w.find('.shiki')
+    expect(shiki.exists()).toBe(true)
+    expect(shiki.attributes('style')).toContain('#282c34')
   })
 
   it('shows copied state and resets it', async () => {

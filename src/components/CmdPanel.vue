@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Check, Copy } from '@lucide/vue'
+import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
+import { Button } from './ui/button'
 import { useCopy } from '../composables/useCopy'
 
 const { t } = useI18n()
@@ -11,36 +14,47 @@ const props = defineProps<{
   file?: string
 }>()
 
-const active = ref(0)
 const { copied, copy } = useCopy()
 const list = computed(() =>
   props.tabs ?? (props.code ? [{ id: 'x', label: props.file ?? 'shard.yml', code: props.code }] : []),
 )
-const activeCode = computed(() => list.value[active.value]?.code ?? '')
-// Line by line so every prompt gets its own amber prefix; a single <pre>
-// with one .pfx would collapse a multi-line command into one line.
+const active = ref(list.value[0]?.id ?? '')
+const activeCode = computed(
+  () => list.value.find((tab) => tab.id === active.value)?.code ?? list.value[0]?.code ?? '',
+)
+// Line by line so every prompt gets its own muted prefix; a single <pre>
+// with one prefix span would collapse a multi-line command into one line.
 const lines = computed(() => activeCode.value.split('\n'))
 </script>
 
 <template>
-  <div class="cmd">
-    <div v-if="list.length > 1" class="cmd-tabs" role="tablist" aria-label="Formas de instalar">
-      <button
-        v-for="(tab, i) in list"
-        :key="tab.id"
-        role="tab"
-        :aria-selected="i === active ? 'true' : 'false'"
-        @click="active = i"
-      >
-        {{ tab.label }}
-      </button>
+  <div class="border border-border bg-card rounded-lg overflow-hidden">
+    <div v-if="list.length > 1" class="px-4 py-2 border-b border-border">
+      <Tabs v-model="active">
+        <TabsList class="font-mono text-xs">
+          <TabsTrigger v-for="tab in list" :key="tab.id" :value="tab.id">
+            {{ tab.label }}
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
     </div>
-    <div class="cmd-body">
-      <pre><template v-for="(line, i) in lines" :key="i"><span v-if="line.startsWith('$')" class="pfx">$</span>{{ line.startsWith('$') ? line.slice(1) : line }}{{ i < lines.length - 1 ? '\n' : '' }}</template></pre>
-      <button class="copy" data-copy :data-copied="copied || undefined" @click="copy(activeCode)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+    <div class="flex items-start gap-3 p-4">
+      <pre
+        class="font-mono text-sm text-foreground/90 overflow-x-auto flex-1 min-w-0"
+      ><template v-for="(line, i) in lines" :key="i"><span v-if="line.startsWith('$')" class="pfx text-muted-foreground">$</span>{{ line.startsWith('$') ? line.slice(1) : line }}{{ i < lines.length - 1 ? '\n' : '' }}</template></pre>
+      <Button
+        variant="ghost"
+        size="sm"
+        class="shrink-0"
+        data-copy
+        :data-copied="copied || undefined"
+        :aria-label="copied ? t('code.copied') : t('code.copy')"
+        @click="copy(activeCode)"
+      >
+        <Check v-if="copied" aria-hidden="true" />
+        <Copy v-else aria-hidden="true" />
         <span>{{ copied ? t('code.copied') : t('code.copy') }}</span>
-      </button>
+      </Button>
     </div>
   </div>
 </template>

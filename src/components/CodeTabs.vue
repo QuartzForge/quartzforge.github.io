@@ -1,58 +1,34 @@
 <script setup lang="ts">
-import { computed, ref, type ComponentPublicInstance } from 'vue'
+import { computed, ref } from 'vue'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import CodeBlock from './CodeBlock.vue'
 
 const props = defineProps<{ tabs: { label: string; file: string; code: string }[] }>()
 
-const active = ref(0)
-const activeTab = computed(() => props.tabs[active.value])
-const buttons = ref<HTMLButtonElement[]>([])
-
-function select(i: number) {
-  active.value = (i + props.tabs.length) % props.tabs.length
-}
-
-// Template refs instead of a querySelector: the buttons are the source of
-// truth for the roving focus, exactly like js/quartzforge.js tabs block.
-function setButtonRef(i: number, el: Element | ComponentPublicInstance | null) {
-  if (el instanceof HTMLButtonElement) buttons.value[i] = el
-}
-
-function onKeydown(i: number, event: KeyboardEvent) {
-  const next =
-    event.key === 'ArrowRight'
-      ? (i + 1) % props.tabs.length
-      : event.key === 'ArrowLeft'
-        ? (i - 1 + props.tabs.length) % props.tabs.length
-        : null
-  if (next === null) return
-  event.preventDefault()
-  select(next)
-  buttons.value[next]?.focus()
-}
+const active = ref(props.tabs[0]?.label ?? '')
+const activeTab = computed(() => props.tabs.find((t) => t.label === active.value) ?? props.tabs[0])
 </script>
 
 <template>
-  <div class="panel">
-    <div class="panel-head">
-      <div class="panel-tabs" role="tablist" :aria-label="'Exemplos'">
-        <button
-          v-for="(tab, i) in tabs"
-          :key="tab.label"
-          :ref="(el) => setButtonRef(i, el)"
-          :data-tab="tab.label"
-          role="tab"
-          class="panel-tab"
-          :class="{ 'panel-tab-active': i === active }"
-          :aria-selected="i === active ? 'true' : 'false'"
-          @click="active = i"
-          @keydown="onKeydown(i, $event)"
+  <div class="border border-border bg-card rounded-lg overflow-hidden">
+    <Tabs v-model="active" class="gap-0">
+      <div class="flex items-center justify-between gap-2 px-4 py-2 border-b border-border">
+        <TabsList class="font-mono text-xs">
+          <TabsTrigger v-for="tab in tabs" :key="tab.label" :value="tab.label" :data-tab="tab.label">
+            {{ tab.label }}
+          </TabsTrigger>
+        </TabsList>
+        <span
+          v-if="activeTab"
+          class="font-mono text-xs text-muted-foreground truncate"
+          data-panel-label
         >
-          {{ tab.label }}
-        </button>
+          {{ activeTab.file }}
+        </span>
       </div>
-      <span class="panel-file" data-panel-label>{{ activeTab.file }}</span>
-    </div>
-    <CodeBlock :code="activeTab.code" :file="activeTab.file" />
+      <TabsContent v-for="tab in tabs" :key="tab.label" :value="tab.label">
+        <CodeBlock :code="tab.code" :file="tab.file" />
+      </TabsContent>
+    </Tabs>
   </div>
 </template>

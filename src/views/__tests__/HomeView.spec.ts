@@ -17,7 +17,9 @@ describe('HomeView', () => {
     const w = mountHome()
     expect(w.find('.kicker').exists()).toBe(true)
     expect(w.find('h1').exists()).toBe(true)
-    expect(w.find('.cmd').exists()).toBe(true)
+    // the command panel lost its .cmd handoff class in the shadcn port; the
+    // copy button is the stable element of the panel
+    expect(w.find('[data-copy]').exists()).toBe(true)
   })
 
   it('renders the six package cards including the ecosystem card', () => {

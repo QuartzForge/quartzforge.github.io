@@ -21,9 +21,11 @@ describe('CmdPanel', () => {
     delete (document as Omit<Document, 'execCommand'> & { execCommand?: unknown }).execCommand
   })
 
-  it('renders the prompt prefix and copy button', () => {
+  it('renders every $ prompt in muted foreground with a copy button', () => {
     const w = mountPanel()
-    expect(w.find('.pfx').exists()).toBe(true)
+    const prompts = w.findAll('.pfx')
+    expect(prompts).toHaveLength(2)
+    expect(prompts[0].classes()).toContain('text-muted-foreground')
     expect(w.find('[data-copy]').exists()).toBe(true)
   })
 
