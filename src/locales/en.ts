@@ -19,8 +19,8 @@ export default {
     projects: 'Projects',
   },
   status: {
-    development: 'In development',
-    released: 'Released',
+    stable: 'stable',
+    development: 'in development',
   },
   project: {
     inDevelopment: 'In development',
