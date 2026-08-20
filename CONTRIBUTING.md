@@ -17,10 +17,11 @@
   against the real modules (quartz 0.1.1, facet 0.1.0). Never invent APIs.
 - i18n covers prose and interface only. Code, file names and terminal output never
   pass through `$t()`.
-- Unreleased modules (obsidian, pulse, vault) show concept, status and roadmap —
+- Unreleased modules (vault) show concept, status and roadmap —
   zero code examples.
-- Versions come from `scripts/fetch_versions.cr` at build time. If the fetch fails,
-  the badge degrades to "in development" — never a fabricated number.
+- Versions come from `src/data/versions.json` (committed baseline) and are
+  refreshed at runtime against the GitHub API. If the fetch fails, the baseline
+  is kept — never a fabricated number.
 
 ## Releases
 

@@ -5,9 +5,13 @@ import App from './App.vue'
 import { router } from './router'
 import ptBR from './locales/pt-BR'
 import en from './locales/en'
+import { revealDirective } from './composables/useReveal'
+import { refreshVersions } from './composables/useVersions'
 
-const savedLocale = localStorage.getItem('qf-locale') ?? 'pt-BR'
-const locale = savedLocale === 'en' ? 'en' : 'pt-BR'
+const savedLocale = localStorage.getItem('qf-locale') ?? 'en'
+const locale = savedLocale === 'pt-BR' ? 'pt-BR' : 'en'
+
+document.documentElement.classList.add('js')
 
 const i18n = createI18n({
   legacy: false,
@@ -16,4 +20,10 @@ const i18n = createI18n({
   messages: { 'pt-BR': ptBR, en },
 })
 
-createApp(App).use(router).use(i18n).mount('#app')
+createApp(App)
+  .use(router)
+  .use(i18n)
+  .directive('reveal', revealDirective)
+  .mount('#app')
+
+refreshVersions()

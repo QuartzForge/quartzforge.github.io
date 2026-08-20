@@ -1,29 +1,55 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { Check, Copy } from '@lucide/vue'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import CodeBlock from './CodeBlock.vue'
+import { Button } from './ui/button'
+import { useCopy } from '../composables/useCopy'
 
-defineProps<{
-  tabs: { label: string; file: string; code: string }[]
-}>()
+const props = defineProps<{ tabs: { label: string; file: string; code: string }[] }>()
 
-const active = ref(0)
+const { t } = useI18n()
+const { copied, copy } = useCopy()
+
+const active = ref(props.tabs[0]?.label ?? '')
+const activeTab = computed(() => props.tabs.find((t) => t.label === active.value) ?? props.tabs[0])
 </script>
 
 <template>
-  <div class="overflow-hidden rounded-lg border border-neutral-800">
-    <div class="flex flex-wrap border-b border-neutral-800 bg-neutral-900">
-      <button
-        v-for="(tab, index) in tabs"
-        :key="tab.label"
-        class="px-3 py-2 text-xs"
-        :class="index === active
-          ? 'border-b-2 border-amber-400 text-neutral-100'
-          : 'text-neutral-500 hover:text-neutral-300'"
-        @click="active = index"
-      >
-        {{ tab.label }}
-      </button>
-    </div>
-    <CodeBlock :code="tabs[active].code" :file="tabs[active].file" />
+  <div class="border border-border bg-card rounded-lg overflow-hidden">
+    <Tabs v-model="active" class="gap-0">
+      <div class="flex items-center justify-between gap-2 px-5 py-3 border-b border-border">
+        <TabsList class="font-mono text-xs">
+          <TabsTrigger v-for="tab in tabs" :key="tab.label" :value="tab.label" :data-tab="tab.label">
+            {{ tab.label }}
+          </TabsTrigger>
+        </TabsList>
+        <div class="flex min-w-0 items-center gap-2">
+          <span
+            v-if="activeTab"
+            class="font-mono text-xs text-muted-foreground truncate"
+            data-panel-label
+          >
+            {{ activeTab.file }}
+          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            data-copy
+            :data-copied="copied || undefined"
+            :aria-label="copied ? t('code.copied') : t('code.copy')"
+            @click="copy(activeTab?.code ?? '')"
+          >
+            <Check v-if="copied" aria-hidden="true" />
+            <Copy v-else aria-hidden="true" />
+            <span>{{ copied ? t('code.copied') : t('code.copy') }}</span>
+          </Button>
+        </div>
+      </div>
+      <TabsContent v-for="tab in tabs" :key="tab.label" :value="tab.label">
+        <CodeBlock :code="tab.code" :framed="false" />
+      </TabsContent>
+    </Tabs>
   </div>
 </template>

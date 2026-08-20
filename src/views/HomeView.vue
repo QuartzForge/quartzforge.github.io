@@ -1,122 +1,240 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { projects } from '../data/projects'
+import { ArrowDown, ArrowRight, Boxes, Clock, List, ShieldCheck } from '@lucide/vue'
+import { projects, type Project } from '../data/projects'
+import { useVersions } from '../composables/useVersions'
 import { quartzExample, facetExample } from '../data/examples'
-import VersionBadge from '../components/VersionBadge.vue'
-import StatusPill from '../components/StatusPill.vue'
+import CodeBlock from '../components/CodeBlock.vue'
 import CodeTabs from '../components/CodeTabs.vue'
-import InstallShard from '../components/InstallShard.vue'
+import VersionBadge from '../components/VersionBadge.vue'
+import { Button } from '../components/ui/button'
+import { Card, CardContent, CardHeader } from '../components/ui/card'
 
 const { t, tm } = useI18n()
-
-const design = projects.filter((p) => p.status === 'design')
+const { versions } = useVersions()
 
 // t() returns the message key for non-string messages, so array messages
 // must be read with tm(), which resolves the raw message of the active
 // locale. Computed so a locale switch re-renders the section.
-const principles = computed(
-  () => tm('home.principles') as unknown as { title: string; body: string }[],
-)
+function listOf<T>(key: string): T {
+  return tm(key) as unknown as T
+}
+
+const archPoints = computed(() => listOf<{ title: string; body: string }[]>('arch.points'))
+const archArrows = computed(() => listOf<string[]>('arch.arrows'))
+const principles = computed(() => listOf<{ title: string; body: string }[]>('principles.list'))
 
 const heroTabs = [
   { label: 'quartz', file: 'src/app.cr', code: quartzExample },
   { label: 'facet', file: 'src/schemas/signup.cr', code: facetExample },
 ]
+
+// The install block shows one shard.yml with the released projects only,
+// versions fetched from the GitHub API at runtime; when the fetch fails
+// nothing is fabricated — the file renders with only the projects whose
+// version is known.
+const installYaml = computed(() => {
+  const lines = ['dependencies:']
+  for (const id of ['quartz', 'facet']) {
+    const info = versions.value[id]
+    if (info.released && info.version) {
+      lines.push(`  ${id}:`, `    github: QuartzForge/${id}`, `    version: ~> ${info.version}`)
+    }
+  }
+  return lines.join('\n')
+})
+
+// Display order is release-first: quartz, then facet, then vault.
+const pkgOrder = ['quartz', 'facet', 'vault'] as const
+const pkgCards = computed(() =>
+  pkgOrder
+    .map((id) => projects.find((p) => p.id === id))
+    .filter((p): p is Project => p !== undefined),
+)
 </script>
 
 <template>
   <div>
-    <!-- Hero -->
-    <section class="border-b border-neutral-800">
-      <div class="mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-2">
+    <!-- ============================================================= hero -->
+    <section class="border-b border-border">
+      <div class="wrap grid gap-10 py-16 lg:grid-cols-2 lg:items-stretch lg:gap-10 lg:py-24">
         <div>
-          <h1 class="font-display text-4xl font-bold leading-tight sm:text-5xl">
-            {{ t('home.heroTitle') }}
+          <p data-hero-kicker class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {{ t('home.heroKicker') }}
+          </p>
+          <h1 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+            {{ t('home.heroLead') }} <span class="text-primary">{{ t('home.markWord') }}</span>.
           </h1>
-          <p class="mt-4 max-w-md text-lg text-neutral-400">
-            {{ t('home.heroSubtitle') }}
-          </p>
+          <p class="mt-5 max-w-[62ch] text-lg text-muted-foreground">{{ t('home.heroBody') }}</p>
 
-          <div class="mt-8">
-            <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-500">
-              {{ t('home.installLabel') }}
+          <div class="mt-6">
+            <CodeBlock data-install :code="installYaml" file="shard.yml" lang="yaml" />
+          </div>
+
+          <div class="mt-6 flex flex-wrap gap-3">
+            <Button as-child>
+              <RouterLink to="/docs">
+                {{ t('home.ctaDocs') }}
+                <ArrowRight class="size-4" aria-hidden="true" />
+              </RouterLink>
+            </Button>
+          </div>
+        </div>
+
+        <div v-reveal class="flex h-full flex-col gap-4">
+          <CodeTabs :tabs="heroTabs" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================== os 3 projetos -->
+    <section id="projetos" class="border-b border-border">
+      <div class="wrap py-16">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {{ t('home.projectsKicker') }}
+          </p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-tight">{{ t('home.projectsTitle') }}</h2>
+          <p class="mt-3 text-muted-foreground">{{ t('home.projectsBody') }}</p>
+        </div>
+
+        <div v-reveal class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <RouterLink
+            v-for="p in pkgCards"
+            :key="p.id"
+            :to="`/${p.id}`"
+            data-pkg-card
+            class="flex flex-col gap-4 rounded-xl border border-border bg-card p-6 shadow-sm transition-colors hover:border-primary/40"
+            :style="{ '--pkg': `var(--pkg-${p.id})` }"
+          >
+            <span class="h-0.5 w-10 rounded-full" :style="{ background: 'var(--pkg)' }" aria-hidden="true"></span>
+            <div>
+              <p class="font-semibold">{{ p.name }}</p>
+              <p class="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                {{ t(`home.role.${p.id}`) }}
+              </p>
+            </div>
+            <p class="text-sm text-muted-foreground">{{ p.description }}</p>
+            <div class="mt-auto flex items-center gap-2">
+              <VersionBadge :project-id="p.id" />
+            </div>
+          </RouterLink>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================== como se encaixam -->
+    <section id="arquitetura" class="border-b border-border">
+      <div class="wrap py-16">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {{ t('arch.kicker') }}
+          </p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-tight">{{ t('arch.title') }}</h2>
+          <p class="mt-3 text-muted-foreground">{{ t('arch.body') }}</p>
+        </div>
+
+        <div v-reveal class="mt-10 grid gap-10 lg:grid-cols-2">
+          <div class="mx-auto flex w-full max-w-md flex-col">
+            <Card class="gap-0 border-primary/30 py-4">
+              <CardContent class="py-0">
+                <p class="font-mono text-sm font-semibold">quartz</p>
+                <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.lead') }}</p>
+              </CardContent>
+            </Card>
+            <div class="flex items-center gap-2 py-3 font-mono text-xs text-muted-foreground">
+              <ArrowDown class="size-4" aria-hidden="true" />
+              {{ archArrows[0] }}
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <Card class="gap-0 py-4">
+                <CardContent class="py-0">
+                  <p class="font-mono text-sm font-semibold">facet</p>
+                  <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.facet') }}</p>
+                </CardContent>
+              </Card>
+              <Card class="gap-0 py-4">
+                <CardContent class="py-0">
+                  <p class="font-mono text-sm font-semibold">vault</p>
+                  <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.vault') }}</p>
+                </CardContent>
+              </Card>
+            </div>
+            <div class="flex items-center gap-2 py-3 font-mono text-xs text-muted-foreground">
+              <ArrowDown class="size-4" aria-hidden="true" />
+              {{ archArrows[1] }}
+            </div>
+            <Card class="gap-0 border-primary/30 py-4">
+              <CardContent class="py-0">
+                <p class="font-mono text-sm font-semibold">PostgreSQL</p>
+                <p class="mt-1 text-xs text-muted-foreground">{{ t('arch.diag.pg') }}</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div>
+            <ul class="space-y-3">
+              <li v-for="(point, i) in archPoints" :key="point.title" class="flex items-start gap-3">
+                <span class="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground" aria-hidden="true">
+                  <Boxes v-if="i === 0" class="size-3.5" />
+                  <ShieldCheck v-else-if="i === 1" class="size-3.5" />
+                  <Clock v-else-if="i === 2" class="size-3.5" />
+                  <List v-else class="size-3.5" />
+                </span>
+                <p class="text-sm text-muted-foreground">
+                  <span class="font-medium text-foreground">{{ point.title }}.</span> {{ point.body }}
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ princípios -->
+    <section class="border-b border-border bg-muted/40">
+      <div class="wrap py-16">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {{ t('principles.kicker') }}
+          </p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-tight">{{ t('principles.title') }}</h2>
+        </div>
+
+        <div v-reveal class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Card v-for="principle in principles" :key="principle.title" class="gap-3 py-5">
+            <CardHeader class="px-5">
+              <p class="text-base font-semibold">{{ principle.title }}</p>
+            </CardHeader>
+            <CardContent class="px-5">
+              <p class="text-sm text-muted-foreground">{{ principle.body }}</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ CTA -->
+    <section id="repositorios">
+      <div class="wrap py-16">
+        <div v-reveal class="mx-auto max-w-2xl">
+          <Card class="items-center px-8 py-12 text-center">
+            <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              {{ t('cta.kicker') }}
             </p>
-            <InstallShard projectId="quartz" />
-            <InstallShard projectId="facet" />
-          </div>
-
-          <div class="mt-8 flex gap-3">
-            <RouterLink to="/docs" class="rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-neutral-950 hover:bg-amber-300">
-              {{ t('home.ctaDocs') }}
-            </RouterLink>
-            <RouterLink to="/ecosystem" class="rounded-lg border border-neutral-700 px-4 py-2 text-sm text-neutral-300 hover:border-neutral-500">
-              {{ t('home.ctaEcosystem') }}
-            </RouterLink>
-          </div>
-
-          <p class="mt-6 text-xs text-neutral-500">
-            MIT · Crystal ~> 1.21 · Linux · macOS · FreeBSD
-          </p>
+            <h2 class="mt-4 text-3xl font-semibold tracking-tight">{{ t('cta.title') }}</h2>
+            <p class="mt-4 text-muted-foreground">{{ t('cta.body') }}</p>
+            <div class="mt-8 flex flex-wrap justify-center gap-3">
+              <Button as-child>
+                <RouterLink to="/docs">
+                  {{ t('cta.primary') }}
+                  <ArrowRight class="size-4" aria-hidden="true" />
+                </RouterLink>
+              </Button>
+            </div>
+          </Card>
         </div>
-
-        <CodeTabs :tabs="heroTabs" />
-      </div>
-    </section>
-
-    <!-- Projects -->
-    <section class="mx-auto max-w-6xl px-6 py-16">
-      <h2 class="font-display text-2xl font-semibold">{{ t('home.projectsTitle') }}</h2>
-      <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <RouterLink
-          v-for="p in projects"
-          :key="p.id"
-          :to="`/${p.id}`"
-          class="group rounded-lg border border-neutral-800 p-5 transition-colors hover:border-neutral-600"
-        >
-          <div class="flex items-center justify-between">
-            <span class="font-display text-lg font-semibold">{{ p.name }}</span>
-            <VersionBadge :project-id="p.id" />
-          </div>
-          <p class="mt-1 text-xs uppercase tracking-wider text-neutral-500">{{ p.role }}</p>
-          <p class="mt-3 text-sm text-neutral-400">{{ p.description }}</p>
-          <div class="mt-4">
-            <StatusPill :status="p.status" />
-          </div>
-        </RouterLink>
-      </div>
-    </section>
-
-    <!-- Principles -->
-    <section class="border-t border-neutral-800 bg-neutral-900/40">
-      <div class="mx-auto max-w-6xl px-6 py-16">
-        <h2 class="font-display text-2xl font-semibold">{{ t('home.principlesTitle') }}</h2>
-        <div class="mt-6 grid gap-4 md:grid-cols-3">
-          <div v-for="principle in principles" :key="principle.title" class="rounded-lg border border-neutral-800 p-5">
-            <h3 class="font-display font-semibold">{{ principle.title }}</h3>
-            <p class="mt-2 text-sm text-neutral-400">{{ principle.body }}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Roadmap -->
-    <section class="mx-auto max-w-6xl px-6 py-16">
-      <h2 class="font-display text-2xl font-semibold">{{ t('home.roadmapTitle') }}</h2>
-      <p class="mt-2 max-w-2xl text-sm text-neutral-400">{{ t('home.roadmapSubtitle') }}</p>
-      <div class="mt-6 grid gap-4 md:grid-cols-3">
-        <RouterLink
-          v-for="p in design"
-          :key="p.id"
-          :to="`/${p.id}`"
-          class="rounded-lg border border-neutral-800 p-5 transition-colors hover:border-neutral-600"
-        >
-          <div class="flex items-center justify-between">
-            <span class="font-display font-semibold">{{ p.name }}</span>
-            <VersionBadge :project-id="p.id" />
-          </div>
-          <p class="mt-2 text-sm text-neutral-400">{{ p.tagline }}</p>
-        </RouterLink>
       </div>
     </section>
   </div>

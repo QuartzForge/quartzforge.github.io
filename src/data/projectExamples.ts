@@ -7,5 +7,5 @@ export const projectExamples: Record<string, { label: string; file: string; code
   facet: [
     { label: 'signup', file: 'src/schemas/signup.cr', code: facetExample },
   ],
-  // obsidian, pulse, vault: undefined — no examples until released
+  // vault stays undefined: no examples until released
 }

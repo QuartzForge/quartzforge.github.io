@@ -16,4 +16,14 @@ export default tseslint.config(
       parserOptions: { parser: tseslint.parser },
     },
   },
+  {
+    // shadcn-vue components keep their canonical single-word names (Button,
+    // Card, ...) and unset props (variant?: "default" | ...) — the registry
+    // structure is a contract for future tasks.
+    files: ['src/components/ui/**/*.vue'],
+    rules: {
+      'vue/multi-word-component-names': 'off',
+      'vue/require-default-prop': 'off',
+    },
+  },
 )

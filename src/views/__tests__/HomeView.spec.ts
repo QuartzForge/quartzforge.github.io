@@ -3,71 +3,61 @@ import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import HomeView from '../HomeView.vue'
 import ptBR from '../../locales/pt-BR'
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'pt-BR',
-  messages: { 'pt-BR': ptBR },
-})
+import en from '../../locales/en'
 
 function mountHome() {
+  const i18n = createI18n({ legacy: false, locale: 'pt-BR', messages: { 'pt-BR': ptBR, en } })
   return mount(HomeView, {
-    global: {
-      plugins: [i18n],
-      // Stubbing a component by name replaces it with an empty element: the
-      // named stub drops the component's own template, and only renders the
-      // parent's default slot content when renderStubDefaultSlot is true.
-      // CodeTabs is deliberately NOT stubbed — the code examples are its own
-      // template, so a stub would remove them from the DOM and the assertions
-      // below could never pass. CodeBlock (its async Shiki rendering) is
-      // stubbed with a plain-text double so the example strings reach the DOM
-      // synchronously and the tests are deterministic.
-      renderStubDefaultSlot: true,
-      stubs: {
-        RouterLink: true,
-        VersionBadge: true,
-        StatusPill: true,
-        InstallShard: true,
-        CodeBlock: { props: ['code'], template: '<pre>{{ code }}</pre>' },
-      },
-    },
+    global: { plugins: [i18n], stubs: ['RouterLink', 'VersionBadge'], renderStubDefaultSlot: true },
   })
 }
 
 describe('HomeView', () => {
-  it('shows the five projects with real status', () => {
-    const wrapper = mountHome()
-
-    const text = wrapper.text()
-    expect(text).toContain('quartz')
-    expect(text).toContain('facet')
-    expect(text).toContain('obsidian')
-    expect(text).toContain('pulse')
-    expect(text).toContain('vault')
+  it('renders the hero with kicker, headline, mark, install block and example tabs', () => {
+    const w = mountHome()
+    expect(w.find('[data-hero-kicker]').text()).toContain('Crystal')
+    const h1 = w.find('h1')
+    expect(h1.exists()).toBe(true)
+    expect(h1.text()).toContain('Uma stack inteira, numa linguagem compilada.')
+    expect(h1.find('.text-primary').exists()).toBe(true)
+    // the install block follows the docs pattern: file label + copy button
+    const install = w.find('[data-install]')
+    expect(install.exists()).toBe(true)
+    expect(install.find('[data-code-header]').text()).toContain('shard.yml')
+    expect(install.find('[data-copy]').exists()).toBe(true)
+    expect(install.text()).toContain('dependencies:')
+    // the example tabs (quartz + facet) render below the install block
+    const triggers = w.findAll('[data-slot="tabs-trigger"]')
+    expect(triggers.map((t) => t.text())).toEqual(['quartz', 'facet'])
+    // the docs CTA renders after the install block: the shard.yml example
+    // sits above the button (Button with as-child renders the link itself)
+    const cta = w.findAllComponents({ name: 'RouterLink' }).find((l) => l.text().includes('Ler a documentação'))
+    expect(cta).toBeDefined()
+    expect(install.element.compareDocumentPosition(cta!.element) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0)
   })
 
-  it('contains the real quartz example code', () => {
-    const wrapper = mountHome()
-
-    const text = wrapper.text()
-    expect(text).toContain('Quartz::Controller')
-    expect(text).toContain('Quartz.run')
-    expect(text).toContain('Hello, #{name}!')
+  it('renders the three package cards and no ecosystem card', () => {
+    const w = mountHome()
+    expect(w.findAll('[data-pkg-card]')).toHaveLength(3)
+    expect(w.text()).not.toContain('todos')
+    expect(w.text()).not.toContain('Ecossistema')
   })
 
-  it('renders the facet example with literal interpolation markers', async () => {
-    const wrapper = mountHome()
-
-    await wrapper.findAll('button')[1].trigger('click')
-
-    const text = wrapper.text()
-    expect(text).toContain('#{error.field}')
-    expect(text).not.toContain('\\#{')
+  it('no longer shows the obsidian compiler demo or the concept badge', () => {
+    const w = mountHome()
+    expect(w.find('[data-concept-badge]').exists()).toBe(false)
+    expect(w.find('#compilador').exists()).toBe(false)
+    expect(w.text()).not.toContain('conceito')
   })
 
-  it('renders the principles from the active locale', () => {
-    const wrapper = mountHome()
+  it('drops the hero note from the hero', () => {
+    const w = mountHome()
+    expect(w.text()).not.toContain('MIT ·')
+  })
 
-    expect(wrapper.text()).toContain('A macro só coleta')
+  it('renders no decorative facet or gradient', () => {
+    const w = mountHome()
+    expect(w.find('.facet').exists()).toBe(false)
+    expect(w.findAll('[style*="gradient"]')).toHaveLength(0)
   })
 })
