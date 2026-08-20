@@ -2,9 +2,9 @@ export default {
   nav: {
     overview: 'Visão geral',
     documentation: 'Documentação',
-    quartz: 'quartz — HTTP',
-    facet: 'facet — validação',
-    vault: 'vault — OAuth',
+    quartz: 'quartz (HTTP)',
+    facet: 'facet (validação)',
+    vault: 'vault (OAuth)',
   },
   header: {
     guide: 'Começar',
@@ -30,7 +30,7 @@ export default {
     roadmapTitle: 'O que vem',
     roadmapPlanned: 'planejado',
     gapKicker: 'O vão que preenche',
-    notYet: 'API não lançada — sujeita a mudança',
+    notYet: 'em desenvolvimento: a API ainda não foi lançada e pode mudar',
     pagerLabel: 'Outros projetos',
     pager: {
       prev: 'Início',
@@ -115,7 +115,7 @@ export default {
   },
   docs: {
     quickStart: 'Início rápido',
-    subtitle: 'Do zero a uma API rodando — os exemplos abaixo vêm dos exemplos enviados com quartz 0.1.1 e facet 0.1.0 e do README.',
+    subtitle: 'Do zero a uma API rodando: os exemplos abaixo vêm do README e dos exemplos que acompanham quartz 0.1.1 e facet 0.1.0.',
     searchPlaceholder: 'Buscar…',
     searchLabel: 'Buscar na documentação',
     searchEmpty: 'Nenhuma página para “{query}”.',
@@ -132,7 +132,7 @@ export default {
     },
     installation: 'Instalação',
     installationBody:
-      'Adicione os shards ao shard.yml. Cada peça é independente — instale só o que usar.',
+      'Adicione os shards ao shard.yml. Cada peça é independente. Instale só o que usar.',
     payload: 'Defina o payload',
     payloadBody:
       'Um payload é um record comum com regras declaradas ao lado do campo. A macro do Facet coleta as annotations em compile-time e gera a validação.',
@@ -141,7 +141,7 @@ export default {
       'Controllers são classes comuns, sem classe-base. A annotation registra a rota; o tipo do argumento body é desserializado e entregue já validado pelo seu código.',
     validation: 'Validando a entrada',
     validationBody:
-      'Facet.validate devolve um ValidationResult — sem exceção. O contrato com o Quartz é direto: FieldError do Facet vira FieldError do Quartz, e o BindError vira 400 problem+json.',
+      'Facet.validate devolve um ValidationResult, sem exceção. O contrato com o Quartz é direto: FieldError do Facet vira FieldError do Quartz, e o BindError vira 400 problem+json.',
     run: 'Rodando',
     runBody: 'Quartz.configure define a porta e o título do OpenAPI; Quartz.run sobe o servidor.',
     test: 'Testando',
@@ -149,7 +149,7 @@ export default {
       'As specs de cada repo são a referência real de teste hoje: rodar crystal spec dentro do projeto. O client in-memory é interno na 0.1.x.',
     errors: 'Formato de erro',
     errorsBody:
-      'Todo erro é application/problem+json (RFC 9457). O campo type é o identificador estável para tratamento programático — estes são os nove valores emitidos pelo Quartz:',
+      'Todo erro é application/problem+json (RFC 9457). O campo type é o identificador estável para tratamento programático. Estes são os nove valores emitidos pelo Quartz:',
   },
   code: {
     copy: 'copiar',

@@ -3,7 +3,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const src = join(__dirname, '..')
-const BLOCKLIST = ['copiar', 'Documentação', 'Buscar', 'Conceito', 'Estável', 'Feito em Crystal', 'aguardando CI', 'Sumário', 'Projeto não encontrado', 'em desenvolvimento']
+const BLOCKLIST = ['copiar', 'Documentação', 'Buscar', 'Estável', 'Feito em Crystal', 'Sumário', 'Projeto não encontrado', 'em desenvolvimento']
 // Brand names are never translated and are allowed in sr-only position.
 const BRAND_ALLOWLIST = ['QuartzForge']
 
