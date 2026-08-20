@@ -19,7 +19,7 @@ const activeTab = computed(() => props.tabs.find((t) => t.label === active.value
 <template>
   <div class="border border-border bg-card rounded-lg overflow-hidden">
     <Tabs v-model="active" class="gap-0">
-      <div class="flex items-center justify-between gap-2 px-4 py-2 border-b border-border">
+      <div class="flex items-center justify-between gap-2 px-5 py-3 border-b border-border">
         <TabsList class="font-mono text-xs">
           <TabsTrigger v-for="tab in tabs" :key="tab.label" :value="tab.label" :data-tab="tab.label">
             {{ tab.label }}

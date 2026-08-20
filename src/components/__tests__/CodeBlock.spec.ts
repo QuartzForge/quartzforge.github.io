@@ -26,6 +26,12 @@ describe('CodeBlock', () => {
     expect(shiki.attributes('style')).toContain('#282c34')
   })
 
+  it('leaves a bigger gap between the code and the panel borders', () => {
+    const w = mountBlock('a = 1', 'a.cr')
+    expect(w.find('[data-code-body]').classes()).toContain('p-6')
+    expect(w.find('[data-code-header]').classes()).toContain('px-5')
+  })
+
   it('shows copied state and resets it', async () => {
     vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } })
     vi.useFakeTimers()

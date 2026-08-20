@@ -62,7 +62,7 @@ const pkgCards = computed(() =>
   <div>
     <!-- ============================================================= hero -->
     <section class="border-b border-border">
-      <div class="wrap grid gap-10 py-16 lg:grid-cols-2 lg:items-center lg:gap-14 lg:py-24">
+      <div class="wrap grid gap-10 py-16 lg:grid-cols-2 lg:items-stretch lg:gap-14 lg:py-24">
         <div>
           <p data-hero-kicker class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
             {{ t('home.heroKicker') }}
@@ -89,7 +89,7 @@ const pkgCards = computed(() =>
           </div>
         </div>
 
-        <CodeTabs v-reveal :tabs="heroTabs" />
+        <CodeTabs v-reveal class="h-full" :tabs="heroTabs" />
       </div>
     </section>
 

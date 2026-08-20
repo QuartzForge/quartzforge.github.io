@@ -50,7 +50,7 @@ watch(() => [props.code, props.lang], render, { immediate: true })
 <template>
   <template v-if="framed">
     <div class="border border-border bg-card rounded-lg overflow-hidden">
-      <div class="flex items-center gap-2 px-4 py-2 border-b border-border">
+      <div class="flex items-center gap-2 px-5 py-3 border-b border-border" data-code-header>
         <span v-if="file" class="font-mono text-xs text-muted-foreground truncate">{{ file }}</span>
         <Button
           variant="ghost"
@@ -66,13 +66,13 @@ watch(() => [props.code, props.lang], render, { immediate: true })
           <span>{{ copied ? t('code.copied') : t('code.copy') }}</span>
         </Button>
       </div>
-      <div v-if="!failed && html" class="p-4 overflow-x-auto" v-html="html" />
-      <pre v-else class="p-4 overflow-x-auto bg-transparent font-mono text-sm text-foreground/90">{{ code }}</pre>
+      <div v-if="!failed && html" data-code-body class="p-6 overflow-x-auto" v-html="html" />
+      <pre v-else data-code-body class="p-6 overflow-x-auto bg-transparent font-mono text-sm text-foreground/90">{{ code }}</pre>
     </div>
   </template>
   <!-- Unframed: the caller owns the frame, the file label and the copy
        action (CodeTabs, shadcn Cards) — this renders the bare code body. -->
-  <div v-else class="overflow-x-auto p-4">
+  <div v-else data-code-body class="overflow-x-auto p-6">
     <div v-if="!failed && html" v-html="html" />
     <pre v-else class="bg-transparent font-mono text-sm text-foreground/90">{{ code }}</pre>
   </div>

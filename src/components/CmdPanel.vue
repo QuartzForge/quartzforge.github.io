@@ -29,7 +29,7 @@ const lines = computed(() => activeCode.value.split('\n'))
 
 <template>
   <div class="border border-border bg-card rounded-lg overflow-hidden">
-    <div v-if="list.length > 1" class="px-4 py-2 border-b border-border">
+    <div v-if="list.length > 1" class="px-5 py-3 border-b border-border">
       <Tabs v-model="active">
         <TabsList class="font-mono text-xs">
           <TabsTrigger v-for="tab in list" :key="tab.id" :value="tab.id">
@@ -38,7 +38,7 @@ const lines = computed(() => activeCode.value.split('\n'))
         </TabsList>
       </Tabs>
     </div>
-    <div class="flex items-start gap-3 p-4">
+    <div class="flex items-start gap-3 p-6">
       <pre
         class="font-mono text-sm text-foreground/90 overflow-x-auto flex-1 min-w-0"
       ><template v-for="(line, i) in lines" :key="i"><span v-if="line.startsWith('$')" class="pfx text-muted-foreground">$</span>{{ line.startsWith('$') ? line.slice(1) : line }}{{ i < lines.length - 1 ? '\n' : '' }}</template></pre>
