@@ -3,7 +3,6 @@ export default {
     overview: 'Overview',
     ecosystem: 'Ecosystem',
     documentation: 'Documentation',
-    projects: 'Projects',
     quartz: 'quartz — HTTP',
     facet: 'facet — validation',
     obsidian: 'obsidian — data',
@@ -18,6 +17,9 @@ export default {
   },
   drawer: {
     projects: 'Projects',
+  },
+  sheet: {
+    close: 'Close',
   },
   status: {
     stable: 'stable',

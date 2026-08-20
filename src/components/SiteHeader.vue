@@ -113,7 +113,7 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
               <Menu class="size-4" aria-hidden="true" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" class="w-72 sm:max-w-72">
+          <SheetContent side="left" class="w-72 sm:max-w-72" :close-label="t('sheet.close')">
             <SheetTitle class="sr-only">QuartzForge</SheetTitle>
             <SheetDescription class="sr-only">{{ t('drawer.projects') }}</SheetDescription>
             <div class="flex items-center gap-2.5 px-2 pt-2">
