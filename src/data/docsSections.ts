@@ -1,16 +1,50 @@
 // Each code block below is taken from the shipped quartz 0.1.1 and facet 0.1.0 examples.
+export type DocGroup = 'comecando' | 'guias' | 'referencia'
+
 export interface DocSection {
   id: string
   headingKey: string
   bodyKey: string
+  group: DocGroup
+  keywords: string
   code?: { label: string; file: string; code: string }
 }
 
+export interface DocProjectLink {
+  to: string
+  textKey: string
+  keywords: string
+}
+
+// Sidebar groups mirror the template sidebar. The "Referência" group carries
+// no guide sections — the view fills it with the project links and the
+// ecosystem link.
+export const docsGroups: { id: DocGroup; titleKey: string; sectionIds: string[] }[] = [
+  { id: 'comecando', titleKey: 'docs.groupGettingStarted', sectionIds: ['instalacao', 'rodar', 'testar'] },
+  { id: 'guias', titleKey: 'docs.groupGuides', sectionIds: ['payload', 'controller', 'validacao', 'erros'] },
+  { id: 'referencia', titleKey: 'docs.groupReference', sectionIds: [] },
+]
+
+// Project links rendered in the Referência group. Keywords feed the docs
+// search, which matches link text plus this field.
+export const docsProjectLinks: DocProjectLink[] = [
+  { to: '/quartz', textKey: 'nav.quartz', keywords: 'http api router middleware' },
+  { to: '/facet', textKey: 'nav.facet', keywords: 'validação validation schema validar' },
+  { to: '/obsidian', textKey: 'nav.obsidian', keywords: 'orm data mapper banco postgres' },
+  { to: '/pulse', textKey: 'nav.pulse', keywords: 'fila job jobs postgres' },
+  { to: '/vault', textKey: 'nav.vault', keywords: 'oauth identidade login' },
+]
+
+// Display order of the guide on the page and in the TOC: installation, then
+// the payload/controller/validation trio, then run and test, closing with
+// RFC 9457.
 export const docsSections: DocSection[] = [
   {
     id: 'instalacao',
     headingKey: 'docs.installation',
     bodyKey: 'docs.installationBody',
+    group: 'comecando',
+    keywords: 'instalar shard shards dependências setup começar',
     code: {
       label: 'shard.yml',
       file: 'shard.yml',
@@ -27,6 +61,8 @@ export const docsSections: DocSection[] = [
     id: 'payload',
     headingKey: 'docs.payload',
     bodyKey: 'docs.payloadBody',
+    group: 'guias',
+    keywords: 'payload schema record campo field validar facet',
     code: {
       label: 'payload',
       file: 'src/schemas/signup.cr',
@@ -56,6 +92,8 @@ end`,
     id: 'controller',
     headingKey: 'docs.controller',
     bodyKey: 'docs.controllerBody',
+    group: 'guias',
+    keywords: 'controller rota route post endpoint annotation',
     code: {
       label: 'controller',
       file: 'src/controllers/signups_controller.cr',
@@ -86,6 +124,8 @@ end`,
     id: 'validacao',
     headingKey: 'docs.validation',
     bodyKey: 'docs.validationBody',
+    group: 'guias',
+    keywords: 'validar validação facet validation binderror erro',
     code: {
       label: 'validate',
       file: 'src/controllers/signups_controller.cr',
@@ -101,6 +141,8 @@ end`,
     id: 'rodar',
     headingKey: 'docs.run',
     bodyKey: 'docs.runBody',
+    group: 'comecando',
+    keywords: 'rodar run servidor server port configure',
     code: {
       label: 'app',
       file: 'src/app.cr',
@@ -119,6 +161,8 @@ Quartz.run`,
     id: 'testar',
     headingKey: 'docs.test',
     bodyKey: 'docs.testBody',
+    group: 'comecando',
+    keywords: 'testar test spec specs client',
     code: {
       label: 'spec',
       file: 'spec/signups_spec.cr',
@@ -133,5 +177,12 @@ describe SignupsController do
   end
 end`,
     },
+  },
+  {
+    id: 'erros',
+    headingKey: 'docs.errors',
+    bodyKey: 'docs.errorsBody',
+    group: 'guias',
+    keywords: 'erro error rfc 9457 problem json',
   },
 ]

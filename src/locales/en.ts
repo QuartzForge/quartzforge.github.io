@@ -176,8 +176,23 @@ export default {
   },
   docs: {
     title: 'Documentation',
+    quickStart: 'Quick start',
     subtitle: 'From zero to a running API — the examples below are taken from the shipped quartz 0.1.1 and facet 0.1.0 examples and README.',
     step: 'Step {n}',
+    searchPlaceholder: 'Search…',
+    searchLabel: 'Search the documentation',
+    searchEmpty: 'No pages for “{query}”.',
+    sidebarToggle: 'Documentation outline',
+    groupGettingStarted: 'Getting started',
+    groupGuides: 'Guides',
+    groupReference: 'Reference',
+    onThisPage: 'On this page',
+    crumb: 'Documentation',
+    pagerLabel: 'Page navigation',
+    pager: {
+      prev: 'See the ecosystem',
+      next: 'Meet quartz',
+    },
     installation: 'Installation',
     installationBody:
       'Add the shards to shard.yml. Each piece is independent — install only what you use.',
