@@ -133,12 +133,43 @@ export default {
     title: 'Ecossistema',
     subtitle:
       'Cinco projetos independentes, instalados separadamente, desenhados para funcionarem juntos.',
+    heroKicker: 'Ecossistema',
+    heroTitle: 'Cinco projetos com escopos que não se sobrepõem.',
+    heroLede:
+      'Cada um resolve um problema inteiro e para por aí. Você escolhe quantos entram no seu shard.yml — e nenhum deles reclama da ausência dos outros.',
+    filterLabel: 'Filtrar projetos por escopo',
+    chipsAll: 'todos',
+    scope: {
+      web: 'web',
+      dados: 'dados',
+      validacao: 'validação',
+      filas: 'filas',
+      oauth: 'oauth',
+    },
+    count: '1 projeto | {count} projetos',
+    open: 'Abrir',
+    role: {
+      quartz: 'Framework HTTP',
+      obsidian: 'Data mapper tipado',
+      pulse: 'Fila de jobs',
+      facet: 'Validação isolada',
+      vault: 'Cliente OAuth',
+    },
     matrixTitle: 'Matriz de compatibilidade',
+    matrixLead: 'O que cada projeto exige — e nada além disso.',
+    matrixNote:
+      'As dependências abaixo são o que cada projeto assume do seu ambiente. Nenhum projeto depende de outro do QuartzForge.',
+    matrixCaption: 'Dependências e compatibilidade dos projetos do QuartzForge',
     columnProject: 'Projeto',
     columnStatus: 'Status',
     columnCrystal: 'Crystal',
     columnLicense: 'Licença',
     columnDeps: 'Dependências',
+    deps: {
+      stdlib: 'nada além da stdlib',
+      postgres: 'PostgreSQL 14+',
+      http: 'cliente HTTP da stdlib',
+    },
     noteTitle: 'Em desenvolvimento',
     noteBody:
       'obsidian, pulse e vault não lançaram v1 — a API é desenhada a partir das specs aprovadas, mas pode mudar. Esta página não documenta APIs: documenta visão e roadmap.',
