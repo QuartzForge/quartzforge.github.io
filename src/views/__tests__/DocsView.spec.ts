@@ -44,7 +44,7 @@ describe('DocsView', () => {
     await input.setValue('  zzzz-nada  ')
     const empty = w.find('.docs-nav .empty')
     expect(empty.isVisible()).toBe(true)
-    expect(empty.text()).toContain('zzzz-nada')
+    expect(empty.text()).toBe('Nenhuma página para “zzzz-nada”.')
   })
 
   it('toggles the sidebar with the mobile button', async () => {
