@@ -15,13 +15,24 @@ export type Versions = Record<string, ReleaseInfo>
 // version number it did not observe.
 const REPOS = ['quartz', 'facet', 'vault'] as const
 
+// GitHub's unauthenticated API allows 60 requests per hour per IP. The
+// site never needs fresher data than every 15 minutes, and a failed
+// attempt backs off for 5 minutes instead of hammering on every reload.
+const SUCCESS_TTL_MS = 15 * 60 * 1000
+const FAILURE_BACKOFF_MS = 5 * 60 * 1000
+
 const versions = ref<Versions>({ ...baseline })
+
+let nextAllowedAt = 0
 
 export function useVersions() {
   return { versions: readonly(versions) }
 }
 
 export async function refreshVersions(): Promise<void> {
+  const now = Date.now()
+  if (now < nextAllowedAt) return
+
   const results = await Promise.all(
     REPOS.map(async (repo) => {
       try {
@@ -37,6 +48,9 @@ export async function refreshVersions(): Promise<void> {
       }
     }),
   )
+
+  const anySuccess = results.some((result) => result !== null)
+  nextAllowedAt = now + (anySuccess ? SUCCESS_TTL_MS : FAILURE_BACKOFF_MS)
 
   const merged: Versions = { ...versions.value }
   for (const result of results) {

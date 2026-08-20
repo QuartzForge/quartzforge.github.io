@@ -13,6 +13,7 @@ describe('useVersions', () => {
   beforeEach(() => {
     vi.resetModules()
     vi.unstubAllGlobals()
+    vi.useRealTimers()
   })
 
   it('starts from the committed baseline', async () => {
@@ -61,5 +62,44 @@ describe('useVersions', () => {
     const { useVersions, refreshVersions } = await import('../useVersions')
     await refreshVersions()
     expect(useVersions().versions.value.facet.version).toBe('0.1.0')
+  })
+
+  it('does not hit the API again within the rate-limit window', async () => {
+    vi.useFakeTimers()
+    const fetchMock = vi.fn(async () => ok({ tag_name: 'v0.1.1' }))
+    vi.stubGlobal('fetch', fetchMock)
+    const { refreshVersions } = await import('../useVersions')
+    vi.setSystemTime(0)
+    await refreshVersions()
+    vi.setSystemTime(10 * 60 * 1000)
+    await refreshVersions()
+    expect(fetchMock).toHaveBeenCalledTimes(3)
+  })
+
+  it('refetches once the rate-limit window has elapsed', async () => {
+    vi.useFakeTimers()
+    const fetchMock = vi.fn(async () => ok({ tag_name: 'v0.1.1' }))
+    vi.stubGlobal('fetch', fetchMock)
+    const { refreshVersions } = await import('../useVersions')
+    vi.setSystemTime(0)
+    await refreshVersions()
+    vi.setSystemTime(16 * 60 * 1000)
+    await refreshVersions()
+    expect(fetchMock).toHaveBeenCalledTimes(6)
+  })
+
+  it('backs off briefly after a failed attempt', async () => {
+    vi.useFakeTimers()
+    const fetchMock = vi.fn(async () => new Response(null, { status: 403 }))
+    vi.stubGlobal('fetch', fetchMock)
+    const { refreshVersions } = await import('../useVersions')
+    vi.setSystemTime(0)
+    await refreshVersions()
+    vi.setSystemTime(2 * 60 * 1000)
+    await refreshVersions()
+    expect(fetchMock).toHaveBeenCalledTimes(3)
+    vi.setSystemTime(6 * 60 * 1000)
+    await refreshVersions()
+    expect(fetchMock).toHaveBeenCalledTimes(6)
   })
 })
