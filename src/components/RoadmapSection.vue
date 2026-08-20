@@ -6,14 +6,23 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <section class="mt-10">
-    <h2 class="font-display text-xl font-semibold">{{ t('roadmap.title') }}</h2>
-    <ul class="mt-3 space-y-2">
-      <li v-for="item in items" :key="item" class="flex items-start gap-2 text-sm text-neutral-300">
-        <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400/70" />
-        {{ item }}
-      </li>
-    </ul>
-    <p class="mt-3 text-xs text-neutral-500">{{ t('roadmap.disclaimer') }}</p>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">{{ t('project.roadmapKicker') }}</p>
+        <h2>{{ t('project.roadmapTitle') }}</h2>
+      </div>
+      <ul class="feature-list">
+        <li v-for="item in items" :key="item">
+          <span class="fl-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M5 8l7-5 7 5v8l-7 5-7-5Z"/></svg>
+          </span>
+          <span>
+            <strong>{{ item }}</strong>
+            <span>{{ t('project.roadmapPlanned') }}</span>
+          </span>
+        </li>
+      </ul>
+    </div>
   </section>
 </template>

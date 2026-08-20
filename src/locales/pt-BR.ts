@@ -30,6 +30,16 @@ export default {
       'API não lançada — sem exemplos de código até o primeiro release. O conteúdo abaixo é a visão de projeto.',
     gapTitle: 'A lacuna que preenche',
     whenNotTitle: 'Quando não usar',
+    roadmapKicker: 'Roadmap',
+    roadmapTitle: 'O que vem',
+    roadmapPlanned: 'planejado',
+    gapKicker: 'O vão que preenche',
+    notYet: 'API não lançada — sujeita a mudança',
+    pagerLabel: 'Outros projetos',
+    pager: {
+      prev: 'Ver o ecossistema',
+      next: 'Ler a documentação',
+    },
   },
   home: {
     heroKicker: 'Framework completo · Crystal ~> 1.21',

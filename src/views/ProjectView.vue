@@ -3,10 +3,11 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { projects } from '../data/projects'
 import { projectExamples } from '../data/projectExamples'
-import VersionBadge from '../components/VersionBadge.vue'
-import StatusPill from '../components/StatusPill.vue'
+import versions from '../data/versions.json'
 import CodeTabs from '../components/CodeTabs.vue'
-import InstallShard from '../components/InstallShard.vue'
+import CmdPanel from '../components/CmdPanel.vue'
+import VersionBadge from '../components/VersionBadge.vue'
+import Callout from '../components/Callout.vue'
 import RoadmapSection from '../components/RoadmapSection.vue'
 
 const props = defineProps<{ projectId: string }>()
@@ -15,69 +16,128 @@ const { t } = useI18n()
 
 const project = computed(() => projects.find((p) => p.id === props.projectId))
 const examples = computed(() => projectExamples[props.projectId])
+const repoUrl = computed(() => `https://github.com/${project.value?.repo}`)
+
+// The shard block mirrors versions.json: the recorded version when the
+// build-time fetch succeeded, nothing when it degraded (offline, rate
+// limit) — the site never fabricates a version number.
+const shardYml = computed(() => {
+  const info = versions[props.projectId as keyof typeof versions]
+  if (!info.released || !info.version) return ''
+  return `dependencies:\n  ${props.projectId}:\n    github: QuartzForge/${props.projectId}\n    version: ~> ${info.version}`
+})
+
+// Honest placeholder for design projects, shaped like a code panel: a
+// comment and a string literal instead of invented examples.
+const placeholderCode = computed(() => `# ${t('status.development')}\n"${t('project.notYet')}"`)
 </script>
 
 <template>
-  <div v-if="project" class="mx-auto max-w-6xl px-6 py-14">
-    <!-- Hero -->
-    <section class="grid gap-8 lg:grid-cols-2">
-      <div>
-        <div class="flex items-center gap-3">
-          <span class="font-display text-xl font-semibold">{{ project.name }}</span>
-          <VersionBadge :project-id="project.id" />
-          <StatusPill :status="project.status" />
+  <div v-if="project">
+    <!-- ============================================================= hero -->
+    <section class="hero">
+      <span class="facet" aria-hidden="true"></span>
+      <div class="wrap hero-grid">
+        <div>
+          <div class="pkg-top" style="margin-bottom: 20px">
+            <span
+              class="pkg-glyph"
+              aria-hidden="true"
+              :style="{ '--pkg': `var(--pkg-${project.id})` }"
+            >
+              <svg v-if="project.id === 'quartz'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h10M4 17h13"/></svg>
+              <svg v-else-if="project.id === 'obsidian'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
+              <svg v-else-if="project.id === 'pulse'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>
+              <svg v-else-if="project.id === 'facet'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 13 4 4L19 7"/></svg>
+              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            </span>
+            <div>
+              <div class="pkg-name" style="font-size: 17px">{{ project.name }}</div>
+              <div class="pkg-role">{{ t(`ecosystem.role.${project.id}`) }}</div>
+            </div>
+            <span style="margin-inline-start: 12px">
+              <VersionBadge :project-id="project.id" />
+            </span>
+          </div>
+
+          <h1>{{ project.tagline }}</h1>
+          <p class="lede">{{ project.description }}</p>
+
+          <CmdPanel v-if="shardYml" :code="shardYml" file="shard.yml" />
+
+          <div class="hero-actions">
+            <RouterLink to="/docs" class="btn btn-primary">
+              {{ t('home.ctaDocs') }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </RouterLink>
+            <RouterLink to="/ecosystem" class="btn btn-ghost">{{ t('home.ctaEcosystem') }}</RouterLink>
+          </div>
+
+          <p class="hero-note">
+            <span>Crystal {{ versions[project.id].crystal }}</span><span>·</span><span>MIT</span><span>·</span>
+            <a :href="repoUrl">{{ project.repo }}</a>
+          </p>
         </div>
-        <p class="mt-2 text-sm uppercase tracking-wider text-neutral-500">{{ project.role }}</p>
-        <h1 class="mt-4 font-display text-3xl font-bold">{{ project.tagline }}</h1>
-        <p class="mt-4 text-neutral-300">{{ project.description }}</p>
 
-        <div class="mt-6">
-          <InstallShard :project-id="project.id" />
+        <CodeTabs v-if="examples" v-reveal :tabs="examples" />
+        <div v-else class="panel" v-reveal>
+          <div class="panel-head">
+            <span class="panel-file">{{ t('project.inDevelopment') }}</span>
+          </div>
+          <pre class="code">{{ placeholderCode }}</pre>
         </div>
-
-        <p class="mt-6 text-xs text-neutral-500">
-          Crystal {{ project.status === 'released' ? '~> 1.21' : `~> 1.21 (${t('project.planned')})` }} · MIT
-          · <a :href="`https://github.com/${project.repo}`" class="text-neutral-400 underline decoration-neutral-700 hover:text-neutral-200">{{ project.repo }}</a>
-        </p>
-      </div>
-
-      <div v-if="examples">
-        <CodeTabs :tabs="examples" />
-      </div>
-      <div v-else class="rounded-lg border border-dashed border-neutral-700 p-8">
-        <p class="text-sm text-neutral-400">{{ t('project.inDevelopment') }}</p>
-        <p class="mt-2 text-xs text-neutral-500">{{ t('project.noExamples') }}</p>
       </div>
     </section>
 
-    <!-- The gap -->
-    <section class="mt-14">
-      <h2 class="font-display text-xl font-semibold">{{ t('project.gapTitle') }}</h2>
-      <ul class="mt-3 space-y-2">
-        <li v-for="item in project.gap" :key="item" class="flex items-start gap-2 text-sm text-neutral-300">
-          <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400/70" />
-          {{ item }}
-        </li>
-      </ul>
+    <!-- =========================================================== o vão -->
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">{{ t('project.gapKicker') }}</p>
+          <h2>{{ t('project.gapTitle') }}</h2>
+        </div>
+        <ul class="feature-list">
+          <li v-for="item in project.gap" :key="item">
+            <span class="fl-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M5 8l7-5 7 5v8l-7 5-7-5Z"/></svg>
+            </span>
+            <span>{{ item }}</span>
+          </li>
+        </ul>
+      </div>
     </section>
 
-    <!-- Roadmap -->
+    <!-- ========================================================== roadmap -->
     <RoadmapSection :items="project.roadmap" />
 
-    <!-- When not to use -->
-    <section class="mt-10 rounded-lg border border-neutral-800 bg-neutral-900/40 p-6">
-      <h2 class="font-display text-lg font-semibold">{{ t('project.whenNotTitle') }}</h2>
-      <p class="mt-2 text-sm text-neutral-400">{{ project.whenNotToUse }}</p>
-    </section>
+    <!-- ======================================= quando não usar · pager -->
+    <section class="section">
+      <div class="wrap">
+        <Callout variant="warn">
+          <strong>{{ t('project.whenNotTitle') }} {{ project.name }}</strong>
+          <p>{{ project.whenNotToUse }}</p>
+        </Callout>
 
-    <!-- Pagination -->
-    <nav class="mt-14 flex justify-between border-t border-neutral-800 pt-6 text-sm">
-      <RouterLink to="/ecosystem" class="text-neutral-400 hover:text-neutral-200">← {{ t('nav.ecosystem') }}</RouterLink>
-      <RouterLink to="/docs" class="text-neutral-400 hover:text-neutral-200">{{ t('nav.documentation') }} →</RouterLink>
-    </nav>
+        <nav class="pager" :aria-label="t('project.pagerLabel')">
+          <RouterLink to="/ecosystem">
+            <span class="p-dir" aria-hidden="true">←</span>
+            <span class="p-name">{{ t('project.pager.prev') }}</span>
+          </RouterLink>
+          <RouterLink to="/docs" class="next">
+            <span class="p-name">{{ t('project.pager.next') }}</span>
+            <span class="p-dir" aria-hidden="true">→</span>
+          </RouterLink>
+        </nav>
+      </div>
+    </section>
   </div>
 
-  <div v-else class="mx-auto max-w-6xl px-6 py-14">
-    <p>404 — projeto não encontrado</p>
+  <div v-else>
+    <section class="hero">
+      <div class="wrap">
+        <p class="kicker">404</p>
+        <h1 style="font-size: clamp(28px, 3.6vw, 44px)">projeto não encontrado</h1>
+      </div>
+    </section>
   </div>
 </template>

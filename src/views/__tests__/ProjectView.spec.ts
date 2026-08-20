@@ -3,53 +3,46 @@ import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import ProjectView from '../ProjectView.vue'
 import ptBR from '../../locales/pt-BR'
+import en from '../../locales/en'
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'pt-BR',
-  messages: { 'pt-BR': ptBR },
-})
-
-// CodeTabs and RoadmapSection are deliberately NOT stubbed: what the assertions
-// check lives in their own templates (the code examples and the 'Roadmap'
-// heading), so a name stub would drop it from the DOM and the tests could never
-// pass — the HomeView spec documents this exact trap. CodeBlock (its async
-// Shiki rendering) is stubbed with a plain-text double so the example strings
-// reach the DOM synchronously and the tests stay deterministic.
 function mountProject(projectId: string) {
+  const i18n = createI18n({ legacy: false, locale: 'pt-BR', messages: { 'pt-BR': ptBR, en } })
   return mount(ProjectView, {
     props: { projectId },
     global: {
       plugins: [i18n],
+      stubs: ['RouterLink', 'CodeTabs', 'CmdPanel', 'VersionBadge', 'StatusPill', 'RoadmapSection'],
       renderStubDefaultSlot: true,
-      stubs: {
-        RouterLink: true,
-        VersionBadge: true,
-        StatusPill: true,
-        InstallShard: true,
-        CodeBlock: { props: ['code'], template: '<pre>{{ code }}</pre>' },
-      },
     },
   })
 }
 
 describe('ProjectView', () => {
-  it('shows real code for a released project', () => {
-    const wrapper = mountProject('quartz')
-
-    expect(wrapper.text()).toContain('Quartz::Controller')
+  it('renders the hero with the hex package identity', () => {
+    const w = mountProject('quartz')
+    expect(w.find('.pkg-glyph').exists()).toBe(true)
+    expect(w.find('h1').exists()).toBe(true)
+    expect(w.find('.hero-note').exists()).toBe(true)
   })
 
-  it('shows no code and a development disclaimer for a design project', () => {
-    const wrapper = mountProject('obsidian')
-
-    expect(wrapper.text()).toContain('Em desenvolvimento')
-    expect(wrapper.text()).not.toContain('class Invoice')
+  it('renders the when-not-to-use section as a warn callout', () => {
+    const w = mountProject('quartz')
+    expect(w.find('.callout-warn').exists()).toBe(true)
   })
 
-  it('shows the roadmap for a design project', () => {
-    const wrapper = mountProject('pulse')
+  it('shows an honest in-development panel for design projects', () => {
+    const w = mountProject('obsidian')
+    expect(w.text()).toContain('em desenvolvimento')
+    expect(w.find('.panel').exists()).toBe(true)
+  })
 
-    expect(wrapper.text()).toContain('Roadmap')
+  it('renders the pager', () => {
+    const w = mountProject('facet')
+    expect(w.find('.pager').exists()).toBe(true)
+  })
+
+  it('keeps the 404 branch for an unknown project', () => {
+    const w = mountProject('unknown')
+    expect(w.text()).toContain('404')
   })
 })

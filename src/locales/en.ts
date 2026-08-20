@@ -30,6 +30,16 @@ export default {
       'API not released — no code examples until the first release. The content below is the project vision.',
     gapTitle: 'The gap it fills',
     whenNotTitle: 'When not to use',
+    roadmapKicker: 'Roadmap',
+    roadmapTitle: 'What comes next',
+    roadmapPlanned: 'planned',
+    gapKicker: 'The gap it fills',
+    notYet: 'API not released — subject to change',
+    pagerLabel: 'Other projects',
+    pager: {
+      prev: 'See the ecosystem',
+      next: 'Read the documentation',
+    },
   },
   home: {
     heroKicker: 'Full framework · Crystal ~> 1.21',
