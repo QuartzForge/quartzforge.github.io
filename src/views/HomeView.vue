@@ -217,34 +217,6 @@ const pkgCards = computed(() =>
       </div>
     </section>
 
-    <!-- ================================================================ prova -->
-    <section id="prova" class="border-b border-border">
-      <div class="wrap py-16">
-        <div class="max-w-2xl">
-          <p class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            {{ t('proof.kicker') }}
-          </p>
-          <h2 class="mt-3 text-3xl font-semibold tracking-tight">{{ t('proof.title') }}</h2>
-          <p class="mt-3 text-muted-foreground">{{ t('proof.body') }}</p>
-        </div>
-
-        <div v-reveal class="mt-10 space-y-2">
-          <Card v-for="row in proofRows" :key="row" class="flex-row items-center justify-between gap-4 py-0">
-            <div class="px-6 py-3">
-              <p class="text-sm font-medium">{{ row }}</p>
-            </div>
-            <p class="px-6 py-3 font-mono text-xs text-muted-foreground">{{ t('proof.pending') }}</p>
-          </Card>
-        </div>
-
-        <Alert variant="warning" class="mt-8 max-w-3xl">
-          <TriangleAlert aria-hidden="true" />
-          <AlertTitle>{{ t('proof.noteTitle') }}</AlertTitle>
-          <AlertDescription>{{ t('proof.noteBody') }}</AlertDescription>
-        </Alert>
-      </div>
-    </section>
-
     <!-- ================================================================ CTA -->
     <section id="repositorios">
       <div class="wrap py-16">
