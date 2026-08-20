@@ -24,9 +24,6 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - uses: crystal-lang/install-crystal@v1
-        with:
-          crystal: 1.21.0
       - run: npm run lint
       - run: npm test -- --run
       - run: npm run build

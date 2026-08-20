@@ -13,21 +13,27 @@ function mountHome() {
 }
 
 describe('HomeView', () => {
-  it('renders the hero with kicker, headline, mark and command panel', () => {
+  it('renders the hero with kicker, headline, mark, install block and example tabs', () => {
     const w = mountHome()
     expect(w.find('[data-hero-kicker]').text()).toContain('Crystal')
     const h1 = w.find('h1')
     expect(h1.exists()).toBe(true)
     expect(h1.text()).toContain('Uma stack inteira, numa linguagem compilada.')
     expect(h1.find('.text-primary').exists()).toBe(true)
-    // the command panel renders the real shard.yml tabs when the version
-    // fetch succeeded; the copy button is its stable element either way
-    const cmd = w.find('[data-panel-cmd]')
-    expect(cmd.find('[data-copy]').exists()).toBe(true)
-    const triggers = cmd.findAll('[data-slot="tabs-trigger"]')
-    if (triggers.length > 0) {
-      expect(triggers.map((t) => t.text())).toEqual(['quartz', 'facet'])
-    }
+    // the install block follows the docs pattern: file label + copy button
+    const install = w.find('[data-install]')
+    expect(install.exists()).toBe(true)
+    expect(install.find('[data-code-header]').text()).toContain('shard.yml')
+    expect(install.find('[data-copy]').exists()).toBe(true)
+    expect(install.text()).toContain('dependencies:')
+    // the example tabs (quartz + facet) render below the install block
+    const triggers = w.findAll('[data-slot="tabs-trigger"]')
+    expect(triggers.map((t) => t.text())).toEqual(['quartz', 'facet'])
+    // the docs CTA renders after the install block: the shard.yml example
+    // sits above the button (Button with as-child renders the link itself)
+    const cta = w.findAllComponents({ name: 'RouterLink' }).find((l) => l.text().includes('Ler a documentação'))
+    expect(cta).toBeDefined()
+    expect(install.element.compareDocumentPosition(cta!.element) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0)
   })
 
   it('renders the three package cards and no ecosystem card', () => {

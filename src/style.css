@@ -128,6 +128,14 @@
 
   .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
+  /* shiki's <pre> carries no font-size, so it would fall back to the browser's
+     16px default while the site's fallback block uses text-sm — pin the
+     highlighted code to the same size the fallback renders at. */
+  .shiki {
+    font-size: 0.875rem;
+    line-height: 1.42857;
+  }
+
   .sr-only {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
     overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
@@ -135,9 +143,9 @@
 
   .wrap {
     width: 100%;
-    max-width: 1180px;
+    max-width: 1440px;
     margin-inline: auto;
-    padding-inline: clamp(20px, 4vw, 48px);
+    padding-inline: clamp(16px, 3vw, 28px);
   }
 
   /* Faceta prismática do QuartzForge — flat: primário sólido com recorte

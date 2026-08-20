@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import versions from '../data/versions.json'
+import { useVersions } from '../composables/useVersions'
 import StatusPill from './StatusPill.vue'
 import { Badge } from './ui/badge'
 
 const props = defineProps<{ projectId: string }>()
 
+const { versions } = useVersions()
+
 const info = computed(() => {
-  const v = versions[props.projectId as keyof typeof versions]
-  return v && 'released' in v && v.released ? v : null
+  const v = versions.value[props.projectId]
+  return v && v.released ? v : null
 })
 </script>
 

@@ -3,15 +3,16 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowDown, ArrowRight, Boxes, Clock, List, ShieldCheck } from '@lucide/vue'
 import { projects, type Project } from '../data/projects'
-import versions from '../data/versions.json'
+import { useVersions } from '../composables/useVersions'
 import { quartzExample, facetExample } from '../data/examples'
-import CmdPanel from '../components/CmdPanel.vue'
+import CodeBlock from '../components/CodeBlock.vue'
 import CodeTabs from '../components/CodeTabs.vue'
 import VersionBadge from '../components/VersionBadge.vue'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader } from '../components/ui/card'
 
 const { t, tm } = useI18n()
+const { versions } = useVersions()
 
 // t() returns the message key for non-string messages, so array messages
 // must be read with tm(), which resolves the raw message of the active
@@ -29,22 +30,19 @@ const heroTabs = [
   { label: 'facet', file: 'src/schemas/signup.cr', code: facetExample },
 ]
 
-// The install panel shows real shard.yml snippets for the released projects
-// only; when the version fetch degrades (offline, rate limit) nothing is
-// fabricated — the panel renders empty instead of inventing a version.
-const installTabs = computed(() => {
-  const tabs: { id: string; label: string; code: string }[] = []
+// The install block shows one shard.yml with the released projects only,
+// versions fetched from the GitHub API at runtime; when the fetch fails
+// nothing is fabricated — the file renders with only the projects whose
+// version is known.
+const installYaml = computed(() => {
+  const lines = ['dependencies:']
   for (const id of ['quartz', 'facet']) {
-    const info = versions[id as keyof typeof versions]
+    const info = versions.value[id]
     if (info.released && info.version) {
-      tabs.push({
-        id,
-        label: id,
-        code: `dependencies:\n  ${id}:\n    github: QuartzForge/${id}\n    version: ~> ${info.version}`,
-      })
+      lines.push(`  ${id}:`, `    github: QuartzForge/${id}`, `    version: ~> ${info.version}`)
     }
   }
-  return tabs
+  return lines.join('\n')
 })
 
 // Display order is release-first: quartz, then facet, then vault.
@@ -60,7 +58,7 @@ const pkgCards = computed(() =>
   <div>
     <!-- ============================================================= hero -->
     <section class="border-b border-border">
-      <div class="wrap grid gap-10 py-16 lg:grid-cols-2 lg:items-stretch lg:gap-14 lg:py-24">
+      <div class="wrap grid gap-10 py-16 lg:grid-cols-2 lg:items-stretch lg:gap-10 lg:py-24">
         <div>
           <p data-hero-kicker class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
             {{ t('home.heroKicker') }}
@@ -70,8 +68,8 @@ const pkgCards = computed(() =>
           </h1>
           <p class="mt-5 max-w-[62ch] text-lg text-muted-foreground">{{ t('home.heroBody') }}</p>
 
-          <div data-panel-cmd class="mt-8">
-            <CmdPanel :tabs="installTabs" />
+          <div class="mt-6">
+            <CodeBlock data-install :code="installYaml" file="shard.yml" lang="yaml" />
           </div>
 
           <div class="mt-6 flex flex-wrap gap-3">
@@ -84,7 +82,9 @@ const pkgCards = computed(() =>
           </div>
         </div>
 
-        <CodeTabs v-reveal class="h-full" :tabs="heroTabs" />
+        <div v-reveal class="flex h-full flex-col gap-4">
+          <CodeTabs :tabs="heroTabs" />
+        </div>
       </div>
     </section>
 

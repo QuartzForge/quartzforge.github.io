@@ -6,6 +6,7 @@ import { router } from './router'
 import ptBR from './locales/pt-BR'
 import en from './locales/en'
 import { revealDirective } from './composables/useReveal'
+import { refreshVersions } from './composables/useVersions'
 
 const savedLocale = localStorage.getItem('qf-locale') ?? 'en'
 const locale = savedLocale === 'pt-BR' ? 'pt-BR' : 'en'
@@ -24,3 +25,5 @@ createApp(App)
   .use(i18n)
   .directive('reveal', revealDirective)
   .mount('#app')
+
+refreshVersions()

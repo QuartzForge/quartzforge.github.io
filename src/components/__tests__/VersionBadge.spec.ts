@@ -1,13 +1,9 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import VersionBadge from '../VersionBadge.vue'
 import ptBR from '../../locales/pt-BR'
 import en from '../../locales/en'
-
-vi.mock('../../data/versions.json', () => ({
-  default: { quartz: { version: '0.1.1', released: true }, facet: { version: '0.1.0', released: true }, vault: { released: false } },
-}))
 
 function mountBadge(projectId: string) {
   const i18n = createI18n({ legacy: false, locale: 'pt-BR', messages: { 'pt-BR': ptBR, en } })

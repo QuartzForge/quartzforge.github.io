@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { ArrowLeft, ArrowRight, Target, TriangleAlert } from '@lucide/vue'
 import { projects } from '../data/projects'
 import { projectExamples } from '../data/projectExamples'
-import versions from '../data/versions.json'
+import { useVersions } from '../composables/useVersions'
 import CodeTabs from '../components/CodeTabs.vue'
 import CmdPanel from '../components/CmdPanel.vue'
 import VersionBadge from '../components/VersionBadge.vue'
@@ -16,16 +16,17 @@ import RoadmapSection from '../components/RoadmapSection.vue'
 const props = defineProps<{ projectId: string }>()
 
 const { t } = useI18n()
+const { versions } = useVersions()
 
 const project = computed(() => projects.find((p) => p.id === props.projectId))
 const examples = computed(() => projectExamples[props.projectId])
 const repoUrl = computed(() => `https://github.com/${project.value?.repo}`)
 
-// The shard block mirrors versions.json: the recorded version when the
-// build-time fetch succeeded, nothing when it degraded (offline, rate
-// limit) — the site never fabricates a version number.
+// The shard block shows the recorded version when the runtime fetch
+// succeeded, nothing when it degraded (offline, rate limit) — the site
+// never fabricates a version number.
 const shardYml = computed(() => {
-  const info = versions[props.projectId as keyof typeof versions]
+  const info = versions.value[props.projectId]
   if (!info.released || !info.version) return ''
   return `dependencies:\n  ${props.projectId}:\n    github: QuartzForge/${props.projectId}\n    version: ~> ${info.version}`
 })
@@ -39,7 +40,7 @@ const placeholderCode = computed(() => `# ${t('status.development')}\n"${t('proj
   <div v-if="project">
     <!-- ============================================================= hero -->
     <section class="border-b border-border">
-      <div class="wrap grid gap-10 py-16 lg:grid-cols-2 lg:items-center lg:gap-14 lg:py-24">
+      <div class="wrap grid gap-10 py-16 lg:grid-cols-2 lg:items-center lg:gap-10 lg:py-24">
         <div>
           <div class="flex flex-wrap items-center gap-3">
             <span
@@ -78,7 +79,7 @@ const placeholderCode = computed(() => `# ${t('status.development')}\n"${t('proj
           </div>
 
           <p data-hero-note class="mt-6 font-mono text-xs text-muted-foreground">
-            <span>Crystal {{ versions[project.id as keyof typeof versions].crystal }}</span>
+            <span>Crystal {{ versions[project.id].crystal }}</span>
             <span aria-hidden="true"> · </span>
             <span>MIT</span>
             <template v-if="project.status === 'released'">

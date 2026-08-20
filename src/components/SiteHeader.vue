@@ -2,13 +2,13 @@
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import { Languages, Menu, Moon, Sun } from '@lucide/vue'
+import { Menu, Moon, Sun } from '@lucide/vue'
 import { projects } from '../data/projects'
 import BrandMark from './BrandMark.vue'
 import { Button } from './ui/button'
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from './ui/sheet'
 
-const { locale, t } = useI18n()
+const { t } = useI18n()
 const route = useRoute()
 const open = ref(false)
 const stuck = ref(false)
@@ -29,10 +29,10 @@ function toggleTheme() {
   localStorage.setItem('qf-theme', dark.value ? 'dark' : 'light')
 }
 
-function toggleLang() {
-  locale.value = locale.value === 'en' ? 'pt-BR' : 'en'
-  localStorage.setItem('qf-locale', locale.value)
-}
+// function toggleLang() {
+//   locale.value = locale.value === 'en' ? 'pt-BR' : 'en'
+//   localStorage.setItem('qf-locale', locale.value)
+// }
 
 watch(() => route.path, () => {
   open.value = false
@@ -92,7 +92,7 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
           <svg viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03a9.5 9.5 0 0 1 5 0c1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.86v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
         </Button>
 
-        <Button
+        <!-- <Button
           variant="ghost"
           data-lang-toggle
           :aria-label="t('theme.lang')"
@@ -101,7 +101,7 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
         >
           <Languages class="size-4" aria-hidden="true" />
           <span class="mono text-xs">{{ locale === 'en' ? 'pt' : 'en' }}</span>
-        </Button>
+        </Button> -->
 
         <Button as-child variant="default" size="sm" data-nav-cta class="hidden md:inline-flex">
           <RouterLink to="/docs">{{ t('header.guide') }}</RouterLink>

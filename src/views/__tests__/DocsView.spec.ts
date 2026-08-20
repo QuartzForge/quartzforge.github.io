@@ -56,9 +56,28 @@ describe('DocsView', () => {
     expect(w.find('[data-docs-side]').attributes('data-open')).toBe('false')
   })
 
-  it('renders the RFC 9457 section with the nine error types', () => {
+  it('renders the RFC 9457 section with the nine error types as links', () => {
     const w = mountDocs()
-    expect(w.findAll('#erros code').length).toBeGreaterThanOrEqual(9)
+    const links = w.findAll('#erros [data-error-type]')
+    const slugs = [
+      'bad-request',
+      'unauthorized',
+      'forbidden',
+      'not-found',
+      'conflict',
+      'unprocessable-entity',
+      'timeout',
+      'bind-error',
+      'internal',
+    ] as const
+    expect(links).toHaveLength(9)
+    links.forEach((link, i) => {
+      const slug = slugs[i]
+      expect(link.attributes('href')).toBe(`https://quartzforge.org/errors/${slug}`)
+      // the visible label is the human name, never the identifier URL
+      expect(link.text()).toBe(ptBR.docs.errorTypes[slug])
+      expect(link.text()).not.toContain('quartzforge.org')
+    })
   })
 
   it('keeps the sidebar to guide groups only, without project links', () => {

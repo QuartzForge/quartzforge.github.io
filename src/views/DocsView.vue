@@ -82,7 +82,11 @@ const problemJson = `{
   "instance": "/users/abc",
   "request_id": "01JD3K7XQ2M8N4P",
   "errors": [
-    { "field": "id",   "in": "path",  "message": "expected Int64, got \\"abc\\"" }
+    {
+      "field": "id",
+      "in": "path",
+      "message": "expected Int64, got \\"abc\\""
+    }
   ]
 }`
 </script>
@@ -182,13 +186,16 @@ const problemJson = `{
             <CodeBlock :code="problemJson" lang="json" file="application/problem+json" />
           </div>
           <div class="mt-6 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-            <code
+            <a
               v-for="type in problemTypes"
               :key="type"
-              class="rounded-md border border-border px-2.5 py-1.5 font-mono text-xs"
+              data-error-type
+              :href="`https://quartzforge.org/errors/${type}`"
+              :title="`https://quartzforge.org/errors/${type}`"
+              class="rounded-md border border-border px-2.5 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
             >
-              quartzforge.org/errors/{{ type }}
-            </code>
+              {{ t(`docs.errorTypes.${type}`) }}
+            </a>
           </div>
         </template>
       </section>

@@ -134,6 +134,17 @@ export default {
     errors: 'Error format',
     errorsBody:
       'Every error is application/problem+json (RFC 9457). The type field is the stable identifier for programmatic handling. These are the nine values emitted by Quartz:',
+    errorTypes: {
+      'bad-request': 'Bad Request',
+      unauthorized: 'Unauthorized',
+      forbidden: 'Forbidden',
+      'not-found': 'Not Found',
+      conflict: 'Conflict',
+      'unprocessable-entity': 'Unprocessable Entity',
+      timeout: 'Timeout',
+      'bind-error': 'Bind Error',
+      internal: 'Internal Error',
+    },
   },
   code: {
     copy: 'copy',

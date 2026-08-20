@@ -134,6 +134,17 @@ export default {
     errors: 'Formato de erro',
     errorsBody:
       'Todo erro é application/problem+json (RFC 9457). O campo type é o identificador estável para tratamento programático. Estes são os nove valores emitidos pelo Quartz:',
+    errorTypes: {
+      'bad-request': 'Requisição inválida',
+      unauthorized: 'Não autorizado',
+      forbidden: 'Proibido',
+      'not-found': 'Não encontrado',
+      conflict: 'Conflito',
+      'unprocessable-entity': 'Entidade não processável',
+      timeout: 'Tempo esgotado',
+      'bind-error': 'Erro de bind',
+      internal: 'Erro interno',
+    },
   },
   code: {
     copy: 'copiar',
