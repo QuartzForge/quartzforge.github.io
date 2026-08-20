@@ -49,7 +49,7 @@ const installTabs = computed(() => {
   return tabs
 })
 
-// Display order comes from the handoff template, not from projects.ts.
+// Display order is release-first: quartz, then facet, then vault.
 const pkgOrder = ['quartz', 'facet', 'vault'] as const
 const pkgCards = computed(() =>
   pkgOrder
