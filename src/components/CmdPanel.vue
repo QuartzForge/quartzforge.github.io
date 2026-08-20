@@ -5,6 +5,7 @@ import { Check, Copy } from '@lucide/vue'
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
 import { Button } from './ui/button'
 import { useCopy } from '../composables/useCopy'
+import { useHighlight } from '../composables/useHighlight'
 
 const { t } = useI18n()
 
@@ -12,6 +13,7 @@ const props = defineProps<{
   tabs?: { id: string; label: string; code: string }[]
   code?: string
   file?: string
+  lang?: string
 }>()
 
 const { copied, copy } = useCopy()
@@ -22,9 +24,11 @@ const active = ref(list.value[0]?.id ?? '')
 const activeCode = computed(
   () => list.value.find((tab) => tab.id === active.value)?.code ?? list.value[0]?.code ?? '',
 )
-// Line by line so every prompt gets its own muted prefix; a single <pre>
-// with one prefix span would collapse a multi-line command into one line.
-const lines = computed(() => activeCode.value.split('\n'))
+// The code body is highlighted by the shared Shiki pipeline (useHighlight),
+// so the dependencies example carries the same theme as the code blocks;
+// yaml is the natural default for shard.yml-style snippets.
+const lang = computed(() => props.lang ?? 'yaml')
+const { html, failed } = useHighlight(activeCode, lang)
 </script>
 
 <template>
@@ -38,14 +42,15 @@ const lines = computed(() => activeCode.value.split('\n'))
         </TabsList>
       </Tabs>
     </div>
-    <div class="flex items-start gap-3 p-6">
-      <pre
-        class="font-mono text-sm text-foreground/90 overflow-x-auto flex-1 min-w-0"
-      ><template v-for="(line, i) in lines" :key="i"><span v-if="line.startsWith('$')" class="pfx text-muted-foreground">$</span>{{ line.startsWith('$') ? line.slice(1) : line }}{{ i < lines.length - 1 ? '\n' : '' }}</template></pre>
+    <div class="flex items-start">
+      <div class="p-6 overflow-x-auto flex-1 min-w-0">
+        <div v-if="!failed && html" v-html="html" />
+        <pre v-else class="bg-transparent font-mono text-sm text-foreground/90">{{ activeCode }}</pre>
+      </div>
       <Button
         variant="ghost"
         size="sm"
-        class="shrink-0"
+        class="shrink-0 mt-6 me-6"
         data-copy
         :data-copied="copied || undefined"
         :aria-label="copied ? t('code.copied') : t('code.copy')"

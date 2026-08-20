@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { bundledLanguages, getSingletonHighlighter, type BundledLanguage } from 'shiki'
 import { Check, Copy } from '@lucide/vue'
 import { Button } from './ui/button'
 import { useCopy } from '../composables/useCopy'
+import { useHighlight } from '../composables/useHighlight'
 
 const { t } = useI18n()
 
@@ -13,38 +13,14 @@ const props = withDefaults(
   { framed: true },
 )
 
-const html = ref('')
-const failed = ref(false)
+// Highlighting is delegated to the shared useHighlight composable, so code
+// blocks follow the site theme (one-dark-pro in dark mode, one-light in
+// light mode) and re-render when the header toggle flips. The .shiki inline
+// style carries its background, keeping the wrapping card on the site
+// tokens.
+const lang = computed(() => props.lang ?? 'crystal')
+const { html, failed } = useHighlight(toRef(props, 'code'), lang)
 const { copied, copy } = useCopy()
-let renderSeq = 0
-
-// Shiki v4's codeToHtml is async and its highlighter does not auto-load
-// grammars, so the highlighter is created once as a module-level singleton
-// and languages are loaded on demand. Any failure (offline wasm, unknown
-// language, ...) degrades to a plain <pre>. The theme is the neutral
-// one-dark-pro (ruling S): code blocks keep their own dark palette and do
-// not follow the site theme — the .shiki inline style carries its
-// background, so the wrapping card stays on the site tokens.
-async function render() {
-  const seq = ++renderSeq
-  const lang = props.lang ?? 'crystal'
-  try {
-    const highlighter = await getSingletonHighlighter({ themes: ['one-dark-pro'] })
-    const requested: BundledLanguage | 'text' =
-      lang in bundledLanguages ? (lang as BundledLanguage) : 'text'
-    if (!highlighter.getLoadedLanguages().includes(requested)) {
-      await highlighter.loadLanguage(requested)
-    }
-    if (seq !== renderSeq) return
-    html.value = highlighter.codeToHtml(props.code, { lang: requested, theme: 'one-dark-pro' })
-    failed.value = false
-  } catch {
-    if (seq !== renderSeq) return
-    failed.value = true
-  }
-}
-
-watch(() => [props.code, props.lang], render, { immediate: true })
 </script>
 
 <template>
