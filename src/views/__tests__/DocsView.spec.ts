@@ -28,7 +28,7 @@ describe('DocsView', () => {
   it('renders the docs shell: sidebar groups, crumb, main and pager', () => {
     const w = mountDocs()
     expect(w.find('[data-docs-side]').exists()).toBe(true)
-    expect(w.findAll('[data-docs-nav] [data-nav-group]').length).toBeGreaterThanOrEqual(3)
+    expect(w.findAll('[data-docs-nav] [data-nav-group]').length).toBe(2)
     expect(w.find('[data-docs-nav]').attributes('aria-label')).toBe(ptBR.docs.navLabel)
     expect(w.find('[data-crumb]').exists()).toBe(true)
     expect(w.find('[data-pager]').exists()).toBe(true)
@@ -61,13 +61,12 @@ describe('DocsView', () => {
     expect(w.findAll('#erros code').length).toBeGreaterThanOrEqual(9)
   })
 
-  it('keeps the sidebar project links to quartz, facet and vault only', () => {
+  it('keeps the sidebar to guide groups only, without project links', () => {
     const w = mountDocs()
     const sidebar = w.find('[data-docs-nav]')
-    expect(sidebar.text()).not.toContain('obsidian')
-    expect(sidebar.text()).not.toContain('pulse')
-    expect(sidebar.text()).toContain('quartz')
-    expect(sidebar.text()).toContain('facet')
-    expect(sidebar.text()).toContain('vault')
+    expect(sidebar.text()).not.toContain('quartz')
+    expect(sidebar.text()).not.toContain('facet')
+    expect(sidebar.text()).not.toContain('vault')
+    expect(sidebar.text()).not.toContain('Ecossistema')
   })
 })

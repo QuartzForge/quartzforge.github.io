@@ -75,9 +75,6 @@ const placeholderCode = computed(() => `# ${t('status.development')}\n"${t('proj
                 <ArrowRight class="size-4" aria-hidden="true" />
               </RouterLink>
             </Button>
-            <Button variant="outline" as-child>
-              <RouterLink to="/ecosystem">{{ t('home.ctaEcosystem') }}</RouterLink>
-            </Button>
           </div>
 
           <p data-hero-note class="mt-6 font-mono text-xs text-muted-foreground">
@@ -151,7 +148,7 @@ const placeholderCode = computed(() => `# ${t('status.development')}\n"${t('proj
 
         <nav class="mt-8 flex flex-wrap items-center justify-between gap-3" :aria-label="t('project.pagerLabel')" data-pager>
           <Button variant="outline" as-child>
-            <RouterLink to="/ecosystem">
+            <RouterLink to="/">
               <ArrowLeft class="size-4" aria-hidden="true" />
               {{ t('project.pager.prev') }}
             </RouterLink>

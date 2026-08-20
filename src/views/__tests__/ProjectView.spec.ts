@@ -59,10 +59,13 @@ describe('ProjectView', () => {
     expect(w.findComponent({ name: 'CodeTabs' }).exists()).toBe(false)
   })
 
-  it('renders the pager with prev and next labels', () => {
+  it('renders the pager with prev pointing home and next to the docs', () => {
     const w = mountProject('facet')
     const pager = w.find('[data-pager]')
     expect(pager.exists()).toBe(true)
+    const links = pager.findAll('router-link-stub')
+    expect(links[0].attributes('to')).toBe('/')
+    expect(links[1].attributes('to')).toBe('/docs')
     expect(pager.text()).toContain(ptBR.project.pager.prev)
     expect(pager.text()).toContain(ptBR.project.pager.next)
   })

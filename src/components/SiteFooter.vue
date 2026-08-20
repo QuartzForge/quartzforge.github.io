@@ -79,14 +79,6 @@ const communityLinks = [
                 {{ t(c.key) }}
               </a>
             </li>
-            <li>
-              <RouterLink
-                to="/ecosystem"
-                class="text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {{ t('footer.versionPolicy') }}
-              </RouterLink>
-            </li>
           </ul>
         </div>
       </div>

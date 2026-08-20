@@ -30,10 +30,11 @@ describe('HomeView', () => {
     }
   })
 
-  it('renders the four package cards including the ecosystem card', () => {
+  it('renders the three package cards and no ecosystem card', () => {
     const w = mountHome()
-    expect(w.findAll('[data-pkg-card]')).toHaveLength(4)
-    expect(w.text()).toContain('todos')
+    expect(w.findAll('[data-pkg-card]')).toHaveLength(3)
+    expect(w.text()).not.toContain('todos')
+    expect(w.text()).not.toContain('Ecossistema')
   })
 
   it('no longer shows the obsidian compiler demo or the concept badge', () => {

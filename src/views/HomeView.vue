@@ -83,9 +83,6 @@ const pkgCards = computed(() =>
                 <ArrowRight class="size-4" aria-hidden="true" />
               </RouterLink>
             </Button>
-            <Button variant="outline" as-child>
-              <RouterLink to="/ecosystem">{{ t('home.ctaEcosystem') }}</RouterLink>
-            </Button>
           </div>
         </div>
 
@@ -104,7 +101,7 @@ const pkgCards = computed(() =>
           <p class="mt-3 text-muted-foreground">{{ t('home.projectsBody') }}</p>
         </div>
 
-        <div v-reveal class="mt-10 grid gap-4 sm:grid-cols-2">
+        <div v-reveal class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <RouterLink
             v-for="p in pkgCards"
             :key="p.id"
@@ -124,25 +121,6 @@ const pkgCards = computed(() =>
             <div class="mt-auto flex items-center gap-2">
               <VersionBadge :project-id="p.id" />
             </div>
-          </RouterLink>
-
-          <RouterLink
-            to="/ecosystem"
-            data-pkg-card
-            class="flex flex-col gap-4 rounded-xl border border-border bg-card p-6 shadow-sm transition-colors hover:border-primary/40"
-          >
-            <span class="h-0.5 w-10 rounded-full bg-muted-foreground/40" aria-hidden="true"></span>
-            <div>
-              <p class="font-semibold">{{ t('home.allProjects') }}</p>
-              <p class="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                {{ t('home.allRole') }}
-              </p>
-            </div>
-            <p class="text-sm text-muted-foreground">{{ t('home.allBody') }}</p>
-            <p class="mt-auto inline-flex items-center gap-1.5 text-sm font-medium text-primary">
-              {{ t('home.openEcosystem') }}
-              <ArrowRight class="size-4" aria-hidden="true" />
-            </p>
           </RouterLink>
         </div>
       </div>
@@ -211,14 +189,6 @@ const pkgCards = computed(() =>
                 </p>
               </li>
             </ul>
-
-            <RouterLink
-              to="/ecosystem"
-              class="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-            >
-              {{ t('arch.link') }}
-              <ArrowRight class="size-4" aria-hidden="true" />
-            </RouterLink>
           </div>
         </div>
       </div>
@@ -291,9 +261,6 @@ const pkgCards = computed(() =>
                   {{ t('cta.primary') }}
                   <ArrowRight class="size-4" aria-hidden="true" />
                 </RouterLink>
-              </Button>
-              <Button variant="outline" as-child>
-                <RouterLink to="/ecosystem">{{ t('cta.secondary') }}</RouterLink>
               </Button>
             </div>
           </Card>

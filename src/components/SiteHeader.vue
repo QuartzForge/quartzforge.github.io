@@ -15,7 +15,6 @@ const stuck = ref(false)
 
 const topLinks = [
   { to: '/', key: 'nav.overview' },
-  { to: '/ecosystem', key: 'nav.ecosystem' },
   { to: '/docs', key: 'nav.documentation' },
 ]
 

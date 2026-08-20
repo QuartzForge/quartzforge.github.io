@@ -16,17 +16,14 @@ export interface DocProjectLink {
   keywords: string
 }
 
-// Sidebar groups mirror the template sidebar. The "Projetos" group carries
-// no guide sections — the view fills it with the project links and the
-// ecosystem link.
+// Sidebar groups mirror the template sidebar: guide sections only.
 export const docsGroups: { id: DocGroup; titleKey: string; sectionIds: string[] }[] = [
   { id: 'comecando', titleKey: 'docs.groupGettingStarted', sectionIds: ['instalacao', 'rodar', 'testar'] },
   { id: 'guias', titleKey: 'docs.groupGuides', sectionIds: ['payload', 'controller', 'validacao', 'erros'] },
-  { id: 'projetos', titleKey: 'docs.groupProjects', sectionIds: [] },
 ]
 
-// Project links rendered in the Projetos group. Keywords feed the docs
-// search, which matches link text plus this field.
+// Project links feed the docs pager's next button; the sidebar no longer
+// carries a project group.
 export const docsProjectLinks: DocProjectLink[] = [
   { to: '/quartz', textKey: 'nav.quartz', keywords: 'http api router middleware' },
   { to: '/facet', textKey: 'nav.facet', keywords: 'validação validation schema validar' },

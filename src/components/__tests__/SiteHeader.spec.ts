@@ -16,7 +16,6 @@ function createTestRouter() {
     history: createMemoryHistory(),
     routes: [
       { path: '/', component: blank },
-      { path: '/ecosystem', component: blank },
       { path: '/docs', component: blank },
       { path: '/quartz', component: blank },
     ],
@@ -47,12 +46,12 @@ describe('SiteHeader', () => {
     document.body.innerHTML = ''
   })
 
-  it('shows the hex brand mark and the three top-level links', () => {
+  it('shows the hex brand mark and the two top-level links', () => {
     const wrapper = mountHeader()
     expect(wrapper.find('.brand-mark').exists()).toBe(true)
     expect(wrapper.text()).toContain('QuartzForge')
     expect(wrapper.text()).toContain('Visão geral')
-    expect(wrapper.text()).toContain('Ecossistema')
+    expect(wrapper.text()).not.toContain('Ecossistema')
     expect(wrapper.text()).toContain('Documentação')
   })
 
@@ -81,7 +80,6 @@ describe('SiteHeader', () => {
     const content = sheetContent()
     expect(content).not.toBeNull()
     expect(content?.textContent).toContain('Visão geral')
-    expect(content?.textContent).toContain('Ecossistema')
     expect(content?.textContent).toContain('Documentação')
     expect(content?.textContent).toContain('quartz — HTTP')
     expect(content?.textContent).toContain('facet — validação')
@@ -106,7 +104,6 @@ describe('SiteHeader', () => {
     const links = wrapper.findAll('.nav-links > *')
     expect(links[0].attributes('aria-current')).toBe('page')
     expect(links[1].attributes('aria-current')).toBeUndefined()
-    expect(links[2].attributes('aria-current')).toBeUndefined()
   })
 
   it('links the GitHub icon to the org home', () => {

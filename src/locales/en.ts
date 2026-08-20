@@ -1,7 +1,6 @@
 export default {
   nav: {
     overview: 'Overview',
-    ecosystem: 'Ecosystem',
     documentation: 'Documentation',
     quartz: 'quartz — HTTP',
     facet: 'facet — validation',
@@ -34,7 +33,7 @@ export default {
     notYet: 'API not released — subject to change',
     pagerLabel: 'Other projects',
     pager: {
-      prev: 'See the ecosystem',
+      prev: 'Home',
       next: 'Read the documentation',
     },
     notFound: 'Project not found',
@@ -46,7 +45,6 @@ export default {
     heroBody:
       'QuartzForge brings together three official projects: quartz (HTTP), facet (validation) and vault (OAuth). None of them requires the others. The compiler sees the whole application.',
     ctaDocs: 'Read the documentation',
-    ctaEcosystem: 'See the ecosystem',
     projectsKicker: 'Three projects, zero scavenging',
     projectsTitle: 'Each piece solves one scope. None forces the next.',
     projectsBody:
@@ -56,11 +54,6 @@ export default {
       vault: 'OAuth',
       facet: 'Validation',
     },
-    allProjects: 'all',
-    allRole: 'Ecosystem',
-    allBody:
-      'Compatibility matrix, dependencies between the projects and what each one assumes about your database and runtime.',
-    openEcosystem: 'Open the ecosystem',
   },
   arch: {
     kicker: 'How the pieces fit together',
@@ -80,7 +73,6 @@ export default {
       { title: 'No runtime discovery', body: 'Routes are resolved at compile time. No directory scanning at boot.' },
       { title: 'Macros only where they pay off', body: 'Metaprogramming stays where the compiler collects. The rest is plain Crystal the LSP understands.' },
     ],
-    link: 'See the compatibility matrix',
   },
   principles: {
     kicker: 'Principles',
@@ -113,44 +105,13 @@ export default {
     title: 'Adopt one project. Adopt all three. Same door.',
     body: 'The getting-started guide takes about ten minutes and ends with a running API and a validating schema.',
     primary: 'Getting-started guide',
-    secondary: 'Compare the projects',
   },
   ecosystem: {
-    heroKicker: 'Ecosystem',
-    heroTitle: 'Three projects with scopes that never overlap.',
-    heroLede:
-      'Each one solves a whole problem and stops there. You choose how many go into your shard.yml and none of them complains about the absence of the others.',
-    filterLabel: 'Filter projects by scope',
-    chipsAll: 'all',
-    scope: {
-      web: 'web',
-      validacao: 'validation',
-      oauth: 'oauth',
-    },
-    count: '1 project | {count} projects',
-    open: 'Open',
     role: {
       quartz: 'HTTP framework',
       facet: 'Standalone validation',
       vault: 'OAuth client',
     },
-    matrixTitle: 'Compatibility matrix',
-    matrixLead: 'What each project requires — and nothing beyond that.',
-    matrixNote:
-      'The dependencies below are what each project assumes about your environment. No project depends on another QuartzForge project.',
-    matrixCaption: 'Dependencies and compatibility of the QuartzForge projects',
-    columnProject: 'Project',
-    columnStatus: 'Status',
-    columnCrystal: 'Crystal',
-    columnLicense: 'License',
-    columnDeps: 'Dependencies',
-    deps: {
-      stdlib: 'nothing beyond the stdlib',
-      http: 'stdlib HTTP client',
-    },
-    noteTitle: 'In development',
-    noteBody:
-      'vault has not released v1 yet. The API is designed from approved specs and may change. This page does not document APIs: it documents vision and roadmap.',
   },
   docs: {
     quickStart: 'Quick start',
@@ -162,12 +123,11 @@ export default {
     sidebarToggle: 'Documentation outline',
     groupGettingStarted: 'Getting started',
     groupGuides: 'Guides',
-    groupProjects: 'Projects',
     onThisPage: 'On this page',
     crumb: 'Documentation',
     pagerLabel: 'Page navigation',
     pager: {
-      prev: 'See the ecosystem',
+      prev: 'Home',
       next: 'Meet quartz',
     },
     installation: 'Installation',
@@ -207,7 +167,6 @@ export default {
     github: 'GitHub',
     discussions: 'Discussions',
     contributing: 'Contributing guide',
-    versionPolicy: 'Version policy',
     docs: {
       quickStart: 'Quick start',
       installation: 'Installation',

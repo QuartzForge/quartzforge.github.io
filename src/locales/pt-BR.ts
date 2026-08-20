@@ -1,7 +1,6 @@
 export default {
   nav: {
     overview: 'Visão geral',
-    ecosystem: 'Ecossistema',
     documentation: 'Documentação',
     quartz: 'quartz — HTTP',
     facet: 'facet — validação',
@@ -34,7 +33,7 @@ export default {
     notYet: 'API não lançada — sujeita a mudança',
     pagerLabel: 'Outros projetos',
     pager: {
-      prev: 'Ver o ecossistema',
+      prev: 'Início',
       next: 'Ler a documentação',
     },
     notFound: 'Projeto não encontrado',
@@ -46,7 +45,6 @@ export default {
     heroBody:
       'QuartzForge reúne três projetos oficiais: quartz (HTTP), facet (validação) e vault (OAuth). Nenhum deles exige os outros. O compilador enxerga a aplicação de ponta a ponta.',
     ctaDocs: 'Ler a documentação',
-    ctaEcosystem: 'Ver o ecossistema',
     projectsKicker: 'Três projetos, zero garimpo',
     projectsTitle: 'Cada peça resolve um escopo. Nenhuma obriga a próxima.',
     projectsBody:
@@ -56,11 +54,6 @@ export default {
       vault: 'OAuth',
       facet: 'Validação',
     },
-    allProjects: 'todos',
-    allRole: 'Ecossistema',
-    allBody:
-      'Matriz de compatibilidade, dependências entre os projetos e o que cada um assume do seu banco e do seu runtime.',
-    openEcosystem: 'Abrir ecossistema',
   },
   arch: {
     kicker: 'Como as peças se encaixam',
@@ -80,7 +73,6 @@ export default {
       { title: 'Sem descoberta em runtime', body: 'Rotas são resolvidas na compilação. Não há varredura de diretórios no boot.' },
       { title: 'Macros só onde valem a pena', body: 'Metaprogramação fica onde o compilador coleta. O resto é Crystal comum, que o LSP entende.' },
     ],
-    link: 'Ver a matriz de compatibilidade',
   },
   principles: {
     kicker: 'Princípios',
@@ -113,44 +105,13 @@ export default {
     title: 'Adote um projeto. Adote os três. A porta é a mesma.',
     body: 'O guia de início leva cerca de dez minutos e termina com uma API rodando e um schema validando.',
     primary: 'Guia de início',
-    secondary: 'Comparar os projetos',
   },
   ecosystem: {
-    heroKicker: 'Ecossistema',
-    heroTitle: 'Três projetos com escopos que não se sobrepõem.',
-    heroLede:
-      'Cada um resolve um problema inteiro e para por aí. Você escolhe quantos entram no seu shard.yml e nenhum deles reclama da ausência dos outros.',
-    filterLabel: 'Filtrar projetos por escopo',
-    chipsAll: 'todos',
-    scope: {
-      web: 'web',
-      validacao: 'validação',
-      oauth: 'oauth',
-    },
-    count: '1 projeto | {count} projetos',
-    open: 'Abrir',
     role: {
       quartz: 'Framework HTTP',
       facet: 'Validação isolada',
       vault: 'Cliente OAuth',
     },
-    matrixTitle: 'Matriz de compatibilidade',
-    matrixLead: 'O que cada projeto exige — e nada além disso.',
-    matrixNote:
-      'As dependências abaixo são o que cada projeto assume do seu ambiente. Nenhum projeto depende de outro do QuartzForge.',
-    matrixCaption: 'Dependências e compatibilidade dos projetos do QuartzForge',
-    columnProject: 'Projeto',
-    columnStatus: 'Status',
-    columnCrystal: 'Crystal',
-    columnLicense: 'Licença',
-    columnDeps: 'Dependências',
-    deps: {
-      stdlib: 'nada além da stdlib',
-      http: 'cliente HTTP da stdlib',
-    },
-    noteTitle: 'Em desenvolvimento',
-    noteBody:
-      'vault ainda não lançou v1. A API é desenhada a partir das specs aprovadas, mas pode mudar. Esta página não documenta APIs: documenta visão e roadmap.',
   },
   docs: {
     quickStart: 'Início rápido',
@@ -162,12 +123,11 @@ export default {
     sidebarToggle: 'Sumário da documentação',
     groupGettingStarted: 'Começando',
     groupGuides: 'Guias',
-    groupProjects: 'Projetos',
     onThisPage: 'Nesta página',
     crumb: 'Documentação',
     pagerLabel: 'Navegação entre páginas',
     pager: {
-      prev: 'Ver o ecossistema',
+      prev: 'Início',
       next: 'Conhecer o quartz',
     },
     installation: 'Instalação',
@@ -207,7 +167,6 @@ export default {
     github: 'GitHub',
     discussions: 'Discussões',
     contributing: 'Guia de contribuição',
-    versionPolicy: 'Política de versões',
     docs: {
       quickStart: 'Início rápido',
       installation: 'Instalação',

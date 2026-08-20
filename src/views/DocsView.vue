@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowLeft, ArrowRight, Menu, Search } from '@lucide/vue'
-import { docsGroups, docsProjectLinks, docsSections, type DocProjectLink, type DocSection } from '../data/docsSections'
+import { docsGroups, docsProjectLinks, docsSections, type DocSection } from '../data/docsSections'
 import { useScrollSpy } from '../composables/useScrollSpy'
 import CodeBlock from '../components/CodeBlock.vue'
 import { Button } from '../components/ui/button'
@@ -37,27 +37,11 @@ function sectionVisible(s: DocSection): boolean {
   return matches(`${t(s.headingKey)} ${s.keywords}`)
 }
 
-function projectVisible(l: DocProjectLink): boolean {
-  return matches(`${t(l.textKey)} ${l.keywords}`)
-}
-
-// The ecosystem link carries its keywords inline in the template.
-function ecosystemVisible(): boolean {
-  return matches(`${t('nav.ecosystem')} matriz compatibilidade versões`)
-}
-
 function groupVisible(group: (typeof docsGroups)[number]): boolean {
-  if (group.sectionIds.length > 0) return group.sectionIds.some((id) => sectionVisible(sectionsById[id]))
-  return docsProjectLinks.some(projectVisible) || ecosystemVisible()
+  return group.sectionIds.some((id) => sectionVisible(sectionsById[id]))
 }
 
-const hits = computed(() => {
-  if (!query.value) return docsSections.length + docsProjectLinks.length + 1
-  let n = docsSections.filter(sectionVisible).length
-  n += docsProjectLinks.filter(projectVisible).length
-  if (ecosystemVisible()) n += 1
-  return n
-})
+const hits = computed(() => docsSections.filter(sectionVisible).length)
 
 function clearSearch(): void {
   q.value = ''
@@ -147,24 +131,6 @@ const problemJson = `{
             >
               {{ t(s.headingKey) }}
             </a>
-            <template v-if="g.id === 'projetos'">
-              <RouterLink
-                v-for="l in docsProjectLinks"
-                :key="l.to"
-                :to="l.to"
-                :hidden="!projectVisible(l)"
-                class="rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              >
-                {{ t(l.textKey) }}
-              </RouterLink>
-              <RouterLink
-                to="/ecosystem"
-                :hidden="!ecosystemVisible()"
-                class="rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              >
-                {{ t('nav.ecosystem') }}
-              </RouterLink>
-            </template>
           </div>
         </div>
 
@@ -231,7 +197,7 @@ const problemJson = `{
 
       <nav data-pager class="mt-8 flex flex-wrap items-center justify-between gap-4" :aria-label="t('docs.pagerLabel')">
         <Button as-child variant="outline" size="sm">
-          <RouterLink to="/ecosystem" class="flex items-center gap-2">
+          <RouterLink to="/" class="flex items-center gap-2">
             <ArrowLeft class="size-4" aria-hidden="true" />
             {{ t('docs.pager.prev') }}
           </RouterLink>
